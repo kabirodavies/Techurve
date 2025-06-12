@@ -5,7 +5,6 @@ import HeaderMenu from "./HeaderMenu";
 import SearchBar from "./SearchBar";
 import CartIcon from "./CartIcon";
 import FavoriteButton from "./FavoriteButton";
-import SignIn from "./SignIn";
 import MobileMenu from "./MobileMenu";
 import { currentUser } from "@clerk/nextjs/server";
 import { ClerkLoaded, SignInButton, UserButton } from "@clerk/nextjs";
