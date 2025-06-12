@@ -13,3 +13,10 @@
   --color-lightColor: #52525b;
   --color-lightOrange: #fca99b;
 }
+
+
+@layer base {
+  button {
+    @apply hover:cursor-pointer;
+  }
+}
