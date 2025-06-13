@@ -12,7 +12,7 @@ const Home = () => {
         voluptates. Neque dolor eveniet beatae autem dignissimos quod quae,
         velit omnis aperiam cumque ratione dolorum repellat aliquam nobis odio
         unde illo debitis commodi incidunt eligendi? Placeat veniam ipsum in
-        minus autem? Enim.
+        minus autem? Enim..
       </p>
       <Button>Check out</Button>
     </Container>
