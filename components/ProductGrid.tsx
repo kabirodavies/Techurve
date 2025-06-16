@@ -22,9 +22,8 @@ import HomeTabbar from './HomeTabbar'
 
 const ProductGrid = () => {
   return (
-    <div><HomeTabbar selectedTab={''} onTabSelect={function (tab: string): void {
-      throw new Error('Function not implemented.')
-    } } /></div>
+
+    <div>HomeTabbar</div>
   )
 }
 
