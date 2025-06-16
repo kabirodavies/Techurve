@@ -23,8 +23,8 @@ export const categoriesData = [
   { title: "gadget accessories", href: "gadget-accessories" },
 ];
 export const productType = [
-  { title: "Gadget", value: "gadget" },
-  { title: "Appliances", value: "appliances" },
+  { title: "Cameras", value: "camera" },
+  { title: "Software", value: "software" },
   { title: "Refrigerators", value: "refrigerators" },
   { title: "Others", value: "others" },
 ];
