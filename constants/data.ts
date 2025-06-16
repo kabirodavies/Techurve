@@ -24,7 +24,14 @@ export const categoriesData = [
 ];
 export const productType = [
   { title: "Cameras", value: "camera" },
-  { title: "Software", value: "software" },
+  { title: "Appliances", value: "appliances" },
   { title: "Refrigerators", value: "refrigerators" },
   { title: "Others", value: "others" },
 ];
+
+
+  // { title: "Biometrics", value: "biometrics" },
+  // { title: "CCTv Video Surveillance", value: "cctv" },
+  // { title: "Entrance Control", value: "entrance control" },
+  // { title: "IoT Smart Homes", value: "iot smart homes" },
+  // { title: "Telecommunications", value: "telecommunications" },
