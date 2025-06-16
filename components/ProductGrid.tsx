@@ -23,7 +23,9 @@ import HomeTabbar from './HomeTabbar'
 const ProductGrid = () => {
   return (
 
-    <div>HomeTabbar</div>
+    <div>
+      <HomeTabbar />
+    </div>
   )
 }
 
