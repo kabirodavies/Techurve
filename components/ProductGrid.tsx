@@ -1,4 +1,4 @@
-// "use client";
+"use client";
 
 // import React, { useState } from 'react'
 // import HomeTabbar from './HomeTabbar';
@@ -22,7 +22,9 @@ import HomeTabbar from './HomeTabbar'
 
 const ProductGrid = () => {
   return (
-    <div><HomeTabbar /></div>
+    <div><HomeTabbar selectedTab={''} onTabSelect={function (tab: string): void {
+      throw new Error('Function not implemented.')
+    } } /></div>
   )
 }
 
