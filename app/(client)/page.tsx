@@ -1,4 +1,3 @@
-import CompanyPortfolio from "@/components/CompanyPortfolio";
 import Container from "@/components/Container";
 import HomeBanner from "@/components/HomeBanner";
 import HomeCategories from "@/components/HomeCategories";
@@ -19,7 +18,6 @@ const Home = async () => {
       <HomeCategories categories={categories} />
       <ShopByBrands/>
       <LatestBlog />
-      <CompanyPortfolio/>
     </Container>
   );
 };

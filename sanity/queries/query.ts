@@ -31,14 +31,33 @@ const MY_ORDERS_QUERY =
   ...,product->
 }
 }`);
+// const GET_ALL_BLOG = defineQuery(
+//   `*[_type == 'blog'] | order(publishedAt desc)[0...$quantity]{
+//   ...,  
+//      blogcategories[]->{
+//     title
+// }
+//     }
+//   `
+// );
+
+
 const GET_ALL_BLOG = defineQuery(
-  `*[_type == 'blog'] | order(publishedAt desc)[0...$quantity]{
-  ...,  
-     blogcategories[]->{
-    title
-}
+  `*[_type == 'blog' && !('Portfolio' in blogcategories[]->title)] | order(publishedAt desc)[0...$quantity]{
+    ...,
+    blogcategories[]->{
+      title
     }
-  `
+  }`
+);
+
+const GET_PORTFOLIO_BLOGS = defineQuery(
+  `*[_type == 'blog' && 'Portfolio' in blogcategories[]->title] | order(publishedAt desc)[0...$quantity]{
+    ...,
+    blogcategories[]->{
+      title
+    }
+  }`
 );
 
 const SINGLE_BLOG_QUERY =
@@ -92,4 +111,5 @@ export {
   SINGLE_BLOG_QUERY,
   BLOG_CATEGORIES,
   OTHERS_BLOG_QUERY,
+  GET_PORTFOLIO_BLOGS,
 };

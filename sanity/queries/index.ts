@@ -10,6 +10,8 @@ import {
   OTHERS_BLOG_QUERY,
   PRODUCT_BY_SLUG_QUERY,
   SINGLE_BLOG_QUERY,
+  GET_PORTFOLIO_BLOGS,
+  
 } from "./query";
 
 const getCategories = async (quantity?: number) => {
@@ -151,6 +153,21 @@ const getOthersBlog = async (slug: string, quantity: number) => {
     return [];
   }
 };
+
+const getPortifolio = async (slug: string, quantity: number) => {
+  try {
+    const { data } = await sanityFetch({
+      query: GET_PORTFOLIO_BLOGS,
+      params: { slug, quantity },
+    });
+    return data ?? [];
+  } catch (error) {
+    console.log("Error fetching all brands:", error);
+    return [];
+  }
+};
+
+
 export {
   getCategories,
   getAllBrands,
@@ -163,4 +180,5 @@ export {
   getSingleBlog,
   getBlogCategories,
   getOthersBlog,
+  getPortifolio,
 };
