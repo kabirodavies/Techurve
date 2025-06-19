@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "typegen": "npx sanity@latest schema extract && npx sanity@latest typegen generate"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.21.0",
@@ -26,8 +27,10 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
+    "dayjs": "^1.11.13",
     "embla-carousel-react": "^8.6.0",
     "lucide-react": "^0.514.0",
+    "motion": "^12.18.1",
     "next": "15.3.3",
     "next-sanity": "^9.12.0",
     "react": "^19.0.0",
