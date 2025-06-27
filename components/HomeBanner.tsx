@@ -9,8 +9,8 @@ const HomeBanner = () => {
     <div className="mb-8 py-16 md:py-0 bg-shop_light_blue rounded-lg px-10 lg:px-24 flex items-center justify-between">
       <div className="space-y-5">
         <Title className=" text-blue-900 text-2xl md:text-3xl lg:text-4xl">
-          Discover security solutions<br />
-          Protect your digital and physical assets. 
+          Discover curated security solutions<br />
+          Protect your digital & physical assets. 
           
            
         </Title>
