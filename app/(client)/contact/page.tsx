@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, Link, Home, Package, ShoppingBag } from 'lucide-react';
+// import { Check, Link, Home, Package, ShoppingBag } from 'lucide-react';
 import { motion } from 'motion/react';
 import React from 'react'
 
