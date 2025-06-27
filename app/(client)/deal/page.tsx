@@ -14,7 +14,7 @@ const DealPage = async () => {
         </Title>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2.5">
           {products?.map((product) => (
-            //@ts-expect-error
+            // @ts-expect-error Product type mismatch is expected here
             <ProductCard key={product?._id} product={product} />
           ))}
         </div>
