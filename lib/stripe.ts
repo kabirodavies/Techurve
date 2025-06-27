@@ -1,11 +1,11 @@
-// import Stripe from "stripe";
+import Stripe from "stripe";
 
-// if (!process.env.STRIPE_SECRET_KEY) {
-//   throw new Error("STRIPE_SECRET_KEY is not defined");
-// }
+if (!process.env.STRIPE_SECRET_KEY) {
+  throw new Error("STRIPE_SECRET_KEY is not defined");
+}
 
-// const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-//   apiVersion:  "2025-05-28.basil",
-// });
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+  apiVersion: "2025-05-28.basil", // Use a valid Stripe API version
+});
 
-// export default stripe;
+export default stripe;
