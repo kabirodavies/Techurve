@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import SocialMedia from "./SocialMedia";
 import { useOutsideClick } from "@/hooks";
+import { Fingerprint } from "lucide-react";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -24,12 +25,13 @@ const SideMenu: FC<SidebarProps> = ({ isOpen, onClose }) => {
     >
     <div 
     ref={sidebarRef}
-    className="min-w72 max-w-96 bg-black h-screen p-10
-     border-r border-r-shop_light_green flex flex-col gap-6" >
+    className="min-w72 max-w-96 bg-shop_dark_blue h-screen p-10
+     border-r border-r-shop_light_blue flex flex-col gap-6" >
        <div className="flex items-center justify-between gap-5">
+      <Fingerprint className="w-8 h-8 mr-2 text-white" /> 
       <Logo className="text-white" spanDesign="group-hover:text-white" />
       <button onClick={onClose}
-       className="hover:text-shop_light_green hoverEffect" >
+       className="hover:text-shop_light_blue hoverEffect" >
         <X />
       </button>
       </div>
@@ -39,7 +41,7 @@ const SideMenu: FC<SidebarProps> = ({ isOpen, onClose }) => {
               href={item?.href}
               key={item?.title}
               className={`hover:text-shop_light_green hoverEffect ${
-              pathname === item?.href && "text-white"
+              pathname === item?.href && "text-shop_light_green"
               }`}
               >
               {item?.title}

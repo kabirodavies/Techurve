@@ -1430,15 +1430,39 @@
             },
             {
               "type": "string",
-              "value": "appliances"
+              "value": "biometrics"
             },
             {
               "type": "string",
-              "value": "refrigerators"
+              "value": "perimeter_security"
             },
             {
               "type": "string",
-              "value": "others"
+              "value": "intrusion_detection"
+            },
+            {
+              "type": "string",
+              "value": "smart_homes"
+            },
+            {
+              "type": "string",
+              "value": "parking_management"
+            },
+            {
+              "type": "string",
+              "value": "digital_boards"
+            },
+            {
+              "type": "string",
+              "value": "software"
+            },
+            {
+              "type": "string",
+              "value": "connectivity"
+            },
+            {
+              "type": "string",
+              "value": "services"
             }
           ]
         },

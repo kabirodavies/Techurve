@@ -18,8 +18,8 @@ const Footer = () => {
           <div className="space-y-4">
             <Logo />
             <SubText>
-              Discover curated furniture collections at Shopcartyt, blending
-              style and comfort to elevate your living spaces.
+              Discover curated security solutions at Techurve, blending 
+              technology to elevate your peace of mind and protect your digital and physical assets.
             </SubText>
             <SocialMedia
               className="text-darkColor/60"
@@ -46,9 +46,9 @@ const Footer = () => {
             <SubTitle>Categories</SubTitle>
             <ul className="space-y-3 mt-4">
               {categoriesData?.map((item) => (
-                <li key={item?.title}>
+                <li key={item?.value}>
                   <Link
-                    href={`/category/${item?.href}`}
+                    href={`/category/${item?.value}`}
                     className="hover:text-shop_light_green hoverEffect font-medium"
                   >
                     {item?.title}

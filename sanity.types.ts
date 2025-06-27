@@ -229,7 +229,7 @@ export type Product = {
     [internalGroqTypeReferenceTo]?: "brand";
   };
   status?: "new" | "hot" | "sale";
-  variant?: "cctv" | "appliances" | "refrigerators" | "others";
+  variant?: "cctv" | "biometrics" | "perimeter_security" | "intrusion_detection" | "smart_homes" | "parking_management" | "digital_boards" | "software" | "connectivity" | "services";
   isFeatured?: boolean;
 };
 
@@ -558,7 +558,7 @@ export type DEAL_PRODUCTSResult = Array<{
     [internalGroqTypeReferenceTo]?: "brand";
   };
   status?: "hot" | "new" | "sale";
-  variant?: "appliances" | "cctv" | "others" | "refrigerators";
+  variant?: "biometrics" | "cctv" | "connectivity" | "digital_boards" | "intrusion_detection" | "parking_management" | "perimeter_security" | "services" | "smart_homes" | "software";
   isFeatured?: boolean;
 }>;
 // Variable: PRODUCT_BY_SLUG_QUERY
@@ -602,7 +602,7 @@ export type PRODUCT_BY_SLUG_QUERYResult = {
     [internalGroqTypeReferenceTo]?: "brand";
   };
   status?: "hot" | "new" | "sale";
-  variant?: "appliances" | "cctv" | "others" | "refrigerators";
+  variant?: "biometrics" | "cctv" | "connectivity" | "digital_boards" | "intrusion_detection" | "parking_management" | "perimeter_security" | "services" | "smart_homes" | "software";
   isFeatured?: boolean;
 } | null;
 // Variable: BRAND_QUERY
@@ -670,7 +670,7 @@ export type MY_ORDERS_QUERYResult = Array<{
         [internalGroqTypeReferenceTo]?: "brand";
       };
       status?: "hot" | "new" | "sale";
-      variant?: "appliances" | "cctv" | "others" | "refrigerators";
+      variant?: "biometrics" | "cctv" | "connectivity" | "digital_boards" | "intrusion_detection" | "parking_management" | "perimeter_security" | "services" | "smart_homes" | "software";
       isFeatured?: boolean;
     } | null;
     quantity?: number;
@@ -690,8 +690,73 @@ export type MY_ORDERS_QUERYResult = Array<{
   orderDate?: string;
 }>;
 // Variable: GET_ALL_BLOG
-// Query: *[_type == 'blog'] | order(publishedAt desc)[0...$quantity]{  ...,       blogcategories[]->{    title}    }
+// Query: *[_type == 'blog' && !('Portfolio' in blogcategories[]->title)] | order(publishedAt desc)[0...$quantity]{    ...,    blogcategories[]->{      title    }  }
 export type GET_ALL_BLOGResult = Array<{
+  _id: string;
+  _type: "blog";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  slug?: Slug;
+  author?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "author";
+  };
+  mainImage?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  blogcategories: Array<{
+    title: string | null;
+  }> | null;
+  publishedAt?: string;
+  isLatest?: boolean;
+  body?: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "normal";
+    listItem?: "bullet";
+    markDefs?: Array<{
+      href?: string;
+      _type: "link";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
+    _key: string;
+  } | {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+    _key: string;
+  }>;
+}>;
+// Variable: GET_PORTFOLIO_BLOGS
+// Query: *[_type == 'blog' && 'Portfolio' in blogcategories[]->title] | order(publishedAt desc)[0...$quantity]{    ...,    blogcategories[]->{      title    }  }
+export type GET_PORTFOLIO_BLOGSResult = Array<{
   _id: string;
   _type: "blog";
   _createdAt: string;
@@ -888,7 +953,8 @@ declare module "@sanity/client" {
     "*[_type == \"product\" && slug.current == $slug] | order(name asc) [0]": PRODUCT_BY_SLUG_QUERYResult;
     "*[_type == \"product\" && slug.current == $slug]{\n  \"brandName\": brand->title\n  }": BRAND_QUERYResult;
     "*[_type == 'order' && clerkUserId == $userId] | order(orderData desc){\n...,products[]{\n  ...,product->\n}\n}": MY_ORDERS_QUERYResult;
-    "*[_type == 'blog'] | order(publishedAt desc)[0...$quantity]{\n  ...,  \n     blogcategories[]->{\n    title\n}\n    }\n  ": GET_ALL_BLOGResult;
+    "*[_type == 'blog' && !('Portfolio' in blogcategories[]->title)] | order(publishedAt desc)[0...$quantity]{\n    ...,\n    blogcategories[]->{\n      title\n    }\n  }": GET_ALL_BLOGResult;
+    "*[_type == 'blog' && 'Portfolio' in blogcategories[]->title] | order(publishedAt desc)[0...$quantity]{\n    ...,\n    blogcategories[]->{\n      title\n    }\n  }": GET_PORTFOLIO_BLOGSResult;
     "*[_type == \"blog\" && slug.current == $slug][0]{\n  ..., \n    author->{\n    name,\n    image,\n  },\n  blogcategories[]->{\n    title,\n    \"slug\": slug.current,\n  },\n}": SINGLE_BLOG_QUERYResult;
     "*[_type == \"blog\"]{\n     blogcategories[]->{\n    ...\n    }\n  }": BLOG_CATEGORIESResult;
     "*[\n  _type == \"blog\"\n  && defined(slug.current)\n  && slug.current != $slug\n]|order(publishedAt desc)[0...$quantity]{\n...\n  publishedAt,\n  title,\n  mainImage,\n  slug,\n  author->{\n    name,\n    image,\n  },\n  categories[]->{\n    title,\n    \"slug\": slug.current,\n  }\n}": OTHERS_BLOG_QUERYResult;

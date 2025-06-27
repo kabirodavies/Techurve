@@ -7,12 +7,10 @@ import Link from "next/link";
 import { Flame } from "lucide-react";
 // import PriceView from "./PriceView";
 import Title from "./Title";
-// import ProductSideMenu from "./ProductSideMenu";
+import ProductSideMenu from "./ProductSideMenu";
 import AddToCartButton from "./AddToCartButton";
-import AddToWishListButton from "./AddToWishListButton";
 
 const ProductCard = ({ product }: { product: Product }) => {
-
   return (
     <div className="text-sm border-[1px] rounded-md border-darkBlue/20 group bg-white">
       <div className="relative group overflow-hidden bg-shop_light_bg">
@@ -29,16 +27,10 @@ const ProductCard = ({ product }: { product: Product }) => {
             />
           </Link>
         )}
-        <AddToWishListButton />
-        {/* <ProductSideMenu product={product} /> */}
-
+        <ProductSideMenu product={product} />
         {product?.status === "sale" ? (
           <p className="absolute top-2 left-2 z-10 text-xs border border-darkColor/50 px-2 rounded-full group-hover:border-lightGreen hover:text-shop_dark_green hoverEffect">
             Sale!
-          </p>
-        ) : product?.status === "new" ? ( // Check if status is "new"
-          <p className="absolute top-2 left-2 z-10 text-xs border border-blue-500/50 px-2 rounded-full group-hover:border-blue-700 hover:text-blue-900 hoverEffect">
-            New Arrival
           </p>
         ) : (
           <Link
@@ -53,17 +45,16 @@ const ProductCard = ({ product }: { product: Product }) => {
           </Link>
         )}
       </div>
-
       <div className="p-3 flex flex-col gap-2">
         {product?.categories && (
-          <p className="uppercase line-clamp-1 text-xs font-medium text-lightColor"> 
+          <p className="uppercase line-clamp-1 text-xs font-medium text-lightText">
             {product.categories.map((cat) => cat).join(", ")}
           </p>
         )}
-        <Title className="text-sm line-clamp-2 ">{product?.name}</Title>
-        <div className="flex items-center gap-2">
+        <Title className="text-sm line-clamp-1">{product?.name}</Title>
 
-          {/* <div className="flex items-center">
+        {/* <div className="flex items-center gap-2">
+          <div className="flex items-center">
             {[...Array(5)].map((_, index) => (
               <StarIcon
                 key={index}
@@ -74,9 +65,8 @@ const ProductCard = ({ product }: { product: Product }) => {
               />
             ))}
           </div>
-          <p className="text-lightText text-xs tracking-wide">5 Reviews</p> */}
-
-        </div>
+          <p className="text-lightText text-xs tracking-wide">5 Reviews</p>
+        </div> */}
 
         <div className="flex items-center gap-2.5">
           <p className="font-medium">In Stock</p>
@@ -84,7 +74,6 @@ const ProductCard = ({ product }: { product: Product }) => {
             className={`${product?.stock === 0 ? "text-red-600" : "text-shop_dark_green/80 font-semibold"}`}
           >
             {(product?.stock as number) > 0 ? "Yes" : "unavailable"}
-            {/* {(product?.stock as number) > 0 ? product?.stock : "unavailable"} */}
           </p>
         </div>
 
@@ -93,6 +82,7 @@ const ProductCard = ({ product }: { product: Product }) => {
           discount={product?.discount}
           className="text-sm"
         /> */}
+
         <AddToCartButton product={product} className="w-36 rounded-full" />
       </div>
     </div>

@@ -6,8 +6,9 @@ interface Props {
   price: number | undefined;
   discount: number | undefined;
   className?: string;
+  hideTotal?: boolean; // To hide the total price
 }
-const PriceView = ({ price, discount, className }: Props) => {
+const PriceView = ({ price, discount, className, hideTotal }: Props) => {
   return (
     <div className="flex items-center justify-between gap-5">
       <div className="flex items-center gap-2">
@@ -15,7 +16,7 @@ const PriceView = ({ price, discount, className }: Props) => {
           amount={price}
           className={cn("text-shop_dark_green", className)}
         />
-        {price && discount && (
+        {price && discount && !hideTotal && (
           <PriceFormatter
             amount={price + (discount * price) / 100}
             className={twMerge(

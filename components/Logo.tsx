@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import React from "react";
+import { Fingerprint } from "lucide-react"; // Example icon, you can use any icon you prefer
 
 const Logo = ({
   className,
@@ -10,21 +11,22 @@ const Logo = ({
   spanDesign?: string;
 }) => {
   return (
-    <Link href={"/"} className="inline-flex">
+    <Link href={"/"} className="inline-flex items-center">
+      <Fingerprint className="w-5 h-5 mr-2 text-shop_dark_blue" />
       <h2
         className={cn(
-          "text-2xl text-shop_dark_green font-black tracking-wider uppercase hover:text-shop_light_green hoverEffect group font-sans",
+          "text-2xl text-shop_dark_blue font-black tracking-wider uppercase hover:text-black/90 hoverEffect group font-sans",
           className
         )}
       >
-        Techurv
+        Techurve{" "}
         <span
           className={cn(
-            "text-shop_light_green group-hover:text-shop_dark_green hoverEffect",
+            "text-black/90 group-hover:text-shop_dark_blue hoverEffect",
             spanDesign
           )}
         >
-          e
+          Solutions
         </span>
       </h2>
     </Link>
