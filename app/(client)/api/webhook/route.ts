@@ -6,6 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
 export async function POST(req: NextRequest) {
+  console.log("Received Stripe webhook");
   const body = await req.text();
   const headersList = await headers();
   const sig = headersList.get("stripe-signature");
@@ -100,6 +101,14 @@ async function createOrderInSanity(
     });
     stockUpdates.push({ productId, quantity });
   }
+  console.log("Creating order in Sanity with:", {
+    orderNumber,
+    products: sanityProducts,
+    customerName,
+    customerEmail,
+    // ...other fields
+  });
+
   //   Create order in Sanity
 
   const order = await backendClient.create({
@@ -138,6 +147,8 @@ async function createOrderInSanity(
       : null,
   });
 
+  console.log("Order created in Sanity:", order);
+
   // Update stock levels in Sanity
 
   await updateStockLevels(stockUpdates);
@@ -169,3 +180,9 @@ async function updateStockLevels(
     }
   }
 }
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
