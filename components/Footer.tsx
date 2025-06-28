@@ -23,7 +23,7 @@ const Footer = () => {
             </SubText>
             <SocialMedia
               className="text-darkColor/60"
-              iconClassName="border-darkColor/60 hover:border-shop_light_green hover:text-shop_light_green"
+              iconClassName="border-darkColor/60 hover:border-shop_dark_blue hover:text-shop_dark_blue"
               tooltipClassName="bg-darkColor text-white"
             />
           </div>
@@ -34,7 +34,7 @@ const Footer = () => {
                 <li key={item?.title}>
                   <Link
                     href={item?.href}
-                    className="hover:text-shop_light_green hoverEffect font-medium"
+                    className="hover:text-shop_dark_blue hoverEffect font-medium"
                   >
                     {item?.title}
                   </Link>
@@ -49,7 +49,7 @@ const Footer = () => {
                 <li key={item?.value}>
                   <Link
                     href={`/category/${item?.value}`}
-                    className="hover:text-shop_light_green hoverEffect font-medium"
+                    className="hover:text-shop_dark_blue hoverEffect font-medium"
                   >
                     {item?.title}
                   </Link>

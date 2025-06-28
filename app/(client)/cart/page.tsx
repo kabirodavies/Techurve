@@ -6,6 +6,7 @@ import {
 } from "@/actions/createCheckoutSession";
 import Container from "@/components/Container";
 import EmptyCart from "@/components/EmptyCart";
+import FloatingPopup from "@/components/FloatngPopup";
 import NoAccess from "@/components/NoAccess";
 import PriceFormatter from "@/components/PriceFormatter";
 import ProductSideMenu from "@/components/ProductSideMenu";
@@ -109,6 +110,7 @@ const CartPage = () => {
           {groupedItems?.length ? (
             <>
               <div className="flex items-center gap-2 py-5">
+                <FloatingPopup />
                 <ShoppingBag className="text-darkColor" />
                 <Title>Shopping Cart</Title>
               </div>

@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     template: "%T - Techurve Solutions",
     default: "Techurve Solutions",
   },
-  description: "Techurve Solutions, Security Redifined",
+  description: "Discover curated security solutions at Techurve, blending technology to elevate your peace of mind and protect your digital and physical assets.",
 };
 
 export default function RootLayout({
@@ -52,11 +52,15 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <div className="flex flex-col min-h-screen">
-        <Header />
-        <main className="flex-1">{children}</main>
-        <Footer />
-      </div>
+      <html lang="en">
+        <body className="font-poppins antialiased">
+          <div className="flex flex-col min-h-screen bg-gray-100">
+            <Header />
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </div>
+        </body>
+      </html>
     </ClerkProvider>
   );
 }
