@@ -41,14 +41,15 @@ const SingleBlogPage = async ({
             <div className="text-xs flex items-center gap-5 my-7">
               <div className="flex items-center relative group cursor-pointer">
                 {blog?.blogcategories?.map(
-                  (item: { title: string }, index: number) => (
-                    <p
-                      key={index}
-                      className="font-semibold text-shop_dark_green tracking-wider"
-                    >
-                      {item?.title}
-                    </p>
-                  )
+                  (item: { title: string | null; slug: string | null }, index: number) =>
+                    item?.title && (
+                      <p
+                        key={index}
+                        className="font-semibold text-shop_dark_green tracking-wider"
+                      >
+                        {item.title}
+                      </p>
+                    )
                 )}
                 <span className="absolute left-0 -bottom-1.5 bg-lightColor/30 inline-block w-full h-[2px] group-hover:bg-shop_dark_green hover:cursor-pointer hoverEffect" />
               </div>
