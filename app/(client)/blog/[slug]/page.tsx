@@ -221,14 +221,7 @@ const BlogLeft = async ({ slug }: { slug: string }) => {
         <Title className="text-base">Latest Blogs</Title>
         <div className="space-y-4 mt-4">
           {blogs?.map(
-            (
-              blog: {
-                slug?: { current?: string };
-                mainImage?: any;
-                title?: string;
-              },
-              index: number
-            ) => (
+            (blog: BlogSummary, index: number) => (
               <Link
                 href={`/blog/${blog?.slug?.current}`}
                 key={index}
