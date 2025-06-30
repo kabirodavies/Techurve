@@ -15,6 +15,12 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import React from "react";
 
+type BlogSummary = {
+  slug?: { current?: string };
+  mainImage?: unknown;
+  title?: string;
+};
+
 const SingleBlogPage = async ({
   params,
 }: {
