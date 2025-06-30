@@ -242,7 +242,7 @@ const CartPage = () => {
                           disabled={loading}
                           onClick={handleCheckout}
                         >
-                          {loading ? "Please wait..." : "Proceed to Checkout"}
+                          {loading ? "Please wait..." : "Get a Quatation"}
                         </Button>
                       </div>
                     </div>
