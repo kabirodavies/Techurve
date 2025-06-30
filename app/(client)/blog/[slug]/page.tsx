@@ -16,9 +16,9 @@ import { notFound } from "next/navigation";
 import React from "react";
 
 type BlogSummary = {
-  slug?: { current?: string };
-  mainImage?: unknown;
-  title?: string;
+  slug?: { current?: string } | null;
+  mainImage?: unknown | null;
+  title?: string | null;
 };
 
 const SingleBlogPage = async ({
