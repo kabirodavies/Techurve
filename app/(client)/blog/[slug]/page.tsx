@@ -14,10 +14,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import React from "react";
+import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
 type BlogSummary = {
   slug?: { current?: string } | null;
-  mainImage?: unknown | null;
+  mainImage?: SanityImageSource | null;
   title?: string | null;
 };
 
@@ -235,7 +236,7 @@ const BlogLeft = async ({ slug }: { slug: string }) => {
               >
                 {blog?.mainImage && (
                   <Image
-                    src={urlFor(blog.mainImage as any).url()} // Use 'as any' or your actual image type
+                    src={urlFor(blog.mainImage as SanityImageSource).url()}
                     alt="blogImage"
                     width={100}
                     height={100}
