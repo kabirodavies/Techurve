@@ -235,7 +235,7 @@ const BlogLeft = async ({ slug }: { slug: string }) => {
               >
                 {blog?.mainImage && (
                   <Image
-                    src={urlFor(blog?.mainImage).url()}
+                    src={urlFor(blog.mainImage as any).url()} // Use 'as any' or your actual image type
                     alt="blogImage"
                     width={100}
                     height={100}
