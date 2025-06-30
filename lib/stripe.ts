@@ -1,10 +1,12 @@
 import Stripe from "stripe";
 
-if (!process.env.STRIPE_SECRET_KEY) {
+const secretKey = process.env.STRIPE_SECRET_KEY as string;
+
+if (!secretKey) {
   throw new Error("STRIPE_SECRET_KEY is not defined");
 }
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+const stripe = new Stripe(secretKey, {
   apiVersion: "2025-05-28.basil",
 });
 
