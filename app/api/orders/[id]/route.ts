@@ -4,7 +4,7 @@ import { sendOrderStatusEmail, OrderStatusEmailData } from "@/lib/email";
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: any
 ) {
   try {
     const { id } = params;
@@ -80,7 +80,7 @@ export async function PATCH(
 
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: any
 ) {
   try {
     const { id } = params;
@@ -105,7 +105,7 @@ export async function GET(
 
 export async function POST(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: any
 ) {
   try {
     const { id } = params;
