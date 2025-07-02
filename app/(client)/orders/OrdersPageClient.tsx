@@ -1,16 +1,57 @@
 "use client";
 import { useState } from "react";
-import OrdersComponent, { FilterByStatus } from "@/components/OrdersComponent";
+import OrdersComponent from "@/components/OrdersComponent";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Table, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { FileX } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { MY_ORDERS_QUERYResult } from "@/sanity.types";
 
-export default function OrdersPageClient({ orders, isAdmin }: { orders: any[]; isAdmin: boolean }) {
+const orderStatuses = [
+  { value: "all", label: "All" },
+  { value: "pending", label: "Pending" },
+  { value: "processing", label: "Processing" },
+  { value: "paid", label: "Paid" },
+  { value: "shipped", label: "Shipped" },
+  { value: "out_for_delivery", label: "Out for Delivery" },
+  { value: "delivered", label: "Delivered" },
+  { value: "cancelled", label: "Cancelled" },
+];
+
+function FilterByStatus({ orders, statusFilter, setStatusFilter }: {
+  orders: MY_ORDERS_QUERYResult;
+  statusFilter: string;
+  setStatusFilter: (value: string) => void;
+}) {
+  const filteredCount = statusFilter === "all"
+    ? orders.length
+    : orders.filter((order) => order.status === statusFilter).length;
+  return (
+    <div className="flex items-center gap-4 mb-4">
+      <span className="font-bold text-lg">All Orders</span>
+      <span className="bg-gray-200 text-gray-700 rounded-full px-3 py-1 text-sm font-semibold">{filteredCount}</span>
+      <label htmlFor="statusFilter" className="font-medium ml-4">Filter by Status:</label>
+      <select
+        id="statusFilter"
+        value={statusFilter}
+        onChange={e => setStatusFilter(e.target.value)}
+        className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+      >
+        {orderStatuses.map((statusOption) => (
+          <option key={statusOption.value} value={statusOption.value}>
+            {statusOption.label}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+}
+
+export default function OrdersPageClient({ orders, isAdmin }: { orders: MY_ORDERS_QUERYResult; isAdmin: boolean }) {
   const [statusFilter, setStatusFilter] = useState("all");
-  const filteredOrders = statusFilter === "all"
+  const filteredOrders: MY_ORDERS_QUERYResult = statusFilter === "all"
     ? orders
     : orders.filter((order) => order.status === statusFilter);
 

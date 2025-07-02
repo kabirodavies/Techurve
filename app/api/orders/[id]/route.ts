@@ -51,10 +51,10 @@ export async function PATCH(
             status: status,
             totalPrice: orderWithProducts.totalPrice || 0,
             currency: orderWithProducts.currency || "USD",
-            products: orderWithProducts.products?.map((item: any) => ({
-              name: item.product?.name || "Unknown Product",
-              quantity: item.quantity || 0,
-              price: item.product?.price || 0,
+            products: orderWithProducts.products?.map((item: unknown) => ({
+              name: (item as any).product?.name || "Unknown Product",
+              quantity: (item as any).quantity || 0,
+              price: (item as any).product?.price || 0,
             })) || [],
           };
 
@@ -69,10 +69,10 @@ export async function PATCH(
     }
 
     return NextResponse.json({ success: true, order: updatedOrder });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error updating order status:", error);
     return NextResponse.json(
-      { success: false, error: error.message },
+      { success: false, error: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     );
   }
@@ -94,10 +94,10 @@ export async function GET(
     }
 
     return NextResponse.json({ success: true, order });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error fetching order:", error);
     return NextResponse.json(
-      { success: false, error: error.message },
+      { success: false, error: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     );
   }
@@ -137,10 +137,10 @@ export async function POST(
       .set({ invoice: { ...order.invoice, number: invoiceNumber } })
       .commit();
     return NextResponse.json({ success: true, invoiceNumber, order: updatedOrder });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error generating invoice number:", error);
     return NextResponse.json(
-      { success: false, error: error.message },
+      { success: false, error: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     );
   }

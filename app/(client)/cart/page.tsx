@@ -4,7 +4,7 @@ import Container from "@/components/Container";
 import EmptyCart from "@/components/EmptyCart";
 // import FloatingPopup from "@/components/FloatngPopup";
 import NoAccess from "@/components/NoAccess";
-import PriceFormatter from "@/components/PriceFormatter";
+// import PriceFormatter from "@/components/PriceFormatter";
 import ProductSideMenu from "@/components/ProductSideMenu";
 import QuantityButtons from "@/components/QuantityButtons";
 import Title from "@/components/Title";
@@ -57,32 +57,10 @@ const CartPage = () => {
     formState: { errors },
     watch,
   } = useForm();
-  const [addresses, setAddresses] = useState<Address[] | null>(null);
   const router = useRouter();
 
   const selectedCountry = watch("country");
 
-  const fetchAddresses = async () => {
-    setLoading(true);
-    try {
-      const query = `*[_type=="address"] | order(publishedAt desc)`;
-      const data = await client.fetch(query);
-      setAddresses(data);
-      const defaultAddress = data.find((addr: Address) => addr.default);
-      if (defaultAddress) {
-        // setSelectedAddress(defaultAddress);
-      } else if (data.length > 0) {
-        // setSelectedAddress(data[0]); // Optional: select first address if no default
-      }
-    } catch (error) {
-      console.log("Addresses fetching error:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-  useEffect(() => {
-    fetchAddresses();
-  }, []);
   const handleResetCart = () => {
     const confirmed = window.confirm(
       "Are you sure you want to reset your cart?"
@@ -93,7 +71,7 @@ const CartPage = () => {
     }
   };
 
-  const handleGetQuote = async (formData: any) => {
+  const handleGetQuote = async (formData: Record<string, unknown>) => {
     setLoading(true);
     try {
       // Generate a date-based order number: ORD-YYYYMMDD-XXXX
@@ -129,7 +107,7 @@ const CartPage = () => {
       } else {
         toast.error("Failed to send quote request.");
       }
-    } catch (error) {
+    } catch (_) {
       toast.error("An error occurred. Please try again.");
     } finally {
       setLoading(false);
@@ -150,7 +128,6 @@ const CartPage = () => {
                 <div className="lg:col-span-2 rounded-lg">
                   <div className="border bg-white rounded-md">
                     {groupedItems?.map(({ product }) => {
-                      const itemCount = getItemCount(product?._id);
                       return (
                         <div
                           key={product?._id}
@@ -225,10 +202,6 @@ const CartPage = () => {
                             </div>
                           </div>
                           <div className="flex flex-col items-start justify-between h-36 md:h-44 p-0.5 md:p-1">
-                            {/* <PriceFormatter
-                              amount={(product?.price as number) * itemCount}
-                              className="font-bold text-lg"
-                            /> */}
                             <QuantityButtons product={product} />
                           </div>
                         </div>
