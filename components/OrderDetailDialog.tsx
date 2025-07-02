@@ -24,6 +24,10 @@ interface OrderDetailsDialogProps {
   onClose: () => void;
 }
 
+// Utility type to extract array element type
+// type ArrayElement<T extends readonly unknown[]> = T extends readonly (infer U)[] ? U : never;
+type ArrayElement<T> = T extends Array<infer U> ? U : never;
+
 const OrderDetailDialog: React.FC<OrderDetailsDialogProps> = ({
   order,
   isOpen,
@@ -41,7 +45,7 @@ const OrderDetailDialog: React.FC<OrderDetailsDialogProps> = ({
   
   if (!currentOrder) return null;
 
-  const generateInvoicePDF = (orderData: any) => {
+  const generateInvoicePDF = (orderData: MY_ORDERS_QUERYResult[number]) => {
     const doc = new jsPDF();
     doc.setFontSize(18);
     doc.text("Invoice", 10, 10);
@@ -83,7 +87,7 @@ const OrderDetailDialog: React.FC<OrderDetailsDialogProps> = ({
       } else {
         toast.error(result.error || "Failed to generate invoice number");
       }
-    } catch (error) {
+    } catch {
       toast.error("Failed to generate invoice number");
     } finally {
       setIsGeneratingInvoice(false);
@@ -118,8 +122,8 @@ const OrderDetailDialog: React.FC<OrderDetailsDialogProps> = ({
             <div className="mt-2">
               <OrderStatusUpdate 
                 order={currentOrder} 
-                onStatusUpdate={(newStatus) => {
-                  setCurrentOrder({ ...currentOrder, status: newStatus as any });
+                onStatusUpdate={(newStatus: string) => {
+                  setCurrentOrder({ ...currentOrder, status: newStatus as typeof currentOrder.status });
                 }}
               />
             </div>

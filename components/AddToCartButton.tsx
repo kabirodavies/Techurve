@@ -5,7 +5,6 @@ import { cn } from "@/lib/utils";
 import { ShoppingBag } from "lucide-react";
 import useStore from "@/store";
 import toast from "react-hot-toast";
-import PriceFormatter from "./PriceFormatter";
 import QuantityButtons from "./QuantityButtons";
 
 interface Props {

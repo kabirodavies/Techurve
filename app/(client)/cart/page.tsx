@@ -19,15 +19,13 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Address } from "@/sanity.types";
-import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
 import useStore from "@/store";
 import { useAuth, useUser } from "@clerk/nextjs";
 import { ShoppingBag, Trash } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -59,7 +57,7 @@ const CartPage = () => {
   } = useForm();
   const router = useRouter();
 
-  const selectedCountry = watch("country");
+  const selectedCountry = watch("country") as keyof typeof countryCities | undefined;
 
   const handleResetCart = () => {
     const confirmed = window.confirm(
@@ -250,9 +248,10 @@ const CartPage = () => {
                             })}
                             className="w-full border rounded p-2"
                           />
-                          {errors.phone && (
-                            <span className="text-red-500 text-xs">{errors.phone.message}</span>
-                          )}
+                          {errors.phone &&
+                            typeof errors.phone.message === "string" && (
+                              <span className="text-red-500 text-xs">{errors.phone.message}</span>
+                            )}
                         </div>
                         <div>
                           <label className="block font-medium">City</label>
@@ -268,9 +267,10 @@ const CartPage = () => {
                             })}
                             className="w-full border rounded p-2"
                           />
-                          {errors.city && (
-                            <span className="text-red-500 text-xs">{errors.city.message}</span>
-                          )}
+                          {errors.city &&
+                            typeof errors.city.message === "string" && (
+                              <span className="text-red-500 text-xs">{errors.city.message}</span>
+                            )}
                         </div>
                         <div>
                           <label className="block font-medium">Physical Address</label>
@@ -309,14 +309,16 @@ const CartPage = () => {
                           className="text-lg font-bold text-black"
                         />
                       </div> */}
-                      <Button
-                        className="w-full rounded-full font-semibold tracking-wide hoverEffect"
-                        size="lg"
-                        disabled={loading}
-                        onClick={handleGetQuote}
-                      >
-                        {loading ? "Please wait..." : "Get a Quote"}
-                      </Button>
+                      <form onSubmit={handleSubmit(handleGetQuote)}>
+                        <Button
+                          className="w-full rounded-full font-semibold tracking-wide hoverEffect"
+                          size="lg"
+                          disabled={loading}
+                          type="submit"
+                        >
+                          {loading ? "Please wait..." : "Get a Quote"}
+                        </Button>
+                      </form>
                     </div>
                   </div>
                 </div>

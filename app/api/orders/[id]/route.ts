@@ -51,10 +51,10 @@ export async function PATCH(
             status: status,
             totalPrice: orderWithProducts.totalPrice || 0,
             currency: orderWithProducts.currency || "USD",
-            products: orderWithProducts.products?.map((item: unknown) => ({
-              name: (item as any).product?.name || "Unknown Product",
-              quantity: (item as any).quantity || 0,
-              price: (item as any).product?.price || 0,
+            products: orderWithProducts.products?.map((item: { product?: { name?: string; price?: number }; quantity?: number }) => ({
+              name: item.product?.name || "Unknown Product",
+              quantity: item.quantity || 0,
+              price: item.product?.price || 0,
             })) || [],
           };
 
