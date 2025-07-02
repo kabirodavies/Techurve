@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { backendClient } from "@/sanity/lib/backendClient";
 import { sendOrderStatusEmail, OrderStatusEmailData } from "@/lib/email";
 
