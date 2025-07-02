@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from "next/server";
 import { backendClient } from "@/sanity/lib/backendClient";
 import { sendOrderStatusEmail, OrderStatusEmailData } from "@/lib/email";
