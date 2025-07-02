@@ -3,11 +3,11 @@ import { backendClient } from "@/sanity/lib/backendClient";
 import { sendOrderStatusEmail, OrderStatusEmailData } from "@/lib/email";
 
 export async function PATCH(
-  req: NextRequest,
-  { params }: { params: { id: string } }
+  req: Request,
+  context: { params: { id: string } }
 ) {
   try {
-    const { id } = params;
+    const { id } = context.params;
     const { status } = await req.json();
 
     // Get the current order to check if status is actually changing
@@ -79,11 +79,11 @@ export async function PATCH(
 }
 
 export async function GET(
-  req: NextRequest,
-  { params }: { params: { id: string } }
+  req: Request,
+  context: { params: { id: string } }
 ) {
   try {
-    const { id } = params;
+    const { id } = context.params;
     const order = await backendClient.getDocument(id);
     
     if (!order) {
@@ -104,11 +104,11 @@ export async function GET(
 }
 
 export async function POST(
-  req: NextRequest,
-  { params }: { params: { id: string } }
+  req: Request,
+  context: { params: { id: string } }
 ) {
   try {
-    const { id } = params;
+    const { id } = context.params;
     // Fetch the order
     const order = await backendClient.getDocument(id);
     if (!order) {
