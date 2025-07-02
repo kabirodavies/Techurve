@@ -33,30 +33,21 @@ const Shop = ({ categories, brands }: Props) => {
     const fetchProducts = async () => {
       setLoading(true);
       try {
-        // let minPrice = 0;
-        // let maxPrice = 10000;
-        // if (selectedPrice) {
-        //   const [min, max] = selectedPrice.split("-").map(Number);
-        //   minPrice = min;
-        //   maxPrice = max;
-        // }
-        const query = `
-          *[_type == 'product'
-            && (!defined($selectedBrand) || references(*[_type == "brand" && slug.current == $selectedBrand]._id))
-            && (!defined($selectedCategory) || references(*[_type == "category" && slug.current == $selectedCategory]._id))
-            // && price >= $minPrice && price <= $maxPrice
-          ]{
-            _id, name, slug, images, price, discount, stock, status, brand, "categories": categories[]->title
-          }
-        `;
-        const data = await client.fetch(
-          query,
-          { selectedBrand, selectedCategory },
-          { next: { revalidate: 0 } }
-        );
-        setProducts(data);
+        // Build query params for API route
+        const params = new URLSearchParams();
+        if (selectedBrand) params.append("brand", selectedBrand);
+        if (selectedCategory) params.append("category", selectedCategory);
+        // Fetch from local API route
+        const res = await fetch(`/api/products?${params.toString()}`);
+        const data = await res.json();
+        if (data.success) {
+          setProducts(data.products);
+        } else {
+          setProducts([]);
+        }
       } catch (error) {
         console.log("Shop product fetching Error", error);
+        setProducts([]);
       } finally {
         setLoading(false);
       }
