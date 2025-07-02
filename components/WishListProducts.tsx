@@ -100,7 +100,7 @@ const WishListProducts = () => {
                           : "Out of Stock"}
                       </td>
                       <td className="p-2">
-                        <PriceFormatter amount={product?.price} />
+                        {/* <PriceFormatter amount={product?.price} /> */}
                       </td>
                       <td className="p-2">
                         <AddToCartButton product={product} className="w-full" />

@@ -7,6 +7,7 @@ import {
   GET_ALL_BLOG,
   LATEST_BLOG_QUERY,
   MY_ORDERS_QUERY,
+  ALL_ORDERS_QUERY,
   OTHERS_BLOG_QUERY,
   PRODUCT_BY_SLUG_QUERY,
   SINGLE_BLOG_QUERY,
@@ -100,7 +101,19 @@ const getMyOrders = async (userId: string) => {
     });
     return orders?.data || null;
   } catch (error) {
-    console.error("Error fetching product by ID:", error);
+    console.error("Error fetching orders:", error);
+    return null;
+  }
+};
+
+const getAllOrders = async () => {
+  try {
+    const orders = await sanityFetch({
+      query: ALL_ORDERS_QUERY,
+    });
+    return orders?.data || null;
+  } catch (error) {
+    console.error("Error fetching all orders:", error);
     return null;
   }
 };
@@ -176,6 +189,7 @@ export {
   getProductBySlug,
   getBrand,
   getMyOrders,
+  getAllOrders,
   getAllBlogs,
   getSingleBlog,
   getBlogCategories,

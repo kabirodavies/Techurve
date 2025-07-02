@@ -1,12 +1,12 @@
 "use client";
 import { BRANDS_QUERYResult, Category, Product } from "@/sanity.types";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import Container from "./Container";
 import Title from "./Title";
 import CategoryList from "./shop/CategoryList";
 import { useSearchParams } from "next/navigation";
 import BrandList from "./shop/BrandList";
-// import PriceList from "./shop/PriceList";
+import PriceList from "./shop/PriceList";
 import { client } from "@/sanity/lib/client";
 import { Loader2 } from "lucide-react";
 import NoProductAvailable from "./NoProductAvailable";
@@ -29,29 +29,28 @@ const Shop = ({ categories, brands }: Props) => {
     brandParams || null
   );
   const [selectedPrice, setSelectedPrice] = useState<string | null>(null);
-  const fetchProducts = useCallback(async () => {
+  const fetchProducts = async () => {
     setLoading(true);
     try {
-      let minPrice = 0;
-      let maxPrice = 10000;
-      if (selectedPrice) {
-        const [min, max] = selectedPrice.split("-").map(Number);
-        minPrice = min;
-        maxPrice = max;
-      }
+      // let minPrice = 0;
+      // let maxPrice = 10000;
+      // if (selectedPrice) {
+      //   const [min, max] = selectedPrice.split("-").map(Number);
+      //   minPrice = min;
+      //   maxPrice = max;
+      // }
       const query = `
-      *[_type == 'product' 
-        && (!defined($selectedCategory) || references(*[_type == "category" && slug.current == $selectedCategory]._id))
-        && (!defined($selectedBrand) || references(*[_type == "brand" && slug.current == $selectedBrand]._id))
-        && price >= $minPrice && price <= $maxPrice
-      ] 
-      | order(name asc) {
-        ...,"categories": categories[]->title
-      }
-    `;
+        *[_type == 'product'
+          && (!defined($selectedBrand) || references(*[_type == "brand" && slug.current == $selectedBrand]._id))
+          && (!defined($selectedCategory) || references(*[_type == "category" && slug.current == $selectedCategory]._id))
+          // && price >= $minPrice && price <= $maxPrice
+        ]{
+          _id, name, slug, images, price, discount, stock, status, brand, "categories": categories[]->title
+        }
+      `;
       const data = await client.fetch(
         query,
-        { selectedCategory, selectedBrand, minPrice, maxPrice },
+        { selectedBrand, selectedCategory },
         { next: { revalidate: 0 } }
       );
       setProducts(data);
@@ -60,11 +59,11 @@ const Shop = ({ categories, brands }: Props) => {
     } finally {
       setLoading(false);
     }
-  }, [selectedCategory, selectedBrand, selectedPrice]);
+  };
 
   useEffect(() => {
     fetchProducts();
-  }, [fetchProducts]);
+  }, [selectedBrand, selectedCategory]);
   return (
     <div className="border-t">
       <Container className="mt-5">
@@ -101,10 +100,6 @@ const Shop = ({ categories, brands }: Props) => {
               setSelectedBrand={setSelectedBrand}
               selectedBrand={selectedBrand}
             />
-            {/* <PriceList
-              setSelectedPrice={setSelectedPrice}
-              selectedPrice={selectedPrice}
-            /> */}
           </div>
           <div className="flex-1 pt-5">
             <div className="h-[calc(100vh-160px)] overflow-y-auto pr-2 scrollbar-hide">

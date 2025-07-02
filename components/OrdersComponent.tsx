@@ -15,6 +15,46 @@ import { useState } from "react";
 import OrderDetailDialog from "./OrderDetailDialog";
 import toast from "react-hot-toast";
 
+const orderStatuses = [
+  { value: "all", label: "All" },
+  { value: "pending", label: "Pending" },
+  { value: "processing", label: "Processing" },
+  { value: "paid", label: "Paid" },
+  { value: "shipped", label: "Shipped" },
+  { value: "out_for_delivery", label: "Out for Delivery" },
+  { value: "delivered", label: "Delivered" },
+  { value: "cancelled", label: "Cancelled" },
+];
+
+function FilterByStatus({ orders, statusFilter, setStatusFilter }: {
+  orders: MY_ORDERS_QUERYResult;
+  statusFilter: string;
+  setStatusFilter: (value: string) => void;
+}) {
+  const filteredCount = statusFilter === "all"
+    ? orders.length
+    : orders.filter((order) => order.status === statusFilter).length;
+  return (
+    <div className="flex items-center gap-4 mb-4">
+      <span className="font-bold text-lg">All Orders</span>
+      <span className="bg-gray-200 text-gray-700 rounded-full px-3 py-1 text-sm font-semibold">{filteredCount}</span>
+      <label htmlFor="statusFilter" className="font-medium ml-4">Filter by Status:</label>
+      <select
+        id="statusFilter"
+        value={statusFilter}
+        onChange={e => setStatusFilter(e.target.value)}
+        className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+      >
+        {orderStatuses.map((statusOption) => (
+          <option key={statusOption.value} value={statusOption.value}>
+            {statusOption.label}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+}
+
 const OrdersComponent = ({ orders }: { orders: MY_ORDERS_QUERYResult }) => {
   const [selectedOrder, setSelectedOrder] = useState<
     MY_ORDERS_QUERYResult[number] | null
@@ -26,13 +66,14 @@ const OrdersComponent = ({ orders }: { orders: MY_ORDERS_QUERYResult }) => {
     <>
       <TableBody>
         <TooltipProvider>
-          {orders.map((order) => (
+          {orders.map((order, index) => (
             <Tooltip key={order?.orderNumber}>
               <TooltipTrigger asChild>
                 <TableRow
                   className="cursor-pointer hover:bg-gray-100 h-12"
                   onClick={() => setSelectedOrder(order)}
                 >
+                  <TableCell>{index + 1}</TableCell>
                   <TableCell className="font-medium">
                     {order.orderNumber?.slice(-10) ?? "N/A"}...
                   </TableCell>
@@ -41,14 +82,18 @@ const OrdersComponent = ({ orders }: { orders: MY_ORDERS_QUERYResult }) => {
                       format(new Date(order.orderDate), "dd/MM/yyyy")}
                   </TableCell>
                   <TableCell>{order.customerName}</TableCell>
-                  <TableCell className="hidden sm:table-cell">
-                    {order.email}
-                  </TableCell>
+                  <TableCell className="hidden md:table-cell">{order.address?.country ?? "-"}</TableCell>
+                  <TableCell className="hidden md:table-cell">{order.address?.city ?? "-"}</TableCell>
+                  <TableCell className="hidden sm:table-cell">{order.email}</TableCell>
                   <TableCell>
-                    <PriceFormatter
-                      amount={order?.totalPrice}
-                      className="text-black font-medium"
-                    />
+                    {order?.status !== "pending" ? (
+                      <PriceFormatter
+                        amount={order?.totalPrice}
+                        className="text-black font-medium"
+                      />
+                    ) : (
+                      <span>-</span>
+                    )}
                   </TableCell>
                   <TableCell>
                     {order?.status && (

@@ -13,26 +13,6 @@ export const orderType = defineType({
       type: "string",
       validation: (Rule) => Rule.required(),
     }),
-    {
-      name: "invoice",
-      type: "object",
-      fields: [
-        { name: "id", type: "string" },
-        { name: "number", type: "string" },
-        { name: "hosted_invoice_url", type: "url" },
-      ],
-    },
-    defineField({
-      name: "stripeCheckoutSessionId",
-      title: "Stripe Checkout Session ID",
-      type: "string",
-    }),
-    defineField({
-      name: "stripeCustomerId",
-      title: "Stripe Customer ID",
-      type: "string",
-      validation: (Rule) => Rule.required(),
-    }),
     defineField({
       name: "clerkUserId",
       title: "Store User ID",
@@ -50,12 +30,6 @@ export const orderType = defineType({
       title: "Customer Email",
       type: "string",
       validation: (Rule) => Rule.required().email(),
-    }),
-    defineField({
-      name: "stripePaymentIntentId",
-      title: "Stripe Payment Intent ID",
-      type: "string",
-      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "products",
@@ -119,11 +93,31 @@ export const orderType = defineType({
       title: "Shipping Address",
       type: "object",
       fields: [
-        defineField({ name: "state", title: "State", type: "string" }),
-        defineField({ name: "zip", title: "Zip Code", type: "string" }),
-        defineField({ name: "city", title: "City", type: "string" }),
-        defineField({ name: "address", title: "Address", type: "string" }),
-        defineField({ name: "name", title: "Name", type: "string" }),
+        defineField({
+          name: "country",
+          title: "Country",
+          type: "string",
+          options: {
+            list: [
+              { title: "Kenya", value: "Kenya" },
+              { title: "Uganda", value: "Uganda" },
+              { title: "Tanzania", value: "Tanzania" },
+              // { title: "Rwanda", value: "Rwanda" },
+              // { title: "Burundi", value: "Burundi" },
+              // { title: "South Sudan", value: "South Sudan" },
+              // { title: "Ethiopia", value: "Ethiopia" },
+              // { title: "Somalia", value: "Somalia" },
+              // { title: "Djibouti", value: "Djibouti" },
+              // { title: "Eritrea", value: "Eritrea" },
+            ],
+          },
+          validation: (Rule) => Rule.required(),
+        }),
+        defineField({ name: "name", title: "Name", type: "string", validation: (Rule) => Rule.required() }),
+        defineField({ name: "phone", title: "Phone Number", type: "string", validation: (Rule) => Rule.required() }),
+        defineField({ name: "city", title: "City", type: "string", validation: (Rule) => Rule.required() }),  
+        defineField({ name: "address", title: "Physical Address", type: "string", validation: (Rule) => Rule.required() }),
+        
       ],
     }),
     defineField({

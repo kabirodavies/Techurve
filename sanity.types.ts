@@ -155,6 +155,7 @@ export type Order = {
   _updatedAt: string;
   _rev: string;
   orderNumber?: string;
+  invoiceNumber?: string;
   invoice?: {
     id?: string;
     number?: string;
@@ -185,6 +186,7 @@ export type Order = {
     city?: string;
     address?: string;
     name?: string;
+    country?: string;
   };
   status?: "pending" | "processing" | "paid" | "shipped" | "out_for_delivery" | "delivered" | "cancelled";
   orderDate?: string;
@@ -620,6 +622,7 @@ export type MY_ORDERS_QUERYResult = Array<{
   _updatedAt: string;
   _rev: string;
   orderNumber?: string;
+  invoiceNumber?: string;
   invoice?: {
     id?: string;
     number?: string;
@@ -686,6 +689,7 @@ export type MY_ORDERS_QUERYResult = Array<{
     city?: string;
     address?: string;
     name?: string;
+    country?: string;
   };
   status?: "cancelled" | "delivered" | "out_for_delivery" | "paid" | "pending" | "processing" | "shipped";
   orderDate?: string;

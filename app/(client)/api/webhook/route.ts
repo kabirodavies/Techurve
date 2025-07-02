@@ -4,6 +4,7 @@ import { backendClient } from "@/sanity/lib/backendClient";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
+import { sendOrderStatusEmail, OrderStatusEmailData } from "@/lib/email";
 
 export async function POST(req: NextRequest) {
   console.log("Received Stripe webhook");
@@ -148,6 +149,30 @@ async function createOrderInSanity(
   });
 
   console.log("Order created in Sanity:", order);
+
+  // Send email notification for paid order
+  try {
+    const emailData: OrderStatusEmailData = {
+      customerName: customerName || "Customer",
+      customerEmail: customerEmail || "",
+      orderNumber: orderNumber || "",
+      orderDate: new Date().toISOString(),
+      status: "paid",
+      totalPrice: amount_total ? amount_total / 100 : 0,
+      currency: currency || "USD",
+      products: lineItemsWithProduct.data.map((item) => ({
+        name: (item.price?.product as Stripe.Product)?.name || "Unknown Product",
+        quantity: item.quantity || 0,
+        price: (item.price?.unit_amount || 0) / 100,
+      })),
+    };
+
+    await sendOrderStatusEmail(emailData);
+    console.log(`Email notification sent for new paid order ${orderNumber}`);
+  } catch (emailError) {
+    console.error("Failed to send email notification for new order:", emailError);
+    // Don't fail the entire request if email fails
+  }
 
   // Update stock levels in Sanity
 

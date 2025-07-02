@@ -1,12 +1,8 @@
 "use client";
 
-import {
-  createCheckoutSession,
-  Metadata,
-} from "@/actions/createCheckoutSession";
 import Container from "@/components/Container";
 import EmptyCart from "@/components/EmptyCart";
-import FloatingPopup from "@/components/FloatngPopup";
+// import FloatingPopup from "@/components/FloatngPopup";
 import NoAccess from "@/components/NoAccess";
 import PriceFormatter from "@/components/PriceFormatter";
 import ProductSideMenu from "@/components/ProductSideMenu";
@@ -33,6 +29,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+
+const countryCities = {
+  Kenya: ["Nairobi", "Mombasa", "Kisumu"],
+  Uganda: ["Kampala", "Entebbe", "Gulu"],
+  Tanzania: ["Dar es Salaam", "Dodoma", "Arusha"],
+};
 
 const CartPage = () => {
   const {
@@ -47,8 +51,16 @@ const CartPage = () => {
   const groupedItems = useStore((state) => state.getGroupedItems());
   const { isSignedIn } = useAuth();
   const { user } = useUser();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    watch,
+  } = useForm();
   const [addresses, setAddresses] = useState<Address[] | null>(null);
-  const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
+  const router = useRouter();
+
+  const selectedCountry = watch("country");
 
   const fetchAddresses = async () => {
     setLoading(true);
@@ -58,9 +70,9 @@ const CartPage = () => {
       setAddresses(data);
       const defaultAddress = data.find((addr: Address) => addr.default);
       if (defaultAddress) {
-        setSelectedAddress(defaultAddress);
+        // setSelectedAddress(defaultAddress);
       } else if (data.length > 0) {
-        setSelectedAddress(data[0]); // Optional: select first address if no default
+        // setSelectedAddress(data[0]); // Optional: select first address if no default
       }
     } catch (error) {
       console.log("Addresses fetching error:", error);
@@ -81,24 +93,44 @@ const CartPage = () => {
     }
   };
 
-  const handleCheckout = async () => {
+  const handleGetQuote = async (formData: any) => {
     setLoading(true);
     try {
-      const metadata: Metadata = {
-        orderNumber: crypto.randomUUID(),
+      // Generate a date-based order number: ORD-YYYYMMDD-XXXX
+      const datePart = new Date().toISOString().slice(0,10).replace(/-/g, ''); // e.g. 20240501
+      const randomPart = Math.floor(1000 + Math.random() * 9000); // 4-digit random number
+      const orderNumber = `ORD-${datePart}-${randomPart}`;
+      const orderData = {
+        orderNumber,
         customerName: user?.fullName ?? "Unknown",
-        customerEmail: user?.emailAddresses[0]?.emailAddress ?? "Unknown",
-        clerkUserId: user?.id,
-        address: selectedAddress,
+        email: user?.emailAddresses?.[0]?.emailAddress ?? "Unknown",
+        clerkUserId: user?.id ?? "",
+        address: formData, // Use form data for address
+        products: groupedItems.map(({ product }) => ({
+          product: { _type: "reference", _ref: product._id },
+          quantity: getItemCount(product._id),
+        })),
+        totalPrice: getTotalPrice(),
+        currency: "USD",
+        amountDiscount: getSubTotalPrice() - getTotalPrice(),
+        status: "pending",
+        orderDate: new Date().toISOString(),
       };
-      const checkoutUrl = await createCheckoutSession(groupedItems, metadata);
-      if (checkoutUrl && /^https?:\/\//.test(checkoutUrl)) {
-        window.location.href = checkoutUrl;
+      const res = await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(orderData),
+      });
+      const result = await res.json();
+      if (result.success) {
+        toast.success("Quote request sent! We'll contact you soon.");
+        resetCart();
+        router.push(`/success?orderNumber=${orderData.orderNumber}`);
       } else {
-        toast.error("Checkout URL is invalid.");
+        toast.error("Failed to send quote request.");
       }
     } catch (error) {
-      console.error("Error creating checkout session:", error);
+      toast.error("An error occurred. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -110,7 +142,7 @@ const CartPage = () => {
           {groupedItems?.length ? (
             <>
               <div className="flex items-center gap-2 py-5">
-                <FloatingPopup />
+                {/* <FloatingPopup /> */}
                 <ShoppingBag className="text-darkColor" />
                 <Title>Shopping Cart</Title>
               </div>
@@ -193,10 +225,10 @@ const CartPage = () => {
                             </div>
                           </div>
                           <div className="flex flex-col items-start justify-between h-36 md:h-44 p-0.5 md:p-1">
-                            <PriceFormatter
+                            {/* <PriceFormatter
                               amount={(product?.price as number) * itemCount}
                               className="font-bold text-lg"
-                            />
+                            /> */}
                             <QuantityButtons product={product} />
                           </div>
                         </div>
@@ -215,80 +247,74 @@ const CartPage = () => {
                   <div className="lg:col-span-1">
                     <div className="hidden md:inline-block w-full bg-white p-6 rounded-lg border">
                       <h2 className="text-xl font-semibold mb-4">
-                        Order Summary
+                        Get a Quote
                       </h2>
-                      <div className="space-y-4">
-                        <div className="flex items-center justify-between">
-                          <span>SubTotal</span>
-                          <PriceFormatter amount={getSubTotalPrice()} />
+                      <form onSubmit={handleSubmit(handleGetQuote)} className="space-y-4">
+                        <div>
+                          <label className="block font-medium">Country</label>
+                          <select {...register("country", { required: true })} className="w-full border rounded p-2">
+                            <option value="">Select Country</option>
+                            <option value="Kenya">Kenya</option>
+                            <option value="Uganda">Uganda</option>
+                            <option value="Tanzania">Tanzania</option>
+                          </select>
+                          {errors.country && <span className="text-red-500 text-xs">Country is required</span>}
                         </div>
-                        <div className="flex items-center justify-between">
-                          <span>Discount</span>
-                          <PriceFormatter
-                            amount={getSubTotalPrice() - getTotalPrice()}
+                        <div>
+                          <label className="block font-medium">Name</label>
+                          <input {...register("name", { required: true })} className="w-full border rounded p-2" />
+                          {errors.name && <span className="text-red-500 text-xs">Name is required</span>}
+                        </div>
+                        <div>
+                          <label className="block font-medium">Phone Number</label>
+                          <input
+                            {...register("phone", {
+                              required: "Phone number is required",
+                              pattern: {
+                                value: /^\d{10}$/,
+                                message: "Phone number must be exactly 10 digits",
+                              },
+                            })}
+                            className="w-full border rounded p-2"
                           />
+                          {errors.phone && (
+                            <span className="text-red-500 text-xs">{errors.phone.message}</span>
+                          )}
+                        </div>
+                        <div>
+                          <label className="block font-medium">City</label>
+                          <input
+                            {...register("city", {
+                              required: "City is required",
+                              validate: (value) =>
+                                selectedCountry && countryCities[selectedCountry]
+                                  ? countryCities[selectedCountry].includes(value)
+                                    ? true
+                                    : `City must be a valid city in ${selectedCountry}`
+                                  : true,
+                            })}
+                            className="w-full border rounded p-2"
+                          />
+                          {errors.city && (
+                            <span className="text-red-500 text-xs">{errors.city.message}</span>
+                          )}
+                        </div>
+                        <div>
+                          <label className="block font-medium">Physical Address</label>
+                          <input {...register("address", { required: true })} className="w-full border rounded p-2" />
+                          {errors.address && <span className="text-red-500 text-xs">Address is required</span>}
                         </div>
                         <Separator />
-                        <div className="flex items-center justify-between font-semibold text-lg">
-                          <span>Total</span>
-                          <PriceFormatter
-                            amount={getTotalPrice()}
-                            className="text-lg font-bold text-black"
-                          />
-                        </div>
                         <Button
                           className="w-full rounded-full font-semibold tracking-wide hoverEffect"
                           size="lg"
                           disabled={loading}
-                          onClick={handleCheckout}
+                          type="submit"
                         >
-                          {loading ? "Please wait..." : "Get a Quatation"}
+                          {loading ? "Please wait..." : "Get a Quote"}
                         </Button>
-                      </div>
+                      </form>
                     </div>
-                    {addresses && (
-                      <div className="bg-white rounded-md mt-5">
-                        {/* <Card>
-                          <CardHeader>
-                            <CardTitle>Delivery Address</CardTitle>
-                          </CardHeader>
-                          <CardContent>
-                            <RadioGroup
-                              defaultValue={addresses
-                                ?.find((addr) => addr.default)
-                                ?._id.toString()}
-                            >
-                              {addresses?.map((address) => (
-                                <div
-                                  key={address?._id}
-                                  onClick={() => setSelectedAddress(address)}
-                                  className={`flex items-center space-x-2 mb-4 cursor-pointer ${selectedAddress?._id === address?._id && "text-shop_dark_green"}`}
-                                >
-                                  <RadioGroupItem
-                                    value={address?._id.toString()}
-                                  />
-                                  <Label
-                                    htmlFor={`address-${address?._id}`}
-                                    className="grid gap-1.5 flex-1"
-                                  >
-                                    <span className="font-semibold">
-                                      {address?.name}
-                                    </span>
-                                    <span className="text-sm text-black/60">
-                                      {address.address}, {address.city},{" "}
-                                      {address.state} {address.zip}
-                                    </span>
-                                  </Label>
-                                </div>
-                              ))}
-                            </RadioGroup>
-                            <Button variant="outline" className="w-full mt-4">
-                              Add New Address
-                            </Button>
-                          </CardContent>
-                        </Card> */}
-                      </div>
-                    )}
                   </div>
                 </div>
                 {/* Order summary for mobile view */}
@@ -296,31 +322,27 @@ const CartPage = () => {
                   <div className="bg-white p-4 rounded-lg border mx-4">
                     <h2>Order Summary</h2>
                     <div className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <span>SubTotal</span>
-                        <PriceFormatter amount={getSubTotalPrice()} />
-                      </div>
-                      <div className="flex items-center justify-between">
+                      {/* <div className="flex items-center justify-between">
                         <span>Discount</span>
                         <PriceFormatter
                           amount={getSubTotalPrice() - getTotalPrice()}
                         />
-                      </div>
+                      </div> */}
                       <Separator />
-                      <div className="flex items-center justify-between font-semibold text-lg">
+                      {/* <div className="flex items-center justify-between font-semibold text-lg">
                         <span>Total</span>
                         <PriceFormatter
                           amount={getTotalPrice()}
                           className="text-lg font-bold text-black"
                         />
-                      </div>
+                      </div> */}
                       <Button
                         className="w-full rounded-full font-semibold tracking-wide hoverEffect"
                         size="lg"
                         disabled={loading}
-                        onClick={handleCheckout}
+                        onClick={handleGetQuote}
                       >
-                        {loading ? "Please wait..." : "Proceed to Checkout"}
+                        {loading ? "Please wait..." : "Get a Quote"}
                       </Button>
                     </div>
                   </div>

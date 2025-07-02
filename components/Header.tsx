@@ -40,7 +40,7 @@ const Header = async () => {
               className="group relative hover:text-shop_dark_blue hoverEffect"
             >
               <Logs />
-              <span className="absolute -top-1 -right-1 bg-shop_btn_dark_blue text-white h-3.5 w-3.5 rounded-full text-xs font-semibold flex items-center justify-center">
+              <span className="absolute -top-1 -right-1 bg-shop_dark_blue text-white h-3.5 w-3.5 rounded-full text-xs font-semibold flex items-center justify-center">
                 {orders?.length ? orders?.length : 0}
               </span>
             </Link>

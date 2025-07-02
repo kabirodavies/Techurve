@@ -77,6 +77,7 @@ const ProductCard = ({ product }: { product: Product }) => {
           </p>
         </div>
 
+        {/* Comment out price display in product card */}
         {/* <PriceView
           price={product?.price}
           discount={product?.discount}
