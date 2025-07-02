@@ -24,10 +24,6 @@ interface OrderDetailsDialogProps {
   onClose: () => void;
 }
 
-// Utility type to extract array element type
-// type ArrayElement<T extends readonly unknown[]> = T extends readonly (infer U)[] ? U : never;
-type ArrayElement<T> = T extends Array<infer U> ? U : never;
-
 const OrderDetailDialog: React.FC<OrderDetailsDialogProps> = ({
   order,
   isOpen,
@@ -58,9 +54,16 @@ const OrderDetailDialog: React.FC<OrderDetailsDialogProps> = ({
     let y = 70;
     doc.text("Products:", 10, y);
     y += 10;
-    orderData.products?.forEach((product: any, idx: number) => {
+    orderData.products?.forEach((product: unknown, idx: number) => {
+      const p = product as {
+        product: {
+          name?: string;
+          price?: number;
+        } | null;
+        quantity?: number;
+      };
       doc.text(
-        `${idx + 1}. ${product.product?.name || "Unknown"} x ${product.quantity} - ${orderData.status !== "pending" ? (product.product?.price || 0) : "-"}`,
+        `${idx + 1}. ${p.product?.name || "Unknown"} x ${p.quantity} - ${orderData.status !== "pending" ? (p.product?.price || 0) : "-"}`,
         10,
         y
       );

@@ -105,7 +105,7 @@ const CartPage = () => {
       } else {
         toast.error("Failed to send quote request.");
       }
-    } catch (_) {
+    } catch {
       toast.error("An error occurred. Please try again.");
     } finally {
       setLoading(false);
