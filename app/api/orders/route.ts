@@ -2,6 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { createOrder } from "@/sanity/lib/backendClient";
 import { sendOrderStatusEmail, OrderStatusEmailData } from "@/lib/email";
 
+// Define a type for incoming product items
+type IncomingProduct = {
+  product?: { name?: string; price?: number };
+  quantity?: number;
+};
+
 export async function POST(req: NextRequest) {
   try {
     const data = await req.json();
@@ -18,10 +24,10 @@ export async function POST(req: NextRequest) {
         status: data.status || "pending",
         totalPrice: data.totalPrice || 0,
         currency: data.currency || "USD",
-        products: data.products?.map((item: unknown) => ({
-          name: (item as any).product?.name || "Unknown Product",
-          quantity: (item as any).quantity || 0,
-          price: (item as any).product?.price || 0,
+        products: data.products?.map((item: IncomingProduct) => ({
+          name: item.product?.name || "Unknown Product",
+          quantity: item.quantity || 0,
+          price: item.product?.price || 0,
         })) || [],
       };
 
