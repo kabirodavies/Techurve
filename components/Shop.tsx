@@ -28,41 +28,42 @@ const Shop = ({ categories, brands }: Props) => {
     brandParams || null
   );
   const [selectedPrice, setSelectedPrice] = useState<string | null>(null);
-  const fetchProducts = async () => {
-    setLoading(true);
-    try {
-      // let minPrice = 0;
-      // let maxPrice = 10000;
-      // if (selectedPrice) {
-      //   const [min, max] = selectedPrice.split("-").map(Number);
-      //   minPrice = min;
-      //   maxPrice = max;
-      // }
-      const query = `
-        *[_type == 'product'
-          && (!defined($selectedBrand) || references(*[_type == "brand" && slug.current == $selectedBrand]._id))
-          && (!defined($selectedCategory) || references(*[_type == "category" && slug.current == $selectedCategory]._id))
-          // && price >= $minPrice && price <= $maxPrice
-        ]{
-          _id, name, slug, images, price, discount, stock, status, brand, "categories": categories[]->title
-        }
-      `;
-      const data = await client.fetch(
-        query,
-        { selectedBrand, selectedCategory },
-        { next: { revalidate: 0 } }
-      );
-      setProducts(data);
-    } catch (error) {
-      console.log("Shop product fetching Error", error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   useEffect(() => {
+    const fetchProducts = async () => {
+      setLoading(true);
+      try {
+        // let minPrice = 0;
+        // let maxPrice = 10000;
+        // if (selectedPrice) {
+        //   const [min, max] = selectedPrice.split("-").map(Number);
+        //   minPrice = min;
+        //   maxPrice = max;
+        // }
+        const query = `
+          *[_type == 'product'
+            && (!defined($selectedBrand) || references(*[_type == "brand" && slug.current == $selectedBrand]._id))
+            && (!defined($selectedCategory) || references(*[_type == "category" && slug.current == $selectedCategory]._id))
+            // && price >= $minPrice && price <= $maxPrice
+          ]{
+            _id, name, slug, images, price, discount, stock, status, brand, "categories": categories[]->title
+          }
+        `;
+        const data = await client.fetch(
+          query,
+          { selectedBrand, selectedCategory },
+          { next: { revalidate: 0 } }
+        );
+        setProducts(data);
+      } catch (error) {
+        console.log("Shop product fetching Error", error);
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchProducts();
-  }, [selectedBrand, selectedCategory, fetchProducts]);
+  }, [selectedBrand, selectedCategory]);
+
   return (
     <div className="border-t">
       <Container className="mt-5">
