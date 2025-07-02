@@ -10,7 +10,6 @@ import { Product } from "@/sanity.types";
 import toast from "react-hot-toast";
 import Image from "next/image";
 import { urlFor } from "@/sanity/lib/image";
-import PriceFormatter from "./PriceFormatter";
 import AddToCartButton from "./AddToCartButton";
 
 const WishListProducts = () => {

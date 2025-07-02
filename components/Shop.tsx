@@ -6,7 +6,6 @@ import Title from "./Title";
 import CategoryList from "./shop/CategoryList";
 import { useSearchParams } from "next/navigation";
 import BrandList from "./shop/BrandList";
-import PriceList from "./shop/PriceList";
 import { client } from "@/sanity/lib/client";
 import { Loader2 } from "lucide-react";
 import NoProductAvailable from "./NoProductAvailable";
@@ -63,7 +62,7 @@ const Shop = ({ categories, brands }: Props) => {
 
   useEffect(() => {
     fetchProducts();
-  }, [selectedBrand, selectedCategory]);
+  }, [selectedBrand, selectedCategory, fetchProducts]);
   return (
     <div className="border-t">
       <Container className="mt-5">

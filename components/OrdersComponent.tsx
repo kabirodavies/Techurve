@@ -26,35 +26,6 @@ const orderStatuses = [
   { value: "cancelled", label: "Cancelled" },
 ];
 
-function FilterByStatus({ orders, statusFilter, setStatusFilter }: {
-  orders: MY_ORDERS_QUERYResult;
-  statusFilter: string;
-  setStatusFilter: (value: string) => void;
-}) {
-  const filteredCount = statusFilter === "all"
-    ? orders.length
-    : orders.filter((order) => order.status === statusFilter).length;
-  return (
-    <div className="flex items-center gap-4 mb-4">
-      <span className="font-bold text-lg">All Orders</span>
-      <span className="bg-gray-200 text-gray-700 rounded-full px-3 py-1 text-sm font-semibold">{filteredCount}</span>
-      <label htmlFor="statusFilter" className="font-medium ml-4">Filter by Status:</label>
-      <select
-        id="statusFilter"
-        value={statusFilter}
-        onChange={e => setStatusFilter(e.target.value)}
-        className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-      >
-        {orderStatuses.map((statusOption) => (
-          <option key={statusOption.value} value={statusOption.value}>
-            {statusOption.label}
-          </option>
-        ))}
-      </select>
-    </div>
-  );
-}
-
 const OrdersComponent = ({ orders }: { orders: MY_ORDERS_QUERYResult }) => {
   const [selectedOrder, setSelectedOrder] = useState<
     MY_ORDERS_QUERYResult[number] | null

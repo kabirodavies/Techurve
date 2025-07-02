@@ -68,10 +68,6 @@ export const sendOrderStatusEmail = async (orderData: OrderStatusEmailData) => {
 
     const { subject, message } = getStatusMessage(orderData.status);
     
-    const productsList = orderData.products
-      .map(product => `${product.name} x ${product.quantity} - $${product.price}`)
-      .join('\n');
-
     const emailContent = `
       <!DOCTYPE html>
       <html>
