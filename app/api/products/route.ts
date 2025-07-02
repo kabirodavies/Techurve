@@ -17,7 +17,11 @@ export async function GET(req: Request) {
     `;
     const products = await backendClient.fetch(query, { selectedBrand, selectedCategory });
     return NextResponse.json({ success: true, products });
-  } catch (error: any) {
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    let message = "Unknown error";
+    if (error instanceof Error) {
+      message = error.message;
+    }
+    return NextResponse.json({ success: false, error: message }, { status: 500 });
   }
 } 
