@@ -16,10 +16,7 @@ import { getMyOrders } from "@/sanity/queries";
 const Header = async () => {
   const user = await currentUser();
   const { userId } = await auth();
-  let orders = null;
-  if (userId) {
-    orders = await getMyOrders(userId);
-  }
+  const orders = userId ? await getMyOrders(userId) : null;
 
   return (
     <header className="sticky top-0 z-50 py-5 bg-white/70 backdrop-blur-md">
