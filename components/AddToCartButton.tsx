@@ -5,7 +5,6 @@ import { cn } from "@/lib/utils";
 import { ShoppingBag } from "lucide-react";
 import useStore from "@/store";
 import toast from "react-hot-toast";
-import PriceFormatter from "./PriceFormatter";
 import QuantityButtons from "./QuantityButtons";
 
 interface Props {
@@ -35,12 +34,6 @@ const AddToCartButton = ({ product, className }: Props) => {
           <div className="flex items-center justify-between">
             <span className="text-xs text-darkColor/80">Quantity</span>
             <QuantityButtons product={product} />
-          </div>
-          <div className="flex items-center justify-between border-t pt-1">
-            <span className="text-xs font-semibold">Subtotal</span>
-            <PriceFormatter
-              amount={product?.price ? product?.price * itemCount : 0}
-            />
           </div>
         </div>
       ) : (

@@ -4,10 +4,8 @@ import FooterTop from "./FooterTop";
 import Logo from "./Logo";
 import SocialMedia from "./SocialMedia";
 import { SubText, SubTitle } from "./ui/text";
-import { categoriesData, quickLinksData } from "@/constants/data";
+import { usefulLinksData, quickLinksData, contactInfoData } from "@/constants/data";
 import Link from "next/link";
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
 
 const Footer = () => {
   return (
@@ -34,41 +32,41 @@ const Footer = () => {
                 <li key={item?.title}>
                   <Link
                     href={item?.href}
-                    className="hover:text-shop_dark_blue hoverEffect font-medium"
+                    className="hover:text-shop_dark_blue hoverEffect font-medium flex items-center gap-2"
                   >
-                    {item?.title}
+                    <span className="text-lg">&gt;&gt;</span> {item?.title}
                   </Link>
                 </li>
               ))}
             </ul>
           </div>
           <div>
-            <SubTitle>Categories</SubTitle>
+            <SubTitle>Useful Links</SubTitle>
             <ul className="space-y-3 mt-4">
-              {categoriesData?.map((item) => (
-                <li key={item?.value}>
+              {usefulLinksData?.map((item) => (
+                <li key={item?.title}>
                   <Link
-                    href={`/category/${item?.value}`}
-                    className="hover:text-shop_dark_blue hoverEffect font-medium"
+                    href={`/category/${item?.title}`}
+                    className="hover:text-shop_dark_blue hoverEffect font-medium flex items-center gap-2"
                   >
-                    {item?.title}
+                    <span className="text-lg">&gt;&gt;</span> {item?.title}
                   </Link>
                 </li>
               ))}
             </ul>
           </div>
-          <div className="space-y-4">
-            <SubTitle>Newsletter</SubTitle>
-            <SubText>
-              Subscribe to our newsletter to receive updates and exclusive
-              offers
-            </SubText>
-            <form className="space-y-3">
-              <Input placeholder="Enter your email" type="email" required />
-              <Button className="w-full">Subscribe</Button>
-            </form>
+          <div>
+            <SubTitle>Contact Info</SubTitle>
+            <ul className="space-y-3 mt-4">
+              {contactInfoData?.map((item) => (
+                <li key={item?.type}>
+                  <span className="font-medium">{item?.type}:</span> {item?.value}
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
+
         <div className="py-6 border-t text-center text-sm text-gray-600">
           <div>
             © {new Date().getFullYear()} <Logo className="text-sm" />. All

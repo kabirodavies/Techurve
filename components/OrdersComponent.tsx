@@ -26,13 +26,14 @@ const OrdersComponent = ({ orders }: { orders: MY_ORDERS_QUERYResult }) => {
     <>
       <TableBody>
         <TooltipProvider>
-          {orders.map((order) => (
+          {orders.map((order, index) => (
             <Tooltip key={order?.orderNumber}>
               <TooltipTrigger asChild>
                 <TableRow
                   className="cursor-pointer hover:bg-gray-100 h-12"
                   onClick={() => setSelectedOrder(order)}
                 >
+                  <TableCell>{index + 1}</TableCell>
                   <TableCell className="font-medium">
                     {order.orderNumber?.slice(-10) ?? "N/A"}...
                   </TableCell>
@@ -41,14 +42,18 @@ const OrdersComponent = ({ orders }: { orders: MY_ORDERS_QUERYResult }) => {
                       format(new Date(order.orderDate), "dd/MM/yyyy")}
                   </TableCell>
                   <TableCell>{order.customerName}</TableCell>
-                  <TableCell className="hidden sm:table-cell">
-                    {order.email}
-                  </TableCell>
+                  <TableCell className="hidden md:table-cell">{order.address?.country ?? "-"}</TableCell>
+                  <TableCell className="hidden md:table-cell">{order.address?.city ?? "-"}</TableCell>
+                  <TableCell className="hidden sm:table-cell">{order.email}</TableCell>
                   <TableCell>
-                    <PriceFormatter
-                      amount={order?.totalPrice}
-                      className="text-black font-medium"
-                    />
+                    {order?.status !== "pending" ? (
+                      <PriceFormatter
+                        amount={order?.totalPrice}
+                        className="text-black font-medium"
+                      />
+                    ) : (
+                      <span>-</span>
+                    )}
                   </TableCell>
                   <TableCell>
                     {order?.status && (
