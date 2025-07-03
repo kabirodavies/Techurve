@@ -2,12 +2,22 @@ import { NextResponse } from "next/server";
 import { backendClient } from "@/sanity/lib/backendClient";
 import { sendOrderStatusEmail, OrderStatusEmailData } from "@/lib/email";
 
-export async function PATCH(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
+function extractIdFromRequest(req: Request): string | null {
+  const { pathname } = new URL(req.url);
+  // Assumes route is /api/orders/[id]
+  const parts = pathname.split("/");
+  return parts[parts.length - 1] || null;
+}
+
+export async function PATCH(req: Request) {
   try {
-    const { id } = params;
+    const id = extractIdFromRequest(req);
+    if (!id) {
+      return NextResponse.json(
+        { success: false, error: "Order ID not found in URL" },
+        { status: 400 }
+      );
+    }
     const { status } = await req.json();
 
     // Get the current order to check if status is actually changing
@@ -78,12 +88,15 @@ export async function PATCH(
   }
 }
 
-export async function GET(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
+export async function GET(req: Request) {
   try {
-    const { id } = params;
+    const id = extractIdFromRequest(req);
+    if (!id) {
+      return NextResponse.json(
+        { success: false, error: "Order ID not found in URL" },
+        { status: 400 }
+      );
+    }
     const order = await backendClient.getDocument(id);
     
     if (!order) {
@@ -103,12 +116,15 @@ export async function GET(
   }
 }
 
-export async function POST(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
+export async function POST(req: Request) {
   try {
-    const { id } = params;
+    const id = extractIdFromRequest(req);
+    if (!id) {
+      return NextResponse.json(
+        { success: false, error: "Order ID not found in URL" },
+        { status: 400 }
+      );
+    }
     // Fetch the order
     const order = await backendClient.getDocument(id);
     if (!order) {
