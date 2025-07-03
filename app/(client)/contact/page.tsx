@@ -5,6 +5,60 @@ import { motion } from 'motion/react';
 import React from 'react'
 
 const ContactForm = () => {
+  const [form, setForm] = React.useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: ''
+  });
+  const [errors, setErrors] = React.useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: ''
+  });
+  const [submitted, setSubmitted] = React.useState(false);
+
+  const validateEmail = (email: string) => {
+    // Simple email regex
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+    setErrors({ ...errors, [e.target.name]: '' });
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    let valid = true;
+    let newErrors = { name: '', email: '', subject: '', message: '' };
+    if (!form.name.trim()) {
+      newErrors.name = 'Name is required.';
+      valid = false;
+    }
+    if (!form.email.trim()) {
+      newErrors.email = 'Email is required.';
+      valid = false;
+    } else if (!validateEmail(form.email)) {
+      newErrors.email = 'Please enter a valid email address.';
+      valid = false;
+    }
+    if (!form.subject.trim()) {
+      newErrors.subject = 'Subject is required.';
+      valid = false;
+    }
+    if (!form.message.trim()) {
+      newErrors.message = 'Message is required.';
+      valid = false;
+    }
+    setErrors(newErrors);
+    if (valid) {
+      setSubmitted(true);
+      // Here you would handle the actual submission (e.g., API call)
+    }
+  };
+
   return (
     <div className="py-5 bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center mx-4">
           <motion.div
@@ -19,7 +73,7 @@ const ContactForm = () => {
               Contact Us
             </h1>
             <div className="space-y-4 mb-4 text-left">
-  <form className="space-y-4">
+  <form className="space-y-4" onSubmit={handleSubmit} noValidate>
     <div>
       <label htmlFor="name" className="block text-sm font-medium text-gray-700">
         Name
@@ -29,9 +83,12 @@ const ContactForm = () => {
         id="name"
         name="name"
         required
-        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+        value={form.name}
+        onChange={handleChange}
+        className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 ${errors.name ? 'border-red-500' : ''}`}
         placeholder="Your Name"
       />
+      {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
     </div>
     <div>
       <label htmlFor="email" className="block text-sm font-medium text-gray-700">
@@ -42,9 +99,28 @@ const ContactForm = () => {
         id="email"
         name="email"
         required
-        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+        value={form.email}
+        onChange={handleChange}
+        className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 ${errors.email ? 'border-red-500' : ''}`}
         placeholder="you@example.com"
       />
+      {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
+    </div>
+    <div>
+      <label htmlFor="subject" className="block text-sm font-medium text-gray-700">
+        Subject
+      </label>
+      <input
+        type="text"
+        id="subject"
+        name="subject"
+        required
+        value={form.subject}
+        onChange={handleChange}
+        className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 ${errors.subject ? 'border-red-500' : ''}`}
+        placeholder="Subject"
+      />
+      {errors.subject && <p className="text-red-500 text-xs mt-1">{errors.subject}</p>}
     </div>
     <div>
       <label htmlFor="message" className="block text-sm font-medium text-gray-700">
@@ -55,9 +131,12 @@ const ContactForm = () => {
         name="message"
         rows={4}
         required
-        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+        value={form.message}
+        onChange={handleChange}
+        className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 ${errors.message ? 'border-red-500' : ''}`}
         placeholder="How can we help you?"
       />
+      {errors.message && <p className="text-red-500 text-xs mt-1">{errors.message}</p>}
     </div>
     <button
       type="submit"
