@@ -28,7 +28,7 @@ const SearchBar = () => {
           }`
         );
         setProducts(result);
-      } catch (error) {
+      } catch {
         setProducts([]);
       } finally {
         setLoading(false);
