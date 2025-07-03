@@ -1,9 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from "next/server";
 import { backendClient } from "@/sanity/lib/backendClient";
 import { sendOrderStatusEmail, OrderStatusEmailData } from "@/lib/email";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function PATCH(
   req: Request,
   { params }: any
@@ -80,7 +78,6 @@ export async function PATCH(
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function GET(
   req: Request,
   { params }: any
@@ -106,7 +103,6 @@ export async function GET(
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function POST(
   req: Request,
   { params }: any

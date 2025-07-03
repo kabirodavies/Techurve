@@ -17,7 +17,6 @@ const ContactForm = () => {
     subject: '',
     message: ''
   });
-  const [submitted, setSubmitted] = React.useState(false);
 
   const validateEmail = (email: string) => {
     // Simple email regex
@@ -32,7 +31,7 @@ const ContactForm = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     let valid = true;
-    let newErrors = { name: '', email: '', subject: '', message: '' };
+    const newErrors = { name: '', email: '', subject: '', message: '' };
     if (!form.name.trim()) {
       newErrors.name = 'Name is required.';
       valid = false;
@@ -54,7 +53,6 @@ const ContactForm = () => {
     }
     setErrors(newErrors);
     if (valid) {
-      setSubmitted(true);
       // Here you would handle the actual submission (e.g., API call)
     }
   };
