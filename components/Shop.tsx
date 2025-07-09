@@ -1,58 +1,63 @@
 "use client";
-import { BRANDS_QUERYResult, Category, Product } from "@/sanity.types";
+import { CATEGORIES_WITH_SUBCATEGORIESResult, Product } from "@/sanity.types";
+import type { BRANDS_QUERYResult } from "@/sanity.types";
 import React, { useEffect, useState } from "react";
 import Container from "./Container";
 import Title from "./Title";
 import CategoryList from "./shop/CategoryList";
-import { useSearchParams } from "next/navigation";
-import BrandList from "./shop/BrandList";
 import { Loader2 } from "lucide-react";
 import NoProductAvailable from "./NoProductAvailable";
 import ProductCard from "./ProductCard";
+import { getCategoriesWithSubcategories, getProductsBySubcategory, getProductsByCategory, getAllProducts } from "@/sanity/queries";
+import { useSearchParams } from "next/navigation";
 
 interface Props {
-  categories: Category[];
-  brands: BRANDS_QUERYResult;
+  categories: BrandWithCount[]; // should be CategoryWithCount[], but for demonstration, align with the new type
+  brands: BrandWithCount[];
+}
+interface BrandWithCount {
+  _id: string;
+  title: string;
+  slug: any;
+  productCount?: number;
 }
 const Shop = ({ categories, brands }: Props) => {
   const searchParams = useSearchParams();
-  const brandParams = searchParams?.get("brand");
-  const categoryParams = searchParams?.get("category");
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(null);
+  const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(
-    categoryParams || null
-  );
-  const [selectedBrand, setSelectedBrand] = useState<string | null>(
-    brandParams || null
-  );
   const [selectedPrice, setSelectedPrice] = useState<string | null>(null);
+
+  // Set selectedBrand from query param on mount
+  useEffect(() => {
+    const brandParam = searchParams.get("brand");
+    if (brandParam) {
+      setSelectedBrand(brandParam);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
-      try {
-        // Build query params for API route
-        const params = new URLSearchParams();
-        if (selectedBrand) params.append("brand", selectedBrand);
-        if (selectedCategory) params.append("category", selectedCategory);
-        // Fetch from local API route
-        const res = await fetch(`/api/products?${params.toString()}`);
-        const data = await res.json();
-        if (data.success) {
-          setProducts(data.products);
-        } else {
-          setProducts([]);
-        }
-      } catch (error) {
-        console.log("Shop product fetching Error", error);
-        setProducts([]);
-      } finally {
-        setLoading(false);
+      let data: Product[] = [];
+      if (selectedSubcategory) {
+        data = await getProductsBySubcategory(selectedSubcategory);
+      } else if (selectedCategory) {
+        data = await getProductsByCategory(selectedCategory);
+      } else {
+        data = await getAllProducts();
       }
+      // Filter by brand if selected
+      if (selectedBrand) {
+        data = data.filter((product) => product.brand?._ref === selectedBrand);
+      }
+      setProducts(data);
+      setLoading(false);
     };
     fetchProducts();
-  }, [selectedBrand, selectedCategory]);
+  }, [selectedCategory, selectedSubcategory, selectedBrand]);
 
   return (
     <div className="border-t">
@@ -60,14 +65,13 @@ const Shop = ({ categories, brands }: Props) => {
         <div className="sticky top-0 z-10 mb-5">
           <div className="flex items-center justify-between">
             <Title className="text-lg uppercase tracking-wide">
-              Get the products as your needs
+              All Products
             </Title>
-            {(selectedCategory !== null ||
-              selectedBrand !== null ||
-              selectedPrice !== null) && (
+            {(selectedCategory !== null || selectedSubcategory !== null || selectedBrand !== null || selectedPrice !== null) && (
               <button
                 onClick={() => {
                   setSelectedCategory(null);
+                  setSelectedSubcategory(null);
                   setSelectedBrand(null);
                   setSelectedPrice(null);
                 }}
@@ -80,16 +84,41 @@ const Shop = ({ categories, brands }: Props) => {
         </div>
         <div className="flex flex-col md:flex-row gap-5 border-t border-t-shop_dark_green/50">
           <div className="md:sticky md:top-20 md:self-start md:h-[calc(100vh-160px)] md:overflow-y-auto md:min-w-64 pb-5 md:border-r border-r-shop_btn_dark_green/50 scrollbar-hide">
-            <CategoryList
-              categories={categories}
-              selectedCategory={selectedCategory}
-              setSelectedCategory={setSelectedCategory}
-            />
-            <BrandList
-              brands={brands}
-              setSelectedBrand={setSelectedBrand}
-              selectedBrand={selectedBrand}
-            />
+            {/* Product Categories Filter */}
+            <div className="mb-6">
+              <CategoryList
+                categories={categories}
+                selectedCategory={selectedCategory}
+                setSelectedCategory={setSelectedCategory}
+                selectedSubcategory={selectedSubcategory}
+                setSelectedSubcategory={setSelectedSubcategory}
+              />
+            </div>
+            {/* Brand Filter */}
+            <div className="w-full bg-white p-5 mt-6">
+              <Title className="text-base font-black">Brands</Title>
+              <div className="flex flex-col gap-2 mt-2">
+                {brands?.map((brand) => (
+                  <button
+                    key={brand._id}
+                    className={`w-full text-center px-2 py-1 rounded font-semibold shadow-sm border-2 transition-all duration-200 hover:scale-[1.03] hover:shadow-md hover:border-[#6b7280] hover:bg-[#6b7280] hover:text-white focus:outline-none focus:ring-2 focus:ring-[#6b7280] focus:border-[#6b7280] ${selectedBrand === brand._id ? "bg-[#6b7280] border-[#6b7280] text-white" : "bg-[#1e3a8a] border-[#1e3a8a] text-white"}`}
+                    onClick={() => setSelectedBrand(brand._id)}
+                  >
+                    {brand.title ?? ''}
+                    <span className="ml-2 text-xs text-gray-300">({brand.productCount ?? 0})</span>
+                  </button>
+                ))}
+                {selectedBrand && (
+                  <button
+                    onClick={() => setSelectedBrand(null)}
+                    className="text-sm font-medium mt-2 underline underline-offset-2 decoration-[1px] hover:text-[#1e3a8a] hoverEffect text-left"
+                  >
+                    Reset selection
+                  </button>
+                )}
+              </div>
+            </div>
+
           </div>
           <div className="flex-1 pt-5">
             <div className="h-[calc(100vh-160px)] overflow-y-auto pr-2 scrollbar-hide">

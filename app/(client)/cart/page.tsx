@@ -4,7 +4,7 @@ import Container from "@/components/Container";
 import EmptyCart from "@/components/EmptyCart";
 // import FloatingPopup from "@/components/FloatngPopup";
 import NoAccess from "@/components/NoAccess";
-// import PriceFormatter from "@/components/PriceFormatter";
+import PriceFormatter from "@/components/PriceFormatter";
 import ProductSideMenu from "@/components/ProductSideMenu";
 import QuantityButtons from "@/components/QuantityButtons";
 import Title from "@/components/Title";
@@ -29,7 +29,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-
+import { useIsAdmin } from "@/hooks/useIsAdmin";
 const countryCities = {
   Kenya: ["Nairobi", "Mombasa", "Kisumu"],
   Uganda: ["Kampala", "Entebbe", "Gulu"],
@@ -56,6 +56,7 @@ const CartPage = () => {
     watch,
   } = useForm();
   const router = useRouter();
+  const isAdmin = useIsAdmin();
 
   const selectedCountry = watch("country") as keyof typeof countryCities | undefined;
 
@@ -153,17 +154,11 @@ const CartPage = () => {
                                 <h2 className="text-base font-semibold line-clamp-1">
                                   {product?.name}
                                 </h2>
-                                <p className="text-sm capitalize">
-                                  Variant:{" "}
-                                  <span className="font-semibold">
-                                    {product?.variant}
-                                  </span>
-                                </p>
-                                <p className="text-sm capitalize">
-                                  Status:{" "}
-                                  <span className="font-semibold">
-                                    {product?.status}
-                                  </span>
+                                {isAdmin && (
+                                  <PriceFormatter amount={product?.price} className="text-sm text-gray-700" />
+                                )}
+                                <p className="text-sm text-gray-600 line-clamp-3">
+                                  {product?.description}
                                 </p>
                               </div>
                               <div className="flex items-center gap-2">
@@ -216,6 +211,32 @@ const CartPage = () => {
                 </div>
                 <div>
                   <div className="lg:col-span-1">
+                    {/* Order Summary for desktop view */}
+                    <div className="hidden md:inline-block w-full bg-white p-6 rounded-lg border mb-6">
+                      <h2 className="text-xl font-semibold mb-4">
+                        Order Summary
+                      </h2>
+                      <div className="space-y-4">
+                        {isAdmin && (
+                          <>
+                            <div className="flex items-center justify-between">
+                              <span>SubTotal</span>
+                              <PriceFormatter amount={getSubTotalPrice()} />
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <span>Discount</span>
+                              <PriceFormatter amount={getSubTotalPrice() - getTotalPrice()} />
+                            </div>
+                            <Separator />
+                            <div className="flex items-center justify-between font-semibold text-lg">
+                              <span>Total</span>
+                              <PriceFormatter amount={getTotalPrice()} className="text-lg font-bold text-black" />
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                    {/* Get a Quote form for desktop view */}
                     <div className="hidden md:inline-block w-full bg-white p-6 rounded-lg border">
                       <h2 className="text-xl font-semibold mb-4">
                         Get a Quote
@@ -295,20 +316,19 @@ const CartPage = () => {
                   <div className="bg-white p-4 rounded-lg border mx-4">
                     <h2>Order Summary</h2>
                     <div className="space-y-4">
-                      {/* <div className="flex items-center justify-between">
-                        <span>Discount</span>
-                        <PriceFormatter
-                          amount={getSubTotalPrice() - getTotalPrice()}
-                        />
-                      </div> */}
-                      <Separator />
-                      {/* <div className="flex items-center justify-between font-semibold text-lg">
-                        <span>Total</span>
-                        <PriceFormatter
-                          amount={getTotalPrice()}
-                          className="text-lg font-bold text-black"
-                        />
-                      </div> */}
+                      {isAdmin && (
+                        <>
+                          <div className="flex items-center justify-between">
+                            <span>Discount</span>
+                            <PriceFormatter amount={getSubTotalPrice() - getTotalPrice()} />
+                          </div>
+                          <Separator />
+                          <div className="flex items-center justify-between font-semibold text-lg">
+                            <span>Total</span>
+                            <PriceFormatter amount={getTotalPrice()} className="text-lg font-bold text-black" />
+                          </div>
+                        </>
+                      )}
                       <form onSubmit={handleSubmit(handleGetQuote)}>
                         <Button
                           className="w-full rounded-full font-semibold tracking-wide hoverEffect"

@@ -3,14 +3,15 @@ import { urlFor } from "@/sanity/lib/image";
 import Image from "next/image";
 import React from "react";
 import Link from "next/link";
-// import { StarIcon } from "@sanity/icons";
 import { Flame } from "lucide-react";
-// import PriceView from "./PriceView";
+import PriceView from "./PriceView";
 import Title from "./Title";
 import ProductSideMenu from "./ProductSideMenu";
 import AddToCartButton from "./AddToCartButton";
+import { useIsAdmin } from "@/hooks/useIsAdmin";
 
 const ProductCard = ({ product }: { product: Product }) => {
+  const isAdmin = useIsAdmin();
   return (
     <div className="text-sm border-[1px] rounded-md border-darkBlue/20 group bg-white">
       <div className="relative group overflow-hidden bg-shop_light_bg">
@@ -46,44 +47,64 @@ const ProductCard = ({ product }: { product: Product }) => {
         )}
       </div>
       <div className="p-3 flex flex-col gap-2">
-        {product?.categories && (
-          <p className="uppercase line-clamp-1 text-xs font-medium text-lightText">
-            {product.categories.map((cat) => cat).join(", ")}
-          </p>
-        )}
+        {/* Brand, Category, Subcategory */}
+        <div className="flex flex-wrap gap-2 text-xs text-gray-500 font-medium">
+          {product?.brand && (product.brand as any).title && (
+            <span>
+              Brand: {((product.brand as any).slug?.current) ? (
+                <Link href={`/brand/${(product.brand as any).slug.current}`} className="hover:underline text-shop_dark_blue font-semibold">
+                  {(product.brand as any).title}
+                </Link>
+              ) : (
+                <span className="text-gray-700 font-semibold">{(product.brand as any).title}</span>
+              )}
+            </span>
+          )}
+          {(product?.subcategory && (product.subcategory as any).parent?.title && (product.subcategory as any).parent?.slug && (product.subcategory as any).title && (product.subcategory as any).slug) && (
+            <span>
+              <Link href={`/category/${(product.subcategory as any).parent.slug.current}`} className="hover:underline text-shop_dark_blue">
+                {(product.subcategory as any).parent.title}
+              </Link>
+              {" > "}
+              <Link href={{ pathname: `/category/${(product.subcategory as any).parent.slug.current}`, query: { subcategory: (product.subcategory as any).slug.current } }} className="hover:underline text-shop_dark_blue">
+                {(product.subcategory as any).title}
+              </Link>
+            </span>
+          )}
+        </div>
         <Title className="text-sm line-clamp-1">{product?.name}</Title>
 
-        {/* <div className="flex items-center gap-2">
-          <div className="flex items-center">
-            {[...Array(5)].map((_, index) => (
-              <StarIcon
-                key={index}
-                className={
-                  index < 4 ? "text-shop_light_green" : " text-lightText"
-                }
-                fill={index < 4 ? "#93D991" : "#ababab"}
-              />
-            ))}
-          </div>
-          <p className="text-lightText text-xs tracking-wide">5 Reviews</p>
-        </div> */}
 
         <div className="flex items-center gap-2.5">
           <p className="font-medium">In Stock</p>
           <p
             className={`${product?.stock === 0 ? "text-red-600" : "text-shop_dark_green/80 font-semibold"}`}
           >
-            {(product?.stock as number) > 0 ? "Yes" : "unavailable"}
+            {(product?.stock as number) > 0 ? product?.stock : "unavailable"}
           </p>
         </div>
 
-        {/* Comment out price display in product card */}
-        {/* <PriceView
-          price={product?.price}
-          discount={product?.discount}
-          className="text-sm"
-        /> */}
-
+        {isAdmin ? (
+          <PriceView
+            price={product?.price}
+            discount={product?.discount}
+            className="text-sm"
+          />
+        ) : (
+          // Render the existing quotation/request button logic here
+          <>
+            <Link
+              href={"/deal"}
+              className="absolute top-2 left-2 z-10 border border-shop_orange/50 p-1 rounded-full group-hover:border-shop_orange hover:text-shop_dark_green hoverEffect"
+            >
+              <Flame
+                size={18}
+                fill="#fb6c08"
+                className="text-shop_orange/50 group-hover:text-shop_orange hoverEffect"
+              />
+            </Link>
+          </>
+        )}
         <AddToCartButton product={product} className="w-36 rounded-full" />
       </div>
     </div>

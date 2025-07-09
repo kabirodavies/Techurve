@@ -7,8 +7,10 @@ interface Props {
   discount: number | undefined;
   className?: string;
   hideTotal?: boolean; // To hide the total price
+  hidden?: boolean; // NEW
 }
-const PriceView = ({ price, discount, className, hideTotal }: Props) => {
+const PriceView = ({ price, discount, className, hideTotal, hidden }: Props) => {
+  if (hidden) return null;
   return (
     <div className="flex items-center justify-between gap-5">
       <div className="flex items-center gap-2">

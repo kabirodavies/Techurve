@@ -155,18 +155,9 @@ export type Order = {
   _updatedAt: string;
   _rev: string;
   orderNumber?: string;
-  invoiceNumber?: string;
-  invoice?: {
-    id?: string;
-    number?: string;
-    hosted_invoice_url?: string;
-  };
-  stripeCheckoutSessionId?: string;
-  stripeCustomerId?: string;
   clerkUserId?: string;
   customerName?: string;
   email?: string;
-  stripePaymentIntentId?: string;
   products?: Array<{
     product?: {
       _ref: string;
@@ -181,12 +172,11 @@ export type Order = {
   currency?: string;
   amountDiscount?: number;
   address?: {
-    state?: string;
-    zip?: string;
+    country?: "Kenya" | "Uganda" | "Tanzania";
+    name?: string;
+    phone?: string;
     city?: string;
     address?: string;
-    name?: string;
-    country?: string;
   };
   status?: "pending" | "processing" | "paid" | "shipped" | "out_for_delivery" | "delivered" | "cancelled";
   orderDate?: string;
@@ -216,13 +206,12 @@ export type Product = {
   description?: string;
   price?: number;
   discount?: number;
-  categories?: Array<{
+  subcategory?: {
     _ref: string;
     _type: "reference";
     _weak?: boolean;
-    _key: string;
-    [internalGroqTypeReferenceTo]?: "category";
-  }>;
+    [internalGroqTypeReferenceTo]?: "subcategory";
+  };
   stock?: number;
   brand?: {
     _ref: string;
@@ -233,6 +222,8 @@ export type Product = {
   status?: "new" | "hot" | "sale";
   variant?: "cctv" | "biometrics" | "perimeter_security" | "intrusion_detection" | "smart_homes" | "parking_management" | "digital_boards" | "software" | "connectivity" | "services";
   isFeatured?: boolean;
+  features?: string[];
+  usage?: string[];
 };
 
 export type Brand = {
@@ -290,6 +281,35 @@ export type BlockContent = Array<{
   _key: string;
 }>;
 
+export type Subcategory = {
+  _id: string;
+  _type: "subcategory";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  slug?: Slug;
+  description?: string;
+  parent?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "category";
+  };
+  image?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+};
+
 export type Category = {
   _id: string;
   _type: "category";
@@ -313,7 +333,6 @@ export type Category = {
     crop?: SanityImageCrop;
     _type: "image";
   };
-  productCount?: number; // <-- add this line
 };
 
 export type SanityImagePaletteSwatch = {
@@ -434,7 +453,7 @@ export type SanityAssetSourceData = {
   url?: string;
 };
 
-export type AllSanitySchemaTypes = Address | Blogcategory | Blog | Author | Order | Product | Brand | BlockContent | Category | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
+export type AllSanitySchemaTypes = Address | Blogcategory | Blog | Author | Order | Product | Brand | BlockContent | Subcategory | Category | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ./sanity/queries/query.ts
 // Variable: BRANDS_QUERY
@@ -552,7 +571,12 @@ export type DEAL_PRODUCTSResult = Array<{
   description?: string;
   price?: number;
   discount?: number;
-  categories: Array<string | null> | null;
+  subcategory?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "subcategory";
+  };
   stock?: number;
   brand?: {
     _ref: string;
@@ -563,6 +587,7 @@ export type DEAL_PRODUCTSResult = Array<{
   status?: "hot" | "new" | "sale";
   variant?: "biometrics" | "cctv" | "connectivity" | "digital_boards" | "intrusion_detection" | "parking_management" | "perimeter_security" | "services" | "smart_homes" | "software";
   isFeatured?: boolean;
+  categories: null;
 }>;
 // Variable: PRODUCT_BY_SLUG_QUERY
 // Query: *[_type == "product" && slug.current == $slug] | order(name asc) [0]
@@ -590,13 +615,12 @@ export type PRODUCT_BY_SLUG_QUERYResult = {
   description?: string;
   price?: number;
   discount?: number;
-  categories?: Array<{
+  subcategory?: {
     _ref: string;
     _type: "reference";
     _weak?: boolean;
-    _key: string;
-    [internalGroqTypeReferenceTo]?: "category";
-  }>;
+    [internalGroqTypeReferenceTo]?: "subcategory";
+  };
   stock?: number;
   brand?: {
     _ref: string;
@@ -614,7 +638,7 @@ export type BRAND_QUERYResult = Array<{
   brandName: string | null;
 }>;
 // Variable: MY_ORDERS_QUERY
-// Query: *[_type == 'order' && clerkUserId == $userId] | order(orderData desc){...,products[]{  ...,product->}}
+// Query: *[_type == 'order' && clerkUserId == $userId] | order(orderDate desc){...,products[]{  ...,product->}}
 export type MY_ORDERS_QUERYResult = Array<{
   _id: string;
   _type: "order";
@@ -622,18 +646,9 @@ export type MY_ORDERS_QUERYResult = Array<{
   _updatedAt: string;
   _rev: string;
   orderNumber?: string;
-  invoiceNumber?: string;
-  invoice?: {
-    id?: string;
-    number?: string;
-    hosted_invoice_url?: string;
-  };
-  stripeCheckoutSessionId?: string;
-  stripeCustomerId?: string;
   clerkUserId?: string;
   customerName?: string;
   email?: string;
-  stripePaymentIntentId?: string;
   products: Array<{
     product: {
       _id: string;
@@ -659,13 +674,12 @@ export type MY_ORDERS_QUERYResult = Array<{
       description?: string;
       price?: number;
       discount?: number;
-      categories?: Array<{
+      subcategory?: {
         _ref: string;
         _type: "reference";
         _weak?: boolean;
-        _key: string;
-        [internalGroqTypeReferenceTo]?: "category";
-      }>;
+        [internalGroqTypeReferenceTo]?: "subcategory";
+      };
       stock?: number;
       brand?: {
         _ref: string;
@@ -684,12 +698,81 @@ export type MY_ORDERS_QUERYResult = Array<{
   currency?: string;
   amountDiscount?: number;
   address?: {
-    state?: string;
-    zip?: string;
+    country?: "Kenya" | "Tanzania" | "Uganda";
+    name?: string;
+    phone?: string;
     city?: string;
     address?: string;
+  };
+  status?: "cancelled" | "delivered" | "out_for_delivery" | "paid" | "pending" | "processing" | "shipped";
+  orderDate?: string;
+}>;
+// Variable: ALL_ORDERS_QUERY
+// Query: *[_type == 'order'] | order(orderDate desc){...,products[]{  ...,product->}}
+export type ALL_ORDERS_QUERYResult = Array<{
+  _id: string;
+  _type: "order";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  orderNumber?: string;
+  clerkUserId?: string;
+  customerName?: string;
+  email?: string;
+  products: Array<{
+    product: {
+      _id: string;
+      _type: "product";
+      _createdAt: string;
+      _updatedAt: string;
+      _rev: string;
+      name?: string;
+      slug?: Slug;
+      images?: Array<{
+        asset?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: "image";
+        _key: string;
+      }>;
+      description?: string;
+      price?: number;
+      discount?: number;
+      subcategory?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "subcategory";
+      };
+      stock?: number;
+      brand?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "brand";
+      };
+      status?: "hot" | "new" | "sale";
+      variant?: "biometrics" | "cctv" | "connectivity" | "digital_boards" | "intrusion_detection" | "parking_management" | "perimeter_security" | "services" | "smart_homes" | "software";
+      isFeatured?: boolean;
+    } | null;
+    quantity?: number;
+    _key: string;
+  }> | null;
+  totalPrice?: number;
+  currency?: string;
+  amountDiscount?: number;
+  address?: {
+    country?: "Kenya" | "Tanzania" | "Uganda";
     name?: string;
-    country?: string;
+    phone?: string;
+    city?: string;
+    address?: string;
   };
   status?: "cancelled" | "delivered" | "out_for_delivery" | "paid" | "pending" | "processing" | "shipped";
   orderDate?: string;
@@ -947,6 +1030,128 @@ export type OTHERS_BLOG_QUERYResult = Array<{
   } | null;
   categories: null;
 }>;
+// Variable: CATEGORIES_WITH_SUBCATEGORIES
+// Query: *[_type == "category"]{    _id,    title,    slug,    image,    "subcategories": *[_type == "subcategory" && parent._ref == ^._id]{      _id,      title,      slug,      image    }  }
+export type CATEGORIES_WITH_SUBCATEGORIESResult = Array<{
+  _id: string;
+  title: string | null;
+  slug: Slug | null;
+  image: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  } | null;
+  subcategories: Array<{
+    _id: string;
+    title: string | null;
+    slug: Slug | null;
+    image: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    } | null;
+  }>;
+}>;
+// Variable: PRODUCTS_BY_SUBCATEGORY
+// Query: *[_type == "product" && subcategory._ref == $subcategoryId] | order(name asc){    ...  }
+export type PRODUCTS_BY_SUBCATEGORYResult = Array<{
+  _id: string;
+  _type: "product";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  name?: string;
+  slug?: Slug;
+  images?: Array<{
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+    _key: string;
+  }>;
+  description?: string;
+  price?: number;
+  discount?: number;
+  subcategory?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "subcategory";
+  };
+  stock?: number;
+  brand?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "brand";
+  };
+  status?: "hot" | "new" | "sale";
+  variant?: "biometrics" | "cctv" | "connectivity" | "digital_boards" | "intrusion_detection" | "parking_management" | "perimeter_security" | "services" | "smart_homes" | "software";
+  isFeatured?: boolean;
+}>;
+// Variable: PRODUCTS_BY_CATEGORY
+// Query: *[_type == "product" && subcategory->parent._ref == $categoryId] | order(name asc){    ...  }
+export type PRODUCTS_BY_CATEGORYResult = Array<{
+  _id: string;
+  _type: "product";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  name?: string;
+  slug?: Slug;
+  images?: Array<{
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+    _key: string;
+  }>;
+  description?: string;
+  price?: number;
+  discount?: number;
+  subcategory?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "subcategory";
+  };
+  stock?: number;
+  brand?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "brand";
+  };
+  status?: "hot" | "new" | "sale";
+  variant?: "biometrics" | "cctv" | "connectivity" | "digital_boards" | "intrusion_detection" | "parking_management" | "perimeter_security" | "services" | "smart_homes" | "software";
+  isFeatured?: boolean;
+}>;
 
 // Query TypeMap
 import "@sanity/client";
@@ -957,11 +1162,15 @@ declare module "@sanity/client" {
     "*[_type == 'product' && status == 'hot'] | order(name asc){\n    ...,\"categories\": categories[]->title\n  }": DEAL_PRODUCTSResult;
     "*[_type == \"product\" && slug.current == $slug] | order(name asc) [0]": PRODUCT_BY_SLUG_QUERYResult;
     "*[_type == \"product\" && slug.current == $slug]{\n  \"brandName\": brand->title\n  }": BRAND_QUERYResult;
-    "*[_type == 'order' && clerkUserId == $userId] | order(orderData desc){\n...,products[]{\n  ...,product->\n}\n}": MY_ORDERS_QUERYResult;
+    "*[_type == 'order' && clerkUserId == $userId] | order(orderDate desc){\n...,products[]{\n  ...,product->\n}\n}": MY_ORDERS_QUERYResult;
+    "*[_type == 'order'] | order(orderDate desc){\n...,products[]{\n  ...,product->\n}\n}": ALL_ORDERS_QUERYResult;
     "*[_type == 'blog' && !('Portfolio' in blogcategories[]->title)] | order(publishedAt desc)[0...$quantity]{\n    ...,\n    blogcategories[]->{\n      title\n    }\n  }": GET_ALL_BLOGResult;
     "*[_type == 'blog' && 'Portfolio' in blogcategories[]->title] | order(publishedAt desc)[0...$quantity]{\n    ...,\n    blogcategories[]->{\n      title\n    }\n  }": GET_PORTFOLIO_BLOGSResult;
     "*[_type == \"blog\" && slug.current == $slug][0]{\n  ..., \n    author->{\n    name,\n    image,\n  },\n  blogcategories[]->{\n    title,\n    \"slug\": slug.current,\n  },\n}": SINGLE_BLOG_QUERYResult;
     "*[_type == \"blog\"]{\n     blogcategories[]->{\n    ...\n    }\n  }": BLOG_CATEGORIESResult;
     "*[\n  _type == \"blog\"\n  && defined(slug.current)\n  && slug.current != $slug\n]|order(publishedAt desc)[0...$quantity]{\n...\n  publishedAt,\n  title,\n  mainImage,\n  slug,\n  author->{\n    name,\n    image,\n  },\n  categories[]->{\n    title,\n    \"slug\": slug.current,\n  }\n}": OTHERS_BLOG_QUERYResult;
+    "\n  *[_type == \"category\"]{\n    _id,\n    title,\n    slug,\n    image,\n    \"subcategories\": *[_type == \"subcategory\" && parent._ref == ^._id]{\n      _id,\n      title,\n      slug,\n      image\n    }\n  }\n": CATEGORIES_WITH_SUBCATEGORIESResult;
+    "\n  *[_type == \"product\" && subcategory._ref == $subcategoryId] | order(name asc){\n    ...\n  }\n": PRODUCTS_BY_SUBCATEGORYResult;
+    "\n  *[_type == \"product\" && subcategory->parent._ref == $categoryId] | order(name asc){\n    ...\n  }\n": PRODUCTS_BY_CATEGORYResult;
   }
 }

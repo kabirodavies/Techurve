@@ -1,6 +1,7 @@
 "use client";
 import { Category, Product } from "@/sanity.types";
 import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { client } from "@/sanity/lib/client";
@@ -8,6 +9,9 @@ import { AnimatePresence, motion } from "motion/react";
 import { Loader2 } from "lucide-react";
 import NoProductAvailable from "./NoProductAvailable";
 import ProductCard from "./ProductCard";
+import { getCategoriesWithSubcategories, getProductsBySubcategory, getProductsByCategory } from "@/sanity/queries";
+import Title from "@/components/Title";
+
 interface Props {
   categories: Category[];
   slug: string;
@@ -15,34 +19,55 @@ interface Props {
 
 const CategoryProducts = ({ categories, slug }: Props) => {
   const [currentSlug, setCurrentSlug] = useState(slug);
+  const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(null);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const selectedCat = categories.find((cat) => cat.slug?.current === currentSlug) as Category & { subcategories?: any[] };
+
   const handleCategoryChange = (newSlug: string) => {
-    if (newSlug === currentSlug) return; // Prevent unnecessary updates
+    if (newSlug === currentSlug) return;
     setCurrentSlug(newSlug);
-    router.push(`/category/${newSlug}`, { scroll: false }); // Update URL without
+    setSelectedSubcategory(null);
+    router.push(`/category/${newSlug}`, { scroll: false });
   };
 
-  const fetchProducts = async (categorySlug: string) => {
-    setLoading(true);
-    try {
-      const query = `
-        *[_type == 'product' && references(*[_type == "category" && slug.current == $categorySlug]._id)] | order(name asc){
-        ...,"categories": categories[]->title}
-      `;
-      const data = await client.fetch(query, { categorySlug });
-      setProducts(data);
-    } catch (error) {
-      console.error("Error fetching products:", error);
-      setProducts([]);
-    } finally {
-      setLoading(false);
-    }
+  const handleSubcategoryChange = (subSlug: string) => {
+    setSelectedSubcategory(subSlug);
   };
+
+  // Auto-select subcategory from query param on mount or when it changes
   useEffect(() => {
-    fetchProducts(currentSlug);
-  }, [currentSlug, router]);
+    const subcategoryParam = searchParams.get("subcategory");
+    if (subcategoryParam) {
+      setSelectedSubcategory(subcategoryParam);
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      setLoading(true);
+      try {
+        let data = [];
+        if (selectedSubcategory) {
+          const subcat = (selectedCat?.subcategories as any[])?.find((s: any) => s.slug?.current === selectedSubcategory);
+          if (subcat) {
+            data = await getProductsBySubcategory(subcat._id);
+          }
+        } else if (selectedCat) {
+          data = await getProductsByCategory(selectedCat._id);
+        }
+        setProducts(data);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+        setProducts([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, [currentSlug, selectedSubcategory, router]);
 
   return (
     <div className="py-5 flex flex-col md:flex-row items-start gap-5">
@@ -56,6 +81,22 @@ const CategoryProducts = ({ categories, slug }: Props) => {
             <p className="w-full text-left px-2">{item?.title}</p>
           </Button>
         ))}
+        {selectedCat && (selectedCat.subcategories as any[]) && (selectedCat.subcategories as any[]).length > 0 && (
+          <div className="mt-4">
+            <Title className="text-sm font-semibold">Subcategories</Title>
+            <div className="flex flex-col gap-2 mt-2">
+              {(selectedCat.subcategories as any[]).map((subcat: any) => (
+                <button
+                  key={subcat._id}
+                  className={`text-left px-2 py-1 rounded hover:bg-shop_dark_green/10 ${selectedSubcategory === subcat.slug?.current ? "bg-shop_dark_green text-white" : ""}`}
+                  onClick={() => handleSubcategoryChange(subcat.slug?.current as string)}
+                >
+                  {subcat.title}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
       <div className="flex-1">
         {loading ? (

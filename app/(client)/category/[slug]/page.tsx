@@ -1,7 +1,7 @@
 import CategoryProducts from "@/components/CategoryProducts";
 import Container from "@/components/Container";
 import Title from "@/components/Title";
-import { getCategories } from "@/sanity/queries";
+import { getCategoriesWithSubcategories } from "@/sanity/queries";
 import React from "react";
 
 const CategoryPage = async ({
@@ -9,7 +9,7 @@ const CategoryPage = async ({
 }: {
   params: Promise<{ slug: string }>;
 }) => {
-  const categories = await getCategories();
+  const categories = await getCategoriesWithSubcategories();
   const { slug } = await params;
   return (
     <div className="py-10">

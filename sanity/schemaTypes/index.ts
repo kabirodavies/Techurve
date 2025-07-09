@@ -8,11 +8,13 @@ import { blogType } from "./blogType";
 import { blogCategoryType } from "./blogCategoryType";
 import { authorType } from "./authorType";
 import { addressType } from "./addressType";
+import { subcategoryType } from "./subcategoryType";
 
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
     categoryType,
+    subcategoryType,
     blockContentType,
     productType,
     orderType,
