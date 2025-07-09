@@ -16,6 +16,7 @@ import {
   PRODUCTS_BY_SUBCATEGORY,
   PRODUCTS_BY_CATEGORY,
   ALL_PRODUCTS_QUERY,
+  PRODUCTS_BY_BRAND_SLUG,
 } from "./query";
 
 const getCategories = async (quantity?: number) => {
@@ -154,6 +155,10 @@ const getAllProducts = async () => {
   return await client.fetch(ALL_PRODUCTS_QUERY);
 };
 
+const getProductsByBrandSlug = async (brandSlug: string) => {
+  return await client.fetch(PRODUCTS_BY_BRAND_SLUG, { brandSlug });
+};
+
 export {
   getCategories,
   getAllBrands,
@@ -172,4 +177,5 @@ export {
   getProductsBySubcategory,
   getProductsByCategory,
   getAllProducts,
+  getProductsByBrandSlug,
 };

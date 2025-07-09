@@ -19,7 +19,19 @@ const LATEST_BLOG_QUERY = defineQuery(
 
 const DEAL_PRODUCTS = defineQuery(
   `*[_type == 'product' && status == 'hot'] | order(name asc){
-    ...,"categories": categories[]->title
+    ...,
+    brand->{
+      title,
+      slug
+    },
+    subcategory->{
+      title,
+      slug,
+      parent->{
+        title,
+        slug
+      }
+    }
   }`
 );
 
@@ -199,6 +211,24 @@ const ALL_PRODUCTS_QUERY = defineQuery(`
   }
 `);
 
+const PRODUCTS_BY_BRAND_SLUG = defineQuery(`
+  *[_type == "product" && brand->slug.current == $brandSlug] | order(name asc) {
+    ...,
+    brand->{
+      title,
+      slug
+    },
+    subcategory->{
+      title,
+      slug,
+      parent->{
+        title,
+        slug
+      }
+    }
+  }
+`);
+
 export {
   BRANDS_QUERY,
   LATEST_BLOG_QUERY,
@@ -216,4 +246,5 @@ export {
   PRODUCTS_BY_SUBCATEGORY,
   PRODUCTS_BY_CATEGORY,
   ALL_PRODUCTS_QUERY,
+  PRODUCTS_BY_BRAND_SLUG,
 };

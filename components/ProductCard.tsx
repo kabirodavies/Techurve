@@ -1,3 +1,5 @@
+"use client"
+
 import { Product } from "@/sanity.types";
 import { urlFor } from "@/sanity/lib/image";
 import Image from "next/image";
@@ -8,10 +10,9 @@ import PriceView from "./PriceView";
 import Title from "./Title";
 import ProductSideMenu from "./ProductSideMenu";
 import AddToCartButton from "./AddToCartButton";
-import { useIsAdmin } from "@/hooks/useIsAdmin";
+import ProductAdminControls from "./ProductAdminControls";
 
 const ProductCard = ({ product }: { product: Product }) => {
-  const isAdmin = useIsAdmin();
   return (
     <div className="text-sm border-[1px] rounded-md border-darkBlue/20 group bg-white">
       <div className="relative group overflow-hidden bg-shop_light_bg">
@@ -51,13 +52,9 @@ const ProductCard = ({ product }: { product: Product }) => {
         <div className="flex flex-wrap gap-2 text-xs text-gray-500 font-medium">
           {product?.brand && (product.brand as any).title && (
             <span>
-              Brand: {((product.brand as any).slug?.current) ? (
-                <Link href={`/brand/${(product.brand as any).slug.current}`} className="hover:underline text-shop_dark_blue font-semibold">
-                  {(product.brand as any).title}
-                </Link>
-              ) : (
-                <span className="text-gray-700 font-semibold">{(product.brand as any).title}</span>
-              )}
+              Brand: <Link href={`/shop?brand=${encodeURIComponent((product.brand as any).title)}`} className="hover:underline text-shop_dark_blue font-semibold">
+                {(product.brand as any).title}
+              </Link>
             </span>
           )}
           {(product?.subcategory && (product.subcategory as any).parent?.title && (product.subcategory as any).parent?.slug && (product.subcategory as any).title && (product.subcategory as any).slug) && (
@@ -84,27 +81,7 @@ const ProductCard = ({ product }: { product: Product }) => {
           </p>
         </div>
 
-        {isAdmin ? (
-          <PriceView
-            price={product?.price}
-            discount={product?.discount}
-            className="text-sm"
-          />
-        ) : (
-          // Render the existing quotation/request button logic here
-          <>
-            <Link
-              href={"/deal"}
-              className="absolute top-2 left-2 z-10 border border-shop_orange/50 p-1 rounded-full group-hover:border-shop_orange hover:text-shop_dark_green hoverEffect"
-            >
-              <Flame
-                size={18}
-                fill="#fb6c08"
-                className="text-shop_orange/50 group-hover:text-shop_orange hoverEffect"
-              />
-            </Link>
-          </>
-        )}
+        <ProductAdminControls product={product} />
         <AddToCartButton product={product} className="w-36 rounded-full" />
       </div>
     </div>

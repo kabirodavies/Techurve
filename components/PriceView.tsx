@@ -14,11 +14,13 @@ const PriceView = ({ price, discount, className, hideTotal, hidden }: Props) => 
   return (
     <div className="flex items-center justify-between gap-5">
       <div className="flex items-center gap-2">
-        <PriceFormatter
-          amount={price}
-          className={cn("text-shop_dark_green", className)}
-        />
-        {price && discount && !hideTotal && (
+        {typeof price === 'number' && (
+          <PriceFormatter
+            amount={price}
+            className={cn("text-shop_dark_green", className)}
+          />
+        )}
+        {typeof price === 'number' && typeof discount === 'number' && discount > 0 && !hideTotal && (
           <PriceFormatter
             amount={price + (discount * price) / 100}
             className={twMerge(
