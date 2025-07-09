@@ -4,7 +4,6 @@ import FavoriteButton from "@/components/FavoriteButton";
 import ImageView from "@/components/ImageView";
 import PriceView from "@/components/PriceView";
 import ProductCharacteristics from "@/components/ProductCharacteristics";
-import ProductPriceSection from "@/components/ProductPriceSection";
 import { getProductBySlug } from "@/sanity/queries";
 import { CornerDownLeft, Truck } from "lucide-react";
 import { notFound } from "next/navigation";
@@ -13,6 +12,8 @@ import { FaRegQuestionCircle } from "react-icons/fa";
 import { FiShare2 } from "react-icons/fi";
 import { RxBorderSplit } from "react-icons/rx";
 import { TbTruckDelivery } from "react-icons/tb";
+import { currentUser } from "@clerk/nextjs/server";
+import { isAdmin } from "@/lib/utils";
 
 const SingleProductPage = async ({
   params,
@@ -21,6 +22,9 @@ const SingleProductPage = async ({
 }) => {
   const { slug } = await params;
   const product = await getProductBySlug(slug);
+  const user = await currentUser();
+  const showPrice = isAdmin(user);
+  
   if (!product) {
     return notFound();
   }
@@ -38,7 +42,12 @@ const SingleProductPage = async ({
           
         </div>
         <div className="space-y-2 border-t border-b border-gray-200 py-5">
-          <ProductPriceSection price={product?.price} discount={product?.discount} />
+          <PriceView
+            price={product?.price}
+            discount={product?.discount}
+            className="text-lg font-bold"
+            showPrice={showPrice}
+          />
           <p
             className={`px-4 py-1.5 text-sm text-center inline-block font-semibold rounded-lg ${product?.stock === 0 ? "bg-red-100 text-red-600" : "text-green-600 bg-green-100"}`}
           >

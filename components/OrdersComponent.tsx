@@ -47,10 +47,14 @@ const OrdersComponent = ({ orders }: { orders: MY_ORDERS_QUERYResult }) => {
                   <TableCell className="hidden sm:table-cell">{order.email}</TableCell>
                   <TableCell>
                     {order?.status !== "pending" ? (
-                      <PriceFormatter
-                        amount={order?.totalPrice}
-                        className="text-black font-medium"
-                      />
+                      order?.totalPrice && order.totalPrice > 0 ? (
+                        <PriceFormatter
+                          amount={order?.totalPrice}
+                          className="text-black font-medium"
+                        />
+                      ) : (
+                        <span>-</span>
+                      )
                     ) : (
                       <span>-</span>
                     )}

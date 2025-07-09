@@ -30,11 +30,20 @@ const Shop = ({ categories, brands }: Props) => {
   const [loading, setLoading] = useState(false);
   const [selectedPrice, setSelectedPrice] = useState<string | null>(null);
 
-  // Set selectedBrand from query param on mount
+  // Set selected filters from query params on mount
   useEffect(() => {
     const brandParam = searchParams.get("brand");
+    const categoryParam = searchParams.get("category");
+    const subcategoryParam = searchParams.get("subcategory");
+    
     if (brandParam) {
       setSelectedBrand(brandParam);
+    }
+    if (categoryParam) {
+      setSelectedCategory(categoryParam);
+    }
+    if (subcategoryParam) {
+      setSelectedSubcategory(subcategoryParam);
     }
   }, [searchParams]);
 
@@ -49,9 +58,9 @@ const Shop = ({ categories, brands }: Props) => {
       } else {
         data = await getAllProducts();
       }
-      // Filter by brand if selected
+      // Filter by brand name if selected
       if (selectedBrand) {
-        data = data.filter((product) => product.brand?._ref === selectedBrand);
+        data = data.filter((product) => product.brand && (product.brand as any).title && (product.brand as any).title.toLowerCase() === selectedBrand.toLowerCase());
       }
       setProducts(data);
       setLoading(false);
@@ -101,8 +110,8 @@ const Shop = ({ categories, brands }: Props) => {
                 {brands?.map((brand) => (
                   <button
                     key={brand._id}
-                    className={`w-full text-center px-2 py-1 rounded font-semibold shadow-sm border-2 transition-all duration-200 hover:scale-[1.03] hover:shadow-md hover:border-[#6b7280] hover:bg-[#6b7280] hover:text-white focus:outline-none focus:ring-2 focus:ring-[#6b7280] focus:border-[#6b7280] ${selectedBrand === brand._id ? "bg-[#6b7280] border-[#6b7280] text-white" : "bg-[#1e3a8a] border-[#1e3a8a] text-white"}`}
-                    onClick={() => setSelectedBrand(brand._id)}
+                    className={`w-full text-center px-2 py-1 rounded font-semibold shadow-sm border-2 transition-all duration-200 hover:scale-[1.03] hover:shadow-md hover:border-[#6b7280] hover:bg-[#6b7280] hover:text-white focus:outline-none focus:ring-2 focus:ring-[#6b7280] focus:border-[#6b7280] ${selectedBrand === brand.title ? "bg-[#6b7280] border-[#6b7280] text-white" : "bg-[#1e3a8a] border-[#1e3a8a] text-white"}`}
+                    onClick={() => setSelectedBrand(brand.title)}
                   >
                     {brand.title ?? ''}
                     <span className="ml-2 text-xs text-gray-300">({brand.productCount ?? 0})</span>

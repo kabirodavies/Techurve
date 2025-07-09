@@ -185,10 +185,14 @@ const OrderDetailDialog: React.FC<OrderDetailsDialogProps> = ({
                 <TableCell>{product?.quantity}</TableCell>
                 <TableCell>
                   {currentOrder?.status !== "pending" ? (
-                    <PriceFormatter
-                      amount={product?.product?.price}
-                      className="text-black font-medium"
-                    />
+                    product?.product?.price && product.product.price > 0 ? (
+                      <PriceFormatter
+                        amount={product?.product?.price}
+                        className="text-black font-medium"
+                      />
+                    ) : (
+                      <span>-</span>
+                    )
                   ) : (
                     <span>-</span>
                   )}
@@ -220,10 +224,14 @@ const OrderDetailDialog: React.FC<OrderDetailsDialogProps> = ({
             <div className="w-full flex items-center justify-between">
               <strong>Total: </strong>
               {currentOrder?.status !== "pending" ? (
-                <PriceFormatter
-                  amount={currentOrder?.totalPrice}
-                  className="text-black font-bold"
-                />
+                currentOrder?.totalPrice && currentOrder.totalPrice > 0 ? (
+                  <PriceFormatter
+                    amount={currentOrder?.totalPrice}
+                    className="text-black font-bold"
+                  />
+                ) : (
+                  <span>-</span>
+                )
               ) : (
                 <span>-</span>
               )}

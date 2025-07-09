@@ -8,10 +8,11 @@ import PriceView from "./PriceView";
 import Title from "./Title";
 import ProductSideMenu from "./ProductSideMenu";
 import AddToCartButton from "./AddToCartButton";
-import { useIsAdmin } from "@/hooks/useIsAdmin";
+import { useIsAdmin } from "@/hooks";
 
 const ProductCard = ({ product }: { product: Product }) => {
   const isAdmin = useIsAdmin();
+
   return (
     <div className="text-sm border-[1px] rounded-md border-darkBlue/20 group bg-white">
       <div className="relative group overflow-hidden bg-shop_light_bg">
@@ -47,33 +48,44 @@ const ProductCard = ({ product }: { product: Product }) => {
         )}
       </div>
       <div className="p-3 flex flex-col gap-2">
-        {/* Brand, Category, Subcategory */}
-        <div className="flex flex-wrap gap-2 text-xs text-gray-500 font-medium">
-          {product?.brand && (product.brand as any).title && (
-            <span>
-              Brand: {((product.brand as any).slug?.current) ? (
-                <Link href={`/brand/${(product.brand as any).slug.current}`} className="hover:underline text-shop_dark_blue font-semibold">
-                  {(product.brand as any).title}
-                </Link>
-              ) : (
-                <span className="text-gray-700 font-semibold">{(product.brand as any).title}</span>
-              )}
-            </span>
+        {/* Brand Display - Above Product Name */}
+        {product?.brand && (product.brand as any)?.title ? (
+          <Link
+            href={`/shop?brand=${encodeURIComponent((product.brand as any).title)}`}
+            className="text-xs text-shop_dark_green hover:text-shop_dark_blue hoverEffect font-medium"
+          >
+            {(product.brand as any).title}
+          </Link>
+        ) : (
+          <span className="text-xs text-gray-400 font-medium">Brand</span>
+        )}
+
+        {/* Category and Subcategory Display - Below Brand, Above Product Name */}
+        <div className="flex flex-wrap gap-1 text-xs text-gray-600">
+          {product?.subcategory && (product.subcategory as any)?.parent?.title && (
+            <Link
+              href={`/category/${(product.subcategory as any).parent.slug?.current}`}
+              className="hover:text-shop_dark_green hoverEffect"
+            >
+              {(product.subcategory as any).parent.title}
+            </Link>
           )}
-          {(product?.subcategory && (product.subcategory as any).parent?.title && (product.subcategory as any).parent?.slug && (product.subcategory as any).title && (product.subcategory as any).slug) && (
-            <span>
-              <Link href={`/category/${(product.subcategory as any).parent.slug.current}`} className="hover:underline text-shop_dark_blue">
-                {(product.subcategory as any).parent.title}
-              </Link>
-              {" > "}
-              <Link href={{ pathname: `/category/${(product.subcategory as any).parent.slug.current}`, query: { subcategory: (product.subcategory as any).slug.current } }} className="hover:underline text-shop_dark_blue">
+          {product?.subcategory && (product.subcategory as any)?.title && (
+            <>
+              {product?.subcategory && (product.subcategory as any)?.parent?.title && (
+                <span className="text-gray-400">•</span>
+              )}
+              <Link
+                href={`/category/${(product.subcategory as any).parent.slug?.current}?subcategory=${(product.subcategory as any).slug?.current}`}
+                className="hover:text-shop_dark_green hoverEffect"
+              >
                 {(product.subcategory as any).title}
               </Link>
-            </span>
+            </>
           )}
         </div>
-        <Title className="text-sm line-clamp-1">{product?.name}</Title>
 
+        <Title className="text-sm line-clamp-1">{product?.name}</Title>
 
         <div className="flex items-center gap-2.5">
           <p className="font-medium">In Stock</p>
@@ -84,27 +96,12 @@ const ProductCard = ({ product }: { product: Product }) => {
           </p>
         </div>
 
-        {isAdmin ? (
-          <PriceView
-            price={product?.price}
-            discount={product?.discount}
-            className="text-sm"
-          />
-        ) : (
-          // Render the existing quotation/request button logic here
-          <>
-            <Link
-              href={"/deal"}
-              className="absolute top-2 left-2 z-10 border border-shop_orange/50 p-1 rounded-full group-hover:border-shop_orange hover:text-shop_dark_green hoverEffect"
-            >
-              <Flame
-                size={18}
-                fill="#fb6c08"
-                className="text-shop_orange/50 group-hover:text-shop_orange hoverEffect"
-              />
-            </Link>
-          </>
-        )}
+        <PriceView
+          price={product?.price}
+          discount={product?.discount}
+          className="text-sm"
+          showPrice={isAdmin}
+        />
         <AddToCartButton product={product} className="w-36 rounded-full" />
       </div>
     </div>
