@@ -152,6 +152,15 @@ const CartPage = () => {
                             )}
                             <div className="h-full flex flex-1 flex-col justify-between py-1">
                               <div className="flex flex-col gap-0.5 md:gap-1.5">
+                                {/* Brand Display - Above Product Name */}
+                                {product?.brand && (product.brand as any)?.title && (
+                                  <div className="flex items-center gap-1">
+                                    <span className="text-xs text-gray-400 font-medium">Brand:</span>
+                                    <span className="text-xs text-gray-500 font-medium">
+                                      {(product.brand as any).title}
+                                    </span>
+                                  </div>
+                                )}
                                 <h2 className="text-base font-semibold line-clamp-1">
                                   {product?.name}
                                 </h2>
@@ -230,12 +239,14 @@ const CartPage = () => {
                               <span>SubTotal</span>
                               <PriceFormatter amount={getSubTotalPrice()} />
                             </div>
-                            <div className="flex items-center justify-between">
-                              <span>Discount</span>
-                              <PriceFormatter
-                                amount={getSubTotalPrice() - getTotalPrice()}
-                              />
-                            </div>
+                            {getSubTotalPrice() - getTotalPrice() > 0 && (
+                              <div className="flex items-center justify-between">
+                                <span>Discount</span>
+                                <PriceFormatter
+                                  amount={getSubTotalPrice() - getTotalPrice()}
+                                />
+                              </div>
+                            )}
                             <Separator />
                             <div className="flex items-center justify-between font-semibold text-lg">
                               <span>Total</span>
@@ -336,12 +347,14 @@ const CartPage = () => {
                     <div className="space-y-4">
                       {isAdmin ? (
                         <>
-                          <div className="flex items-center justify-between">
-                            <span>Discount</span>
-                            <PriceFormatter
-                              amount={getSubTotalPrice() - getTotalPrice()}
-                            />
-                          </div>
+                          {getSubTotalPrice() - getTotalPrice() > 0 && (
+                            <div className="flex items-center justify-between">
+                              <span>Discount</span>
+                              <PriceFormatter
+                                amount={getSubTotalPrice() - getTotalPrice()}
+                              />
+                            </div>
+                          )}
                           <Separator />
                           <div className="flex items-center justify-between font-semibold text-lg">
                             <span>Total</span>

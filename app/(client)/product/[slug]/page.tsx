@@ -1,19 +1,15 @@
 import AddToCartButton from "@/components/AddToCartButton";
 import Container from "@/components/Container";
 import FavoriteButton from "@/components/FavoriteButton";
-import ImageView from "@/components/ImageView";
-import PriceView from "@/components/PriceView";
-import ProductCharacteristics from "@/components/ProductCharacteristics";
-import { getProductBySlug } from "@/sanity/queries";
-import { CornerDownLeft, Truck } from "lucide-react";
-import { notFound } from "next/navigation";
-import React from "react";
-import { FaRegQuestionCircle } from "react-icons/fa";
-import { FiShare2 } from "react-icons/fi";
-import { RxBorderSplit } from "react-icons/rx";
-import { TbTruckDelivery } from "react-icons/tb";
+import EnhancedProductGallery from "@/components/EnhancedProductGallery";
+import ProductHero from "@/components/ProductHero";
+import ProductTabs from "@/components/ProductTabs";
+import RelatedProducts from "@/components/RelatedProducts";
+import { getProductBySlug, getProductsBySubcategory } from "@/sanity/queries";
 import { currentUser } from "@clerk/nextjs/server";
 import { isAdmin } from "@/lib/utils";
+import { notFound } from "next/navigation";
+import React from "react";
 
 const SingleProductPage = async ({
   params,
@@ -28,82 +24,54 @@ const SingleProductPage = async ({
   if (!product) {
     return notFound();
   }
+
+  // Fetch related products in the same subcategory
+  let relatedProducts: any[] = [];
+  let featuredProduct: any = null;
+  let subcategory = null;
+  if (product.subcategory && product.subcategory._id) {
+    relatedProducts = await getProductsBySubcategory(product.subcategory._id);
+    // Exclude current product
+    relatedProducts = relatedProducts.filter((p: any) => p._id !== product._id);
+    
+    // Collect all featured products (including current product if featured)
+    const allFeaturedProducts: any[] = [];
+    
+    if (product.isFeatured) {
+      allFeaturedProducts.push(product);
+    }
+    
+    // Add featured products from related products
+    const relatedFeatured = relatedProducts.filter((p: any) => p.isFeatured);
+    allFeaturedProducts.push(...relatedFeatured);
+    
+    // Randomly select one featured product
+    if (allFeaturedProducts.length > 0) {
+      const randomIndex = Math.floor(Math.random() * allFeaturedProducts.length);
+      featuredProduct = allFeaturedProducts[randomIndex];
+    }
+    
+    // Remove featured products from related list
+    relatedProducts = relatedProducts.filter((p: any) => !p.isFeatured);
+    
+    // Get subcategory info for button
+    subcategory = product.subcategory;
+  }
+
   return (
-    <Container className="flex flex-col md:flex-row gap-10 py-10">
-      {product?.images && (
-        <ImageView images={product?.images} isStock={product?.stock} />
-      )}
-      <div className="w-full md:w-1/2 flex flex-col gap-5">
-        <div className="space-y-1">
-          <h2 className="text-2xl font-bold">{product?.name}</h2>
-          <p className="text-sm text-gray-600 tracking-wide">
-            {product?.description}
-          </p>
-          
-        </div>
-        <div className="space-y-2 border-t border-b border-gray-200 py-5">
-          <PriceView
-            price={product?.price}
-            discount={product?.discount}
-            className="text-lg font-bold"
-            showPrice={showPrice}
-          />
-          <p
-            className={`px-4 py-1.5 text-sm text-center inline-block font-semibold rounded-lg ${product?.stock === 0 ? "bg-red-100 text-red-600" : "text-green-600 bg-green-100"}`}
-          >
-            {(product?.stock as number) > 0 ? "In Stock" : "Out of Stock"}
-          </p>
-        </div>
-        <div className="flex items-center gap-2.5 lg:gap-3">
-          <AddToCartButton product={product} />
-          <FavoriteButton showProduct={true} product={product} />
-        </div>
-        <ProductCharacteristics product={product} />
-        <div className="flex flex-wrap items-center justify-between gap-2.5 border-b border-b-gray-200 py-5 -mt-2">
-          <div className="flex items-center gap-2 text-sm text-black hover:text-red-600 hoverEffect">
-            <RxBorderSplit className="text-lg" />
-            <p>Compare color</p>
-          </div>
-          <div className="flex items-center gap-2 text-sm text-black hover:text-red-600 hoverEffect">
-            <FaRegQuestionCircle className="text-lg" />
-            <p>Ask a question</p>
-          </div>
-          <div className="flex items-center gap-2 text-sm text-black hover:text-red-600 hoverEffect">
-            <TbTruckDelivery className="text-lg" />
-            <p>Delivery & Return</p>
-          </div>
-          <div className="flex items-center gap-2 text-sm text-black hover:text-red-600 hoverEffect">
-            <FiShare2 className="text-lg" />
-            <p>Share</p>
-          </div>
-        </div>
-        <div className="flex flex-col">
-          <div className="border border-lightColor/25 border-b-0 p-3 flex items-center gap-2.5">
-            <Truck size={30} className="text-shop_orange" />
-            <div>
-              <p className="text-base font-semibold text-black">
-                Free Delivery
-              </p>
-              <p className="text-sm text-gray-500 underline underline-offset-2">
-                Enter your Postal code for Delivey Availability.
-              </p>
-            </div>
-          </div>
-          <div className="border border-lightColor/25 p-3 flex items-center gap-2.5">
-            <CornerDownLeft size={30} className="text-shop_orange" />
-            <div>
-              <p className="text-base font-semibold text-black">
-                Return Delivery
-              </p>
-              <p className="text-sm text-gray-500 ">
-                Free 30days Delivery Returns.{" "}
-                <span className="underline underline-offset-2">Details</span>
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </Container>
+    <div className="min-h-screen bg-gray-50">
+      {/* Hero Section */}
+      <ProductHero product={product} showPrice={showPrice} />
+      {/* Sticky Tab Navigation */}
+      <ProductTabs product={product} showPrice={showPrice} />
+      {/* Related Products */}
+      <RelatedProducts 
+        currentProduct={product} 
+        featuredProduct={featuredProduct}
+        relatedProducts={relatedProducts}
+        subcategory={subcategory}
+      />
+    </div>
   );
 };
 

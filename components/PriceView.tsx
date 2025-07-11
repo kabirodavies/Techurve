@@ -11,8 +11,9 @@ interface Props {
 }
 
 const PriceView = ({ price, discount, className, hideTotal, showPrice = true }: Props) => {
-  // Calculate the final price after discount
-  const finalPrice = price ? price + ((discount || 0) * price) / 100 : 0;
+  // Calculate the final price after discount (discount is a fixed amount, not percentage)
+  const numericDiscount = Number(discount) || 0;
+  const finalPrice = price ? price - numericDiscount : 0;
   
   // Show "Request Quote" if price is not shown or if final price is 0
   if (!showPrice || !price || finalPrice === 0) {
@@ -34,7 +35,7 @@ const PriceView = ({ price, discount, className, hideTotal, showPrice = true }: 
           amount={finalPrice}
           className={cn("text-shop_dark_green", className)}
         />
-        {price && discount && discount !== 0 && !hideTotal && (
+        {price && numericDiscount > 0 && !hideTotal && (
           <PriceFormatter
             amount={price}
             className={twMerge(

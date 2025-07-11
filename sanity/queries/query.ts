@@ -43,6 +43,7 @@ const PRODUCT_BY_SLUG_QUERY = defineQuery(
       slug
     },
     subcategory->{
+      _id,
       title,
       slug,
       parent->{
