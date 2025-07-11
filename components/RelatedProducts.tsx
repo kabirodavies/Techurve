@@ -46,6 +46,9 @@ const RelatedProducts = ({
   const displayProducts = relatedProducts.slice(0, 4); // Limit to 4 products for grid
   const subcategoryTitle = subcategory?.title || currentProduct.variant?.replace(/_/g, ' ');
   const subcategorySlug = subcategory?.slug?.current || currentProduct.variant;
+  
+  // Get the parent category ID for shop filtering
+  const parentCategoryId = subcategory?.parent?._id || subcategory?._id;
 
   return (
     <section className="bg-white py-16">
@@ -192,7 +195,7 @@ const RelatedProducts = ({
 
         {/* View All Products CTA */}
         <div className="text-center mt-12">
-          <Link href={`/category/${subcategorySlug}`}>
+          <Link href={`/shop?category=${parentCategoryId}`}>
           <Button variant="outline" size="lg" className="px-8">
               View All {subcategoryTitle} Products
             <ArrowRight className="w-4 h-4 ml-2" />

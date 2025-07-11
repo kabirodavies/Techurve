@@ -42,17 +42,25 @@ const SingleProductPage = async ({
     }
     
     // Add featured products from related products
-    const relatedFeatured = relatedProducts.filter((p: any) => p.isFeatured);
+    const relatedFeatured = relatedProducts.filter((p: any) => !!p.isFeatured);
     allFeaturedProducts.push(...relatedFeatured);
     
-    // Randomly select one featured product
+    // Select featured product - random if multiple, direct if only one
     if (allFeaturedProducts.length > 0) {
-      const randomIndex = Math.floor(Math.random() * allFeaturedProducts.length);
-      featuredProduct = allFeaturedProducts[randomIndex];
+      if (allFeaturedProducts.length === 1) {
+        featuredProduct = allFeaturedProducts[0];
+      } else {
+        const randomIndex = Math.floor(Math.random() * allFeaturedProducts.length);
+        featuredProduct = allFeaturedProducts[randomIndex];
+      }
+    } else if (relatedProducts.length > 0) {
+      // Fallback: show the first related product as featured
+      featuredProduct = relatedProducts[0];
+      relatedProducts = relatedProducts.slice(1);
     }
     
-    // Remove featured products from related list
-    relatedProducts = relatedProducts.filter((p: any) => !p.isFeatured);
+    // Remove all featured from relatedProducts
+    relatedProducts = relatedProducts.filter((p: any) => !p.isFeatured || p._id === featuredProduct?._id);
     
     // Get subcategory info for button
     subcategory = product.subcategory;
