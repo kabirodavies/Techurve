@@ -224,6 +224,13 @@ export type Product = {
   isFeatured?: boolean;
   features?: string[];
   usage?: string[];
+  trustIndicators?: string[];
+  keyHighlights?: string[];
+  keyFeatures?: Array<{
+    id: string;
+    label: string;
+    value: string;
+  }>;
 };
 
 export type Brand = {

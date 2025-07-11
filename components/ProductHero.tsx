@@ -8,7 +8,8 @@ import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import React, { useEffect, useState } from "react";
 import EnhancedProductGallery from "./EnhancedProductGallery";
-import { Shield, Zap, Wifi, Clock, CheckCircle, Star } from "lucide-react";
+import { Shield, Zap, Wifi, Clock, CheckCircle, Star, Truck, RefreshCw, BadgeCheck } from "lucide-react";
+import FeatureGrid from "./FeatureGrid";
 
 interface ProductHeroProps {
   product: Product | null | undefined;
@@ -28,34 +29,37 @@ const ProductHero = ({ product, showPrice }: ProductHeroProps) => {
     fetchData();
   }, [product]);
 
-  const keyFeatures = [
-    { icon: Shield, label: "Enterprise Security", value: "Military-grade protection" },
-    { icon: Zap, label: "Fast Response", value: "< 0.5s verification" },
-    { icon: Wifi, label: "Smart Connectivity", value: "Wi-Fi & PoE ready" },
-    { icon: Clock, label: "24/7 Operation", value: "Always-on monitoring" },
-  ];
-
-  const productHighlights = [
-    "Advanced biometric authentication with 500 DPI capacitive sensor",
-    "Weatherproof IP65 design for outdoor installation",
-    "Real-time monitoring and instant alerts",
-    "Remote management via secure web interface",
-    "Easy integration with existing security systems",
-    "Multi-factor authentication support",
-    "Comprehensive audit trail and access logs",
-  ];
+  const featureIcons: Record<string, React.ElementType> = {
+    security: Shield,
+    speed: Zap,
+    connectivity: Wifi,
+    time: Clock,
+  };
 
   return (
     <div className="bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Breadcrumb */}
         <div className="flex items-center space-x-2 text-sm text-gray-500 mb-6">
-          <span>Home</span>
-          <span>/</span>
-          <span>Products</span>
-          <span>/</span>
-          <span>{product?.variant?.replace(/_/g, ' ')}</span>
-          <span>/</span>
+          {typeof product?.brand === 'object' && 'title' in (product.brand as any) && (
+            <>
+              <span>Brand:</span>
+              <span>{(product.brand as any).title}</span>
+              <span>|</span>
+            </>
+          )}
+          {typeof product?.subcategory === 'object' && 'parent' in (product.subcategory as any) && (product.subcategory as any).parent && 'title' in (product.subcategory as any).parent && (
+            <>
+              <span>{(product.subcategory as any).parent.title}</span>
+              <span>-</span>
+            </>
+          )}
+          {typeof product?.subcategory === 'object' && 'title' in (product.subcategory as any) && (
+            <>
+              <span>{(product.subcategory as any).title}</span>
+              <span>-</span>
+            </>
+          )}
           <span className="text-gray-900 font-medium">{product?.name}</span>
         </div>
 
@@ -105,30 +109,28 @@ const ProductHero = ({ product, showPrice }: ProductHeroProps) => {
             </div>
 
             {/* Key Features Grid */}
-            <div className="grid grid-cols-2 gap-4">
-              {keyFeatures.map((feature, index) => (
-                <div key={index} className="flex items-start gap-3 p-4 bg-gray-50 rounded-lg">
-                  <feature.icon className="w-6 h-6 text-blue-600 mt-1 flex-shrink-0" />
-                  <div>
-                    <p className="font-semibold text-gray-900 text-sm">{feature.label}</p>
-                    <p className="text-gray-600 text-xs">{feature.value}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
+            {Array.isArray(product?.keyFeatures) && product.keyFeatures.length > 0 && (
+              <FeatureGrid
+                features={product.keyFeatures}
+                iconMap={featureIcons}
+                fallbackIcon={Shield}
+              />
+            )}
 
             {/* Product Highlights */}
-            <div className="space-y-3">
-              <h3 className="text-lg font-semibold text-gray-900">Key Highlights</h3>
-              <ul className="space-y-2">
-                {productHighlights.map((highlight, index) => (
-                  <li key={index} className="flex items-start gap-2">
-                    <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                    <span className="text-gray-700">{highlight}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            {Array.isArray(product?.keyHighlights) && product.keyHighlights.length > 0 && (
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold text-gray-900">Key Highlights</h3>
+                <ul className="space-y-2">
+                  {product.keyHighlights.map((highlight, index) => (
+                    <li key={index} className="flex items-start gap-2">
+                      <CheckCircle className="w-4 h-4 text-gray-500 mt-0.5 flex-shrink-0" />
+                      <span className="text-gray-700">{highlight}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
             {/* Price & Stock */}
             <div className="space-y-6 p-6 bg-gray-50 rounded-lg">
@@ -140,9 +142,9 @@ const ProductHero = ({ product, showPrice }: ProductHeroProps) => {
                     className="text-3xl font-bold"
                     showPrice={showPrice}
                   />
-                  {product?.discount && product.discount > 0 && (
+                  {product?.discount !== undefined && product.discount > 0 && (
                     <p className="text-sm text-green-600 font-medium">
-                      Save ${product.discount} on this item
+                      Save KES{product.discount} on this item
                     </p>
                   )}
                 </div>
@@ -172,13 +174,18 @@ const ProductHero = ({ product, showPrice }: ProductHeroProps) => {
               </div>
 
               {/* Trust Indicators */}
-              <div className="flex items-center justify-between pt-4 border-t border-gray-200">
-                <div className="flex items-center gap-4 text-sm text-gray-600">
-                  <span>✓ Free Shipping</span>
-                  <span>✓ 2-Year Warranty</span>
-                  <span>✓ 30-Day Returns</span>
+              {Array.isArray(product?.trustIndicators) && product.trustIndicators.length > 0 && (
+                <div className="flex items-center justify-between pt-4 border-t border-gray-200">
+                  <div className="flex items-center gap-4 text-sm text-gray-600">
+                    {product.trustIndicators.map((indicator, idx) => (
+                      <span key={idx} className="flex items-center gap-1">
+                        <CheckCircle className="w-4 h-4 text-gray-500 flex-shrink-0" />
+                        {indicator}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </div>

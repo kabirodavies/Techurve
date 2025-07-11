@@ -6,12 +6,16 @@ export const productType = defineType({
   title: "Products",
   type: "document",
   icon: TrolleyIcon,
+  fieldsets: [
+    { name: "hero", title: "Hero Section", options: { collapsible: true, collapsed: false } },
+  ],
   fields: [
     defineField({
       name: "name",
       title: "Product Name",
       type: "string",
       validation: (Rule) => Rule.required(),
+      fieldset: "hero",
     }),
     defineField({
       name: "slug",
@@ -22,50 +26,49 @@ export const productType = defineType({
         maxLength: 96,
       },
       validation: (Rule) => Rule.required(),
+      fieldset: "hero",
     }),
     defineField({
       name: "images",
       title: "Product Images",
       type: "array",
       of: [{ type: "image", options: { hotspot: true } }],
+      fieldset: "hero",
     }),
     defineField({
       name: "description",
       title: "Description",
       type: "string",
+      fieldset: "hero",
     }),
     defineField({
       name: "price",
       title: "Price",
       type: "number",
       validation: (Rule) => Rule.required().min(0),
+      fieldset: "hero",
     }),
     defineField({
       name: "discount",
       title: "Discount",
       type: "number",
       validation: (Rule) => Rule.required().min(0),
-    }),
-    defineField({
-      name: "subcategory",
-      title: "Subcategory",
-      type: "reference",
-      to: [{ type: "subcategory" }],
-      validation: (Rule) => Rule.required(),
+      fieldset: "hero",
     }),
     defineField({
       name: "stock",
       title: "Stock",
       type: "number",
       validation: (Rule) => Rule.min(0),
+      fieldset: "hero",
     }),
     defineField({
       name: "brand",
       title: "Brand",
       type: "reference",
       to: { type: "brand" },
+      fieldset: "hero",
     }),
-
     defineField({
       name: "status",
       title: "Product Status",
@@ -77,6 +80,45 @@ export const productType = defineType({
           { title: "Sale", value: "sale" },
         ],
       },
+      fieldset: "hero",
+    }),
+    defineField({
+      name: "keyFeatures",
+      title: "Key Features",
+      type: "array",
+      of: [
+        {
+          type: "object",
+          fields: [
+            { name: "id", type: "string", title: "Feature ID (for icon mapping)" },
+            { name: "label", type: "string", title: "Label" },
+            { name: "value", type: "string", title: "Value" },
+          ]
+        }
+      ],
+      fieldset: "hero",
+    }),
+    defineField({
+      name: "keyHighlights",
+      title: "Key Highlights",
+      type: "array",
+      of: [{ type: "string" }],
+      fieldset: "hero",
+    }),
+    defineField({
+      name: "trustIndicators",
+      title: "Trust Indicators",
+      type: "array",
+      of: [{ type: "string" }],
+      fieldset: "hero",
+    }),
+    defineField({
+      name: "subcategory",
+      title: "Subcategory",
+      type: "reference",
+      to: [{ type: "subcategory" }],
+      validation: (Rule) => Rule.required(),
+      fieldset: "hero",
     }),
     defineField({
       name: "variant",
@@ -96,6 +138,7 @@ export const productType = defineType({
           { title: "Services & Solutions", value: "services" },
         ],
       },
+      fieldset: "hero",
     }),
     defineField({
       name: "isFeatured",
