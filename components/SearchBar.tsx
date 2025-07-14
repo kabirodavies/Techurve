@@ -144,7 +144,9 @@ const SearchBar = () => {
         onClick={() => setOpen(true)}
         className="flex items-center"
       >
-        <Search className="w-5 h-5 hover:text-shop_dark_blue hoverEffect" />
+        <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-shop_dark_blue/10 border-2 border-shop_dark_blue shadow hover:bg-shop_dark_blue hover:text-white transition-all">
+          <Search className="w-5 h-5" />
+        </span>
       </button>
       {open && typeof window !== 'undefined' && createPortal(modal, document.body)}
     </div>

@@ -124,27 +124,33 @@ const ProductGrid = () => {
           transition={{ delay: 0.2 }}
           className="flex justify-center mb-8"
         >
-          <div className="bg-gray-100 p-1 rounded-lg flex">
+          <div className="bg-gray-100 p-1 rounded-lg flex gap-2">
             <Button
-              variant={selectedSolution === 'onpremise' ? 'default' : 'ghost'}
+              variant="ghost"
               onClick={() => setSelectedSolution('onpremise')}
-              className={`rounded-md transition-all duration-300 ${selectedSolution === 'onpremise' ? 'bg-blue-600 hover:bg-blue-700 text-white' : ''}`}
+              className={`px-4 py-2 rounded-full border border-shop_dark_blue/20 font-semibold text-sm transition-all shadow-sm
+                ${selectedSolution === 'onpremise' ? 'bg-shop_dark_blue text-white font-bold shadow-md' : 'bg-white text-shop_dark_blue hover:bg-shop_dark_blue hover:text-white hover:shadow-md'}
+                hover:bg-shop_dark_blue hover:text-white hover:scale-105 focus:outline-none focus:ring-2 focus:ring-shop_dark_blue/40`}
             >
               <Server className="w-4 h-4 mr-2" />
               On-premise
             </Button>
             <Button
-              variant={selectedSolution === 'cloud' ? 'default' : 'ghost'}
+              variant="ghost"
               onClick={() => setSelectedSolution('cloud')}
-              className={`rounded-md transition-all duration-300 ${selectedSolution === 'cloud' ? 'bg-blue-600 hover:bg-blue-700 text-white' : ''}`}
+              className={`px-4 py-2 rounded-full border border-shop_dark_blue/20 font-semibold text-sm transition-all shadow-sm
+                ${selectedSolution === 'cloud' ? 'bg-shop_dark_blue text-white font-bold shadow-md' : 'bg-white text-shop_dark_blue hover:bg-shop_dark_blue hover:text-white hover:shadow-md'}
+                hover:bg-shop_dark_blue hover:text-white hover:scale-105 focus:outline-none focus:ring-2 focus:ring-shop_dark_blue/40`}
             >
               <Cloud className="w-4 h-4 mr-2" />
               Cloud
             </Button>
             <Button
-              variant={selectedSolution === 'hybrid' ? 'default' : 'ghost'}
+              variant="ghost"
               onClick={() => setSelectedSolution('hybrid')}
-              className={`rounded-md transition-all duration-300 ${selectedSolution === 'hybrid' ? 'bg-blue-600 hover:bg-blue-700 text-white' : ''}`}
+              className={`px-4 py-2 rounded-full border border-shop_dark_blue/20 font-semibold text-sm transition-all shadow-sm
+                ${selectedSolution === 'hybrid' ? 'bg-shop_dark_blue text-white font-bold shadow-md' : 'bg-white text-shop_dark_blue hover:bg-shop_dark_blue hover:text-white hover:shadow-md'}
+                hover:bg-shop_dark_blue hover:text-white hover:scale-105 focus:outline-none focus:ring-2 focus:ring-shop_dark_blue/40`}
             >
               <Server className="w-4 h-4 mr-2" />
               <Cloud className="w-4 h-4 mr-2" />

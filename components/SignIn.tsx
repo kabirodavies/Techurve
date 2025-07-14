@@ -1,14 +1,14 @@
 "use client";
 import { SignInButton } from "@clerk/nextjs";
 import React from "react";
+import { Button } from "./ui/button";
 
 const SignIn = () => {
   return (
     <SignInButton mode="modal">
-      <button className="text-sm font-semibold hover:text-darkColor
-       text-lightColor hover:cursor-pointer hoverEffect">
+      <Button size="default" className="bg-shop_dark_blue text-white rounded-full px-4 py-1.5 font-bold shadow hover:bg-shop_orange transition-all">
         Login
-      </button>
+      </Button>
     </SignInButton>
   );
 };

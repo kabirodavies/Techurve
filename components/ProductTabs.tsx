@@ -139,11 +139,9 @@ const ProductTabs = ({ product, showPrice }: any) => {
         {/* Overview */}
         <section ref={refs.overview} id="overview" className="space-y-8">
           <div className="text-center space-y-4">
-            <h2 className="text-3xl font-bold text-gray-900">Product Overview</h2>
+            <h2 className="text-3xl font-bold text-gray-900">Product Description</h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              The {product?.name} represents the next generation of biometric access control, 
-              combining cutting-edge technology with enterprise-grade security features to 
-              provide reliable and efficient access management solutions.
+              {product?.name} {product?.description}
             </p>
           </div>
 
@@ -163,6 +161,9 @@ const ProductTabs = ({ product, showPrice }: any) => {
             ))}
           </div>
         </section>
+
+        {/* Add a section for detailed description at the bottom */}
+ 
 
         {/* Specifications */}
         <section ref={refs.specs} id="specs" className="space-y-8">

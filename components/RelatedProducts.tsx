@@ -109,7 +109,7 @@ const RelatedProducts = ({
                     {featuredProduct.name}
                 </h3>
                 <p className="text-gray-600">
-                    {featuredProduct.description}
+                    {featuredProduct.overview}
                 </p>
                 {/* Price Section - Use PriceView just like ProductHero */}
                 <div className="flex items-center gap-4">

@@ -8,6 +8,7 @@ export const productType = defineType({
   icon: TrolleyIcon,
   fieldsets: [
     { name: "hero", title: "Hero Section", options: { collapsible: true, collapsed: false } },
+    { name: "productDetails", title: "Product Details", options: { collapsible: true, collapsed: false } },
   ],
   fields: [
     defineField({
@@ -15,6 +16,13 @@ export const productType = defineType({
       title: "Product Name",
       type: "string",
       validation: (Rule) => Rule.required(),
+      fieldset: "hero",
+    }),
+    defineField({
+      name: "overview",
+      title: "Overview",
+      type: "string",
+      description: "A brief summary of the product for the hero section.",
       fieldset: "hero",
     }),
     defineField({
@@ -33,12 +41,6 @@ export const productType = defineType({
       title: "Product Images",
       type: "array",
       of: [{ type: "image", options: { hotspot: true } }],
-      fieldset: "hero",
-    }),
-    defineField({
-      name: "description",
-      title: "Description",
-      type: "string",
       fieldset: "hero",
     }),
     defineField({
@@ -146,6 +148,19 @@ export const productType = defineType({
       type: "boolean",
       description: "Toggle to Featured on or off",
       initialValue: false,
+    }),
+    defineField({
+      name: "description",
+      title: "Description",
+      type: "string",
+      description: "A detailed description of the product for the Product Details section.",
+      fieldset: "productDetails",
+    }),
+    defineField({
+      name: "details",
+      title: "Product Details",
+      type: "text",
+      fieldset: "productDetails",
     }),
   ],
   preview: {
