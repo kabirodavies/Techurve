@@ -20,7 +20,7 @@ const BlogPage = async () => {
   return (
     <div>
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-blue-600 to-indigo-800 text-white py-20 px-6 text-center overflow-hidden">
+      <section className="relative bg-gradient-to-br from-black to-black text-white py-20 px-6 text-center overflow-hidden">
         <h1 className="text-4xl md:text-6xl font-bold mb-4 z-10 relative">News, Events & Thoughts.</h1>
         <p className="text-lg md:text-2xl max-w-2xl mx-auto mb-8 z-10 relative">
           Stay informed with the latest trends, tips, and news in security, automation, and technology.
@@ -30,7 +30,10 @@ const BlogPage = async () => {
       </section>
 
       <Container>
-        <BlogListWithFilter blogs={blogs} categories={categories} />
+        <div className="mt-10" />
+        <div className="mb-16">
+          <BlogListWithFilter blogs={blogs} categories={categories} />
+        </div>
       </Container>
     </div>
   );

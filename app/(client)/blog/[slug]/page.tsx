@@ -15,6 +15,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import React from "react";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
+import SocialMedia from "@/components/SocialMedia";
 
 // Helper to extract ToC from PortableText blocks
 type TocItem = { id: string; text: string; level: string };
@@ -141,13 +142,42 @@ const SingleBlogPage = async ({ params }: { params: Promise<{ slug: string }> })
 
   return (
     <div className="py-10">
-      <Container className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      {/* Hero Section for Blog Post */}
+      <section className="relative bg-gradient-to-br text-black py-20 px-6 text-left overflow-hidden mb-4">
+        <h1 className="text-4xl md:text-6xl font-bold mb-4 z-10 relative">{blog?.title}</h1>
+        {/* Info Bar: Date, Category, Shared On (in hero) */}
+        <div className="flex flex-wrap items-center gap-4 md:gap-8 text-base py-2 px-0 mb-2 z-10 relative">
+          <div className="flex items-center gap-2">
+            <span className="font-semibold text-gray-700 uppercase text-xs">Date:</span>
+            <Calendar size={16} className="text-blue-700" />
+            <span className="text-gray-900 text-sm md:text-base">{dayjs(blog.publishedAt).format("MMMM D, YYYY")}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="font-semibold text-gray-700 uppercase text-xs">Category:</span>
+            {Array.isArray(blog?.blogcategories) && blog.blogcategories.length > 0 ? (
+              blog.blogcategories.map((cat: any, idx: number) => (
+                <span key={idx} className="inline-block px-2 py-0.5 bg-blue-50 text-blue-700 rounded text-sm md:text-base font-normal">
+                  {cat?.title ?? "No Category"}
+                </span>
+              ))
+            ) : (
+              <span className="text-gray-400 text-sm md:text-base">No Category</span>
+            )}
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="font-semibold text-gray-700 uppercase text-xs">Shared on:</span>
+            <SocialMedia className="ml-1" iconClassName="border-gray-200 hover:border-blue-700" />
+          </div>
+        </div>
+        <div className="absolute inset-0 opacity-10 bg-cover bg-center z-0" style={{ backgroundImage: "url('/images/blog-bg.jpg')" }} />
+      </section>
+      <Container className="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-2">
         {/* Sidebar: ToC + Featured Product (now on the left) */}
         <aside className="lg:col-span-4 hidden lg:block">
-          <div className="sticky top-24 flex flex-col h-[calc(100vh-6rem)]">
+          <div className="sticky top-20 flex flex-col h-[calc(100vh-6rem)]">
             {/* Table of Contents */}
             {toc.length > 0 && (
-              <div className="bg-white border border-gray-100 rounded-xl shadow p-6 mb-6">
+              <div className="bg-white border border-gray-100 rounded-xl shadow p-4 mb-4 mt-0">
                 <ul className="space-y-2 list-disc pl-5">
                   {toc.map((item) => (
                     <li key={item.id} className={item.level === "h3" ? "ml-6" : ""}>
@@ -204,20 +234,6 @@ const SingleBlogPage = async ({ params }: { params: Promise<{ slug: string }> })
               className="w-full max-h-[400px] object-cover rounded-xl mb-8"
             />
           )}
-          <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 mb-4">
-            {blog?.blogcategories?.map((item, idx) => (
-              <span key={idx} className="font-semibold text-shop_dark_green tracking-wider">
-                {item?.title ?? "No Category"}
-              </span>
-            ))}
-            <span className="flex items-center gap-1">
-              <Pencil size={15} /> {blog?.author?.name}
-            </span>
-            <span className="flex items-center gap-1">
-              <Calendar size={15} /> {dayjs(blog.publishedAt).format("MMMM D, YYYY")}
-            </span>
-          </div>
-          <h1 className="text-3xl md:text-4xl font-bold mb-6 leading-tight">{blog?.title}</h1>
           <div className="prose max-w-none prose-blue prose-lg">
             <PortableTextWithAnchors value={blocks} />
           </div>

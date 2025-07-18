@@ -1,7 +1,7 @@
 import { title } from "process";
 
 export const headerData = [
-  { title: "Home", href: "/" },
+  // { title: "Home", href: "/" },
   { title: "Products", href: "/shop" },
   { title: "Solutions", href: "/solutions" },
   {
