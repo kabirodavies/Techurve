@@ -10,6 +10,7 @@ import React, { useEffect, useState } from "react";
 import EnhancedProductGallery from "./EnhancedProductGallery";
 import { Shield, Zap, Wifi, Clock, CheckCircle, Star, Truck, RefreshCw, BadgeCheck } from "lucide-react";
 import FeatureGrid from "./FeatureGrid";
+import { featureIconMap } from "@/constants/featureIcons";
 
 interface ProductHeroProps {
   product: Product | null | undefined;
@@ -28,13 +29,6 @@ const ProductHero = ({ product, showPrice }: ProductHeroProps) => {
     };
     fetchData();
   }, [product]);
-
-  const featureIcons: Record<string, React.ElementType> = {
-    security: Shield,
-    speed: Zap,
-    connectivity: Wifi,
-    time: Clock,
-  };
 
   return (
     <div className="bg-white">
@@ -111,8 +105,8 @@ const ProductHero = ({ product, showPrice }: ProductHeroProps) => {
             {/* Key Features Grid */}
             {Array.isArray(product?.keyFeatures) && product.keyFeatures.length > 0 && (
               <FeatureGrid
-                features={product.keyFeatures}
-                iconMap={featureIcons}
+                features={product.keyFeatures.slice(0, 4)}
+                iconMap={featureIconMap}
                 fallbackIcon={Shield}
               />
             )}
@@ -168,9 +162,6 @@ const ProductHero = ({ product, showPrice }: ProductHeroProps) => {
               <div className="flex items-center gap-4">
                 {product && <AddToCartButton product={product} />}
                 {product && <FavoriteButton showProduct={true} product={product} />}
-                <Button variant="outline" size="lg" className="flex-1">
-                  Request Quote
-                </Button>
               </div>
 
               {/* Trust Indicators */}

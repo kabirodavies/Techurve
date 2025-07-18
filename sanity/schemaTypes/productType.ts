@@ -95,6 +95,7 @@ export const productType = defineType({
             { name: "id", type: "string", title: "Feature ID (for icon mapping)" },
             { name: "label", type: "string", title: "Label" },
             { name: "value", type: "string", title: "Value" },
+            { name: "description", type: "string", title: "Description" },
           ]
         }
       ],
@@ -157,9 +158,49 @@ export const productType = defineType({
       fieldset: "productDetails",
     }),
     defineField({
-      name: "details",
-      title: "Product Details",
-      type: "text",
+      name: "specifications",
+      title: "Technical Specifications",
+      type: "array",
+      of: [
+        {
+          type: "object",
+          fields: [
+            { name: "category", type: "string", title: "Category" },
+            {
+              name: "specs",
+              title: "Specs",
+              type: "array",
+              of: [
+                {
+                  type: "object",
+                  fields: [
+                    { name: "label", type: "string", title: "Label" },
+                    { name: "value", type: "string", title: "Value" },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      fieldset: "productDetails",
+    }),
+    defineField({
+      name: "downloads",
+      title: "Downloads",
+      type: "array",
+      of: [
+        {
+          type: "object",
+          fields: [
+            { name: "title", type: "string", title: "Title" },
+            { name: "type", type: "string", title: "Type (e.g. PDF, ZIP)" },
+            { name: "size", type: "string", title: "Size (e.g. 2.4 MB)" },
+            { name: "url", type: "file", title: "File" },
+            { name: "icon", type: "string", title: "Icon (use icon key, e.g. 'FileText', 'Wrench', etc.)" },
+          ]
+        }
+      ],
       fieldset: "productDetails",
     }),
   ],

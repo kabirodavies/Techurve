@@ -47,8 +47,17 @@ const PRODUCT_BY_SLUG_QUERY = defineQuery(
       title,
       slug,
       parent->{
-      title,
-      slug
+        title,
+        slug
+      }
+    },
+    downloads[]{
+      ...,
+      url{
+        ...,
+        asset->{
+          url
+        }
       }
     }
   }`
@@ -229,6 +238,37 @@ const PRODUCTS_BY_BRAND_SLUG = defineQuery(`
     }
   }
 `);
+
+export const GET_ALL_SOLUTIONS = defineQuery(`
+  *[_type == "solution"] | order(title asc) {
+    _id,
+    title,
+    "slug": slug.current,
+    summary,
+    heroImage,
+    industries,
+    body
+  }
+`);
+
+export const GET_SOLUTION_BY_SLUG = defineQuery(`
+  *[_type == "solution" && slug.current == $slug][0] {
+    _id,
+    title,
+    summary,
+    heroImage,
+    industries,
+    body
+  }
+`);
+
+export const GET_ALL_SOLUTION_INDUSTRIES = defineQuery(`
+  array::unique(*[_type=="solution"].industries[])
+`);
+
+export const GET_TESTIMONIALS = `*[_type == "testimonial"] | order(_createdAt desc){
+  _id, quote, clientName, company, "companyLogo": companyLogo.asset->url
+}`;
 
 export {
   BRANDS_QUERY,
