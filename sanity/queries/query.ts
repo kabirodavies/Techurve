@@ -245,7 +245,7 @@ export const GET_ALL_SOLUTIONS = defineQuery(`
     title,
     "slug": slug.current,
     summary,
-    heroImage,
+    icon,
     industries,
     body
   }
@@ -258,7 +258,8 @@ export const GET_SOLUTION_BY_SLUG = defineQuery(`
     summary,
     heroImage,
     industries,
-    body
+    body,
+    qa
   }
 `);
 
