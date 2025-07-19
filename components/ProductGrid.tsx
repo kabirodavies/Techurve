@@ -243,7 +243,7 @@ const ProductGrid = () => {
                       <div className="space-y-4">
                         <Cloud className="w-16 h-16 text-blue-600 mx-auto" />
                         <h3 className="text-xl font-semibold text-gray-800">
-                          World's leading biometrics, now in the cloud.
+                          World&apos;s leading biometrics, now in the cloud.
                         </h3>
                         <div className="space-y-2 text-sm text-gray-600">
                           <p>No servers to set up. No extra door controllers.</p>

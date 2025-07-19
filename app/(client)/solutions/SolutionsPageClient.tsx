@@ -6,9 +6,31 @@ import Testimonials from '@/components/Testimonials'
 import { featureIconMap } from '@/constants/featureIcons';
 import { Shield } from 'lucide-react';
 import CaseStudyShowcase from '@/components/CaseStudyShowcase';
-import { getAllCaseStudies } from '@/sanity/queries';
+import type { Testimonial } from '@/components/Testimonials';
 
-export default function SolutionsPageClient({ solutions, testimonials, caseStudies }: { solutions: unknown[]; testimonials: unknown[]; caseStudies: unknown[] }) {
+// Solution type based on schema and usage
+interface Solution {
+  title: string;
+  slug: string;
+  summary: string;
+  icon: string;
+  industries?: string[];
+  body?: unknown;
+}
+
+// CaseStudy type based on CaseStudyShowcase
+interface CaseStudy {
+  _id: string;
+  title: string;
+  slug: { current: string };
+  summary?: string;
+  mainImage: unknown;
+  location?: string;
+  product?: string;
+  topic?: string;
+}
+
+export default function SolutionsPageClient({ solutions, testimonials, caseStudies }: { solutions: Solution[]; testimonials: Testimonial[]; caseStudies: CaseStudy[] }) {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
 
   const filteredSolutions = solutions;
@@ -33,7 +55,7 @@ export default function SolutionsPageClient({ solutions, testimonials, caseStudi
           {filteredSolutions.length === 0 && (
             <div className="text-center text-gray-500">No solutions found for this industry.</div>
           )}
-          {filteredSolutions.map((solution: unknown, idx: number) => {
+          {filteredSolutions.map((solution: Solution, idx: number) => {
             console.log('Solution:', solution.title, 'Icon:', solution.icon);
             const isOpen = openIndex === idx;
             // Defensive, deterministic icon rendering

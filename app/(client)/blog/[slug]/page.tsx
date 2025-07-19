@@ -10,26 +10,30 @@ import React from "react";
 import SocialMedia from "@/components/SocialMedia";
 import type { GET_ALL_BLOGResult } from "@/sanity.types";
 import { getSingleBlog, getAllBlogs } from "@/sanity/queries";
+import type { BlockContent } from "@/sanity.types";
 
 // Helper to extract ToC from PortableText blocks
 type TocItem = { id: string; text: string; level: string };
-function extractToc(blocks: unknown[]): TocItem[] {
+function extractToc(blocks: BlockContent): TocItem[] {
   const toc: TocItem[] = [];
   let headingCount = 0;
-  blocks?.forEach((block: unknown) => {
-    if (block && (block as any)._type === "block" && (block as any).style === "h2" || (block as any).style === "h3") {
+  blocks?.forEach((block) => {
+    if (
+      block &&
+      block._type === "block" &&
+      (block.style === "h2" || block.style === "h3")
+    ) {
       headingCount++;
       const id =
-        ((block as any).children?.[0]?.text || `section-${headingCount}`)
+        (block.children?.[0]?.text || `section-${headingCount}`)
           .toLowerCase()
           .replace(/[^a-z0-9]+/g, "-")
           .replace(/(^-|-$)/g, "") + `-${headingCount}`;
       toc.push({
         id,
-        text: (block as any).children?.[0]?.text || `Section ${headingCount}`,
-        level: (block as any).style as string,
+        text: block.children?.[0]?.text || `Section ${headingCount}`,
+        level: block.style as string,
       });
-      // (block as any)._tocId = id; // Attach id for later use (not needed for type safety)
     }
   });
   return toc;
@@ -58,11 +62,11 @@ const SingleBlogPage = async ({ params }: { params: { slug: string } }) => {
   }
 
   // Extract ToC and add anchor IDs to blocks
-  const blocks: unknown[] = blog.body ?? [];
+  const blocks: BlockContent = blog.body ?? [];
   const toc = extractToc(blocks);
 
   // Helper to render PortableText with anchor IDs for headings
-  function PortableTextWithAnchors({ value }: { value: unknown[] }) {
+  function PortableTextWithAnchors({ value }: { value: BlockContent }) {
     let headingCount = 0;
     return (
       <PortableText
@@ -143,7 +147,7 @@ const SingleBlogPage = async ({ params }: { params: { slug: string } }) => {
           <div className="flex items-center gap-2">
             <span className="font-semibold text-gray-700 uppercase text-xs">Category:</span>
             {Array.isArray(blog?.blogcategories) && blog.blogcategories.length > 0 ? (
-              blog.blogcategories.map((cat: { title: string }, idx: number) => (
+              blog.blogcategories.map((cat: { title: string | null }, idx: number) => (
                 <span key={idx} className="inline-block px-2 py-0.5 bg-blue-50 text-blue-700 rounded text-sm md:text-base font-normal">
                   {cat?.title ?? "No Category"}
                 </span>
