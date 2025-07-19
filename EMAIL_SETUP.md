@@ -69,3 +69,4 @@ If emails are not being sent:
 2. Verify your domain is verified with Resend
 3. Check the console logs for any error messages
 4. Ensure the customer email address is valid 
+5.

@@ -239,8 +239,6 @@ const PRODUCTS_BY_BRAND_SLUG = defineQuery(`
   }
 `);
 
-<<<<<<< HEAD
-=======
 export const GET_ALL_SOLUTIONS = defineQuery(`
   *[_type == "solution"] | order(title asc) {
     _id,
@@ -273,7 +271,6 @@ export const GET_TESTIMONIALS = `*[_type == "testimonial"] | order(_createdAt de
   _id, quote, clientName, company, "companyLogo": companyLogo.asset->url
 }`;
 
->>>>>>> test
 export {
   BRANDS_QUERY,
   LATEST_BLOG_QUERY,
@@ -292,4 +289,8 @@ export {
   PRODUCTS_BY_CATEGORY,
   ALL_PRODUCTS_QUERY,
   PRODUCTS_BY_BRAND_SLUG,
+  GET_ALL_SOLUTIONS,
+  GET_SOLUTION_BY_SLUG,
+  GET_ALL_SOLUTION_INDUSTRIES,
+  GET_TESTIMONIALS,
 };
