@@ -11,6 +11,10 @@ import EnhancedProductGallery from "./EnhancedProductGallery";
 import { Shield, Zap, Wifi, Clock, CheckCircle, Star, Truck, RefreshCw, BadgeCheck } from "lucide-react";
 import FeatureGrid from "./FeatureGrid";
 import { featureIconMap } from "@/constants/featureIcons";
+import { Product } from "@/sanity.types";
+
+// Define a type for brand
+interface BrandType { brandName?: string | null }
 
 interface ProductHeroProps {
   product: ExpandedProduct | null | undefined;
@@ -18,13 +22,13 @@ interface ProductHeroProps {
 }
 
 const ProductHero = ({ product, showPrice }: ProductHeroProps) => {
-  const [brand, setBrand] = useState<any>(null);
+  const [brand, setBrand] = useState<BrandType | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       if (product?.slug?.current) {
         const brandData = await getBrand(product.slug.current);
-        setBrand(brandData?.[0]);
+        setBrand(brandData?.[0] ?? null);
       }
     };
     fetchData();
@@ -35,22 +39,22 @@ const ProductHero = ({ product, showPrice }: ProductHeroProps) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Breadcrumb */}
         <div className="flex items-center space-x-2 text-sm text-gray-500 mb-6">
-          {typeof product?.brand === 'object' && 'title' in (product.brand as any) && (
+          {typeof product?.brand === 'object' && 'title' in (product.brand ?? {}) && (
             <>
               <span>Brand:</span>
-              <span>{(product.brand as any).title}</span>
+              <span>{product.brand?.title}</span>
               <span>|</span>
             </>
           )}
-          {typeof product?.subcategory === 'object' && 'parent' in (product.subcategory as any) && (product.subcategory as any).parent && 'title' in (product.subcategory as any).parent && (
+          {typeof product?.subcategory === 'object' && 'parent' in (product.subcategory ?? {}) && (product.subcategory?.parent ?? {}) && 'title' in (product.subcategory?.parent ?? {}) && (
             <>
-              <span>{(product.subcategory as any).parent.title}</span>
+              <span>{(product.subcategory?.parent ?? {}).title}</span>
               <span>-</span>
             </>
           )}
-          {typeof product?.subcategory === 'object' && 'title' in (product.subcategory as any) && (
+          {typeof product?.subcategory === 'object' && 'title' in (product.subcategory ?? {}) && (
             <>
-              <span>{(product.subcategory as any).title}</span>
+              <span>{(product.subcategory ?? {}).title}</span>
               <span>-</span>
             </>
           )}
@@ -160,8 +164,8 @@ const ProductHero = ({ product, showPrice }: ProductHeroProps) => {
 
               {/* Action Buttons */}
               <div className="flex items-center gap-4">
-                {product && <AddToCartButton product={product} />}
-                {product && <FavoriteButton showProduct={true} product={product} />}
+                {product && <AddToCartButton product={product as Product} />}
+                {product && <FavoriteButton showProduct={true} product={product as Product} />}
               </div>
 
               {/* Trust Indicators */}

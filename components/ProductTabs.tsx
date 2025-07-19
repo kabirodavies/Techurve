@@ -1,9 +1,6 @@
 "use client";
 import React, { useRef, useState } from "react";
-import EnhancedProductGallery from "./EnhancedProductGallery";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./ui/accordion";
 import { Button } from "./ui/button";
-import { Card, CardContent } from "./ui/card";
 import { 
   Download, 
   Info, 
@@ -54,27 +51,6 @@ const ProductTabs = ({ product }: { product: ExpandedProduct }) => {
     setActiveTab(key);
     const ref = refs[key as keyof typeof refs];
     ref?.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
-
-  // Icon mapping for technical specification categories (should match category from Sanity)
-  const specCategoryIconMap: Record<string, React.ElementType> = {
-    Hardware: Cpu,
-    Biometric: Shield,
-    Connectivity: Wifi,
-    "Power & Environment": Zap,
-    // Add more mappings as needed, matching your Sanity category names
-  };
-
-  // Add icon mapping for downloads (reuse featureIconMap and add file-specific icons)
-  const downloadIconMap: Record<string, React.ElementType> = {
-    FileText,
-    Wrench,
-    Download: Download,
-    Settings,
-    Sliders,
-    Shield,
-    // Add more mappings as needed
-    ...featureIconMap,
   };
 
   return (

@@ -12,6 +12,7 @@ import PriceView from "./PriceView";
 import AddToCartButton from "./AddToCartButton";
 import Image from "next/image";
 import { ExpandedProduct } from "@/types/ExpandedProduct";
+import { Product } from "@/sanity.types";
 
 interface RelatedProductsProps {
   currentProduct: ExpandedProduct;
@@ -99,7 +100,7 @@ const RelatedProducts = ({
                   <PriceView price={featuredProduct.price} discount={featuredProduct.discount} className="text-3xl font-bold" showPrice={true} />
                 </div>
                 <div className="flex items-center gap-3">
-                  <AddToCartButton product={featuredProduct as any} />
+                  <AddToCartButton product={featuredProduct as Product} />
                   <Link href={`/product/${featuredProduct.slug?.current}`}>
                     <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
                       View Product
