@@ -4,31 +4,24 @@ import EnhancedProductGallery from "./EnhancedProductGallery";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./ui/accordion";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { Badge } from "./ui/badge";
 import { 
   Download, 
   Info, 
   Wrench, 
-  HelpCircle, 
   FileText, 
   Sliders, 
   Shield, 
   Zap, 
   ShoppingCart,
   Wifi, 
-  Clock, 
-  CheckCircle,
-  Cpu,
-  Monitor,
-  Database,
-  Globe,
-  Lock,
-  Settings
+  Settings,
+  Cpu // <-- Add this import
 } from "lucide-react";
 import { urlFor } from "@/sanity/lib/image";
 import FeatureGrid from "./FeatureGrid";
 import { featureIconMap } from "@/constants/featureIcons";
 import { ExpandedProduct } from "@/types/ExpandedProduct";
+import Image from "next/image";
 
 const TABS = [
   { key: "overview", label: "Overview", icon: Info },
@@ -138,8 +131,8 @@ const ProductTabs = ({ product, showPrice }: { product: ExpandedProduct; showPri
     <section ref={refs.features} id="features" className="space-y-8">
       {product?.keyFeatures && product.keyFeatures.length > 0 && (() => {
         const half = Math.ceil(product.keyFeatures.length / 2);
-        const leftFeatures = product.keyFeatures.slice(0, half).map(f => ({ ...f, value: f.description ?? f.value ?? "" }));
-        const rightFeatures = product.keyFeatures.slice(half).map(f => ({ ...f, value: f.description ?? f.value ?? "" }));
+        const leftFeatures = product.keyFeatures.slice(0, half).map((f: ProductFeature) => ({ ...f, value: f.value ?? "" }));
+        const rightFeatures = product.keyFeatures.slice(half).map((f: ProductFeature) => ({ ...f, value: f.value ?? "" }));
         return (
           <div className="flex flex-col md:flex-row items-center justify-center gap-8 py-8">
             {/* Left Features */}
@@ -152,15 +145,17 @@ const ProductTabs = ({ product, showPrice }: { product: ExpandedProduct; showPri
             </div>
             {/* Product Image */}
             <div className="flex-shrink-0">
-              <img
+              <Image
                 src={
-                  product.heroImage
-                    ? urlFor(product.heroImage).width(400).height(400).url()
+                  (product as any).heroImage
+                    ? urlFor((product as any).heroImage).width(400).height(400).url() || '/placeholder.png'
                     : product.images?.[0]
-                    ? urlFor(product.images[0]).width(400).height(400).url()
+                    ? urlFor(product.images[0]).width(400).height(400).url() || '/placeholder.png'
                     : '/placeholder.png'
                 }
-                alt={product.name}
+                alt={product.name || 'Product image'}
+                width={256}
+                height={256}
                 className="w-64 h-64 object-contain rounded-lg shadow"
               />
             </div>
@@ -187,9 +182,9 @@ const ProductTabs = ({ product, showPrice }: { product: ExpandedProduct; showPri
           Comprehensive technical details and performance specifications
         </p>
       </div>
-      {product?.specifications && product.specifications.length > 0 ? (
+      {((product as any)?.specifications && (product as any).specifications.length > 0) ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {product.specifications.map((category, idx) => (
+          {(product as any).specifications.map((category: any, idx: number) => (
             <div key={idx} className="bg-white rounded-xl shadow p-6 flex flex-col gap-4 border border-gray-100">
               <div className="flex items-center gap-2 mb-2">
                 {(() => {
@@ -199,7 +194,7 @@ const ProductTabs = ({ product, showPrice }: { product: ExpandedProduct; showPri
                 <span className="text-xl font-semibold text-blue-700">{category.category}</span>
               </div>
               <ul className="divide-y divide-gray-100">
-                {category.specs.map((spec, i) => (
+                {category.specs.map((spec: { label: string; value: string }, i: number) => (
                   <li key={i} className="flex justify-between items-center py-2">
                     <span className="text-gray-600">{spec.label}</span>
                     <span className="font-semibold text-gray-900">{spec.value}</span>
@@ -225,8 +220,8 @@ const ProductTabs = ({ product, showPrice }: { product: ExpandedProduct; showPri
         </p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {product.downloads && product.downloads.length > 0 ? (
-          product.downloads.map((file: any, index: number) => {
+        {(product as any).downloads && (product as any).downloads.length > 0 ? (
+          (product as any).downloads.map((file: any, index: number) => {
             const Icon = downloadIconMap[file.icon] || FileText;
             const fileUrl = file.url?.asset?.url || file.url?.url;
             return (

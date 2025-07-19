@@ -1,14 +1,13 @@
 "use client";
 import React from "react";
 import ProductCard from "./ProductCard";
-import { Product } from "@/sanity.types";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { ArrowRight, Star, Loader2 } from "lucide-react";
 import { Badge } from "./ui/badge";
 import Link from "next/link";
 import { urlFor } from "@/sanity/lib/image";
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
 import PriceView from "./PriceView";
 import AddToCartButton from "./AddToCartButton";
 import Image from "next/image";
@@ -18,7 +17,7 @@ interface RelatedProductsProps {
   currentProduct: ExpandedProduct;
   featuredProduct?: ExpandedProduct | null;
   relatedProducts?: ExpandedProduct[];
-  subcategory?: any;
+  subcategory?: { title?: string; _id?: string; parent?: { _id?: string; title?: string } };
 }
 
 const RelatedProducts = ({ 
@@ -28,7 +27,7 @@ const RelatedProducts = ({
   subcategory 
 }: RelatedProductsProps) => {
   const displayProducts = relatedProducts.slice(0, 4); // Limit to 4 products for grid
-  const subcategoryTitle = subcategory?.title || currentProduct.variant?.replace(/_/g, ' ');
+  const subcategoryTitle = subcategory?.title || (typeof currentProduct.variant === 'string' ? currentProduct.variant.replace(/_/g, ' ') : '');
   // subcategorySlug removed as it is unused
   
   // Get the parent category ID for shop filtering
@@ -74,15 +73,15 @@ const RelatedProducts = ({
                     )}
                   </div>
                   <div className="flex items-center gap-2 text-sm text-gray-600">
-                    {featuredProduct.subcategory?.parent && (
+                    {featuredProduct.subcategory && featuredProduct.subcategory.parent && (
                       <span className="hover:text-blue-600 transition-colors">
                         {featuredProduct.subcategory.parent.title}
                       </span>
                     )}
-                    {featuredProduct.subcategory?.parent && featuredProduct.subcategory?.title && (
+                    {featuredProduct.subcategory && featuredProduct.subcategory.parent && featuredProduct.subcategory.title && (
                       <span className="text-gray-400">•</span>
                     )}
-                    {featuredProduct.subcategory?.title && (
+                    {featuredProduct.subcategory && featuredProduct.subcategory.title && (
                       <span className="hover:text-blue-600 transition-colors">
                         {featuredProduct.subcategory.title}
                       </span>
@@ -100,7 +99,7 @@ const RelatedProducts = ({
                   <PriceView price={featuredProduct.price} discount={featuredProduct.discount} className="text-3xl font-bold" showPrice={true} />
                 </div>
                 <div className="flex items-center gap-3">
-                  <AddToCartButton product={featuredProduct as ExpandedProduct} />
+                  <AddToCartButton product={featuredProduct as any} />
                   <Link href={`/product/${featuredProduct.slug?.current}`}>
                     <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
                       View Product
@@ -112,8 +111,8 @@ const RelatedProducts = ({
                 <div className="bg-gray-200 rounded-lg aspect-video flex items-center justify-center overflow-hidden">
                   {featuredProduct.images && featuredProduct.images.length > 0 ? (
                     <Image
-                      src={urlFor(featuredProduct.images[0]).url()}
-                      alt={featuredProduct.name}
+                      src={urlFor(featuredProduct.images[0]).url() || ''}
+                      alt={featuredProduct.name || ''}
                       className="w-full h-full object-cover"
                       width={400}
                       height={300}
@@ -131,7 +130,7 @@ const RelatedProducts = ({
         {displayProducts.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {displayProducts.map((product) => (
-            <ProductCard key={product._id} product={product} />
+            <ProductCard key={product._id} product={product as ExpandedProduct} />
           ))}
         </div>
         ) : (
@@ -181,11 +180,11 @@ const RelatedProducts = ({
 
         {/* View All Products CTA */}
         <div className="text-center mt-12">
-          <Link href={`/shop?category=${parentCategoryId}`}>
-          <Button variant="outline" size="lg" className="px-8">
+          <Link href={`/shop?category=${parentCategoryId || ''}`}>
+            <Button variant="outline" size="lg" className="px-8">
               View All {subcategoryTitle} Products
-            <ArrowRight className="w-4 h-4 ml-2" />
-          </Button>
+              <ArrowRight className="w-4 h-4 ml-2" />
+            </Button>
           </Link>
         </div>
       </div>
