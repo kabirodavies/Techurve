@@ -1,12 +1,6 @@
-<<<<<<< HEAD
-"use client"
-
-import { Product } from "@/sanity.types";
-=======
 "use client";
 
 import { ExpandedProduct } from "@/types/ExpandedProduct";
->>>>>>> test
 import { urlFor } from "@/sanity/lib/image";
 import Image from "next/image";
 import React from "react";
@@ -16,11 +10,6 @@ import PriceView from "./PriceView";
 import Title from "./Title";
 import ProductSideMenu from "./ProductSideMenu";
 import AddToCartButton from "./AddToCartButton";
-<<<<<<< HEAD
-import ProductAdminControls from "./ProductAdminControls";
-
-const ProductCard = ({ product }: { product: Product }) => {
-=======
 import { useIsAdmin } from "@/hooks";
 
 // Add these types for populated fields
@@ -32,7 +21,6 @@ const ProductCard = ({ product }: { product: ExpandedProduct }) => {
   const brand = product.brand;
   const subcategory = product.subcategory;
 
->>>>>>> test
   return (
     <div className="text-sm border-[1px] rounded-md border-darkBlue/20 group bg-white">
       <div className="relative group overflow-hidden bg-shop_light_bg">
@@ -68,16 +56,6 @@ const ProductCard = ({ product }: { product: ExpandedProduct }) => {
         )}
       </div>
       <div className="p-3 flex flex-col gap-2">
-<<<<<<< HEAD
-        {/* Brand, Category, Subcategory */}
-        <div className="flex flex-wrap gap-2 text-xs text-gray-500 font-medium">
-          {product?.brand && (product.brand as any).title && (
-            <span>
-              Brand: <Link href={`/shop?brand=${encodeURIComponent((product.brand as any).title)}`} className="hover:underline text-shop_dark_blue font-semibold">
-                {(product.brand as any).title}
-              </Link>
-            </span>
-=======
         {/* Brand Display - Above Product Name */}
         {brand?.title ? (
           <Link
@@ -99,7 +77,6 @@ const ProductCard = ({ product }: { product: ExpandedProduct }) => {
             >
               {subcategory.parent.title}
             </Link>
->>>>>>> test
           )}
           {subcategory?.title && (
             <>
@@ -127,16 +104,12 @@ const ProductCard = ({ product }: { product: ExpandedProduct }) => {
           </p>
         </div>
 
-<<<<<<< HEAD
-        <ProductAdminControls product={product} />
-=======
         <PriceView
           price={product?.price}
           discount={product?.discount}
           className="text-sm"
           showPrice={isAdmin}
         />
->>>>>>> test
         <AddToCartButton product={product} className="w-36 rounded-full" />
       </div>
     </div>

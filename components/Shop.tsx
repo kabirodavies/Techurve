@@ -79,14 +79,10 @@ const Shop = ({ categories, brands }: Props) => {
       }
       // Filter by brand name if selected
       if (selectedBrand) {
-<<<<<<< HEAD
-        data = data.filter((product) => product.brand && (product.brand as any).title && (product.brand as any).title.toLowerCase() === selectedBrand.toLowerCase());
-=======
         data = data.filter((product) => {
           const brand = product.brand as PopulatedBrand | undefined;
           return brand?.title && brand.title.toLowerCase() === selectedBrand.toLowerCase();
         });
->>>>>>> test
       }
       setProducts(data);
       setLoading(false);
