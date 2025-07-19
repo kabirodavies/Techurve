@@ -35,7 +35,7 @@ const HeaderMenu = () => {
               <button
                 type="button"
                 onClick={() => handleDropdown(item.title)}
-                className={`uppercase font-bold tracking-wide text-base px-0 py-2 bg-transparent border-none outline-none transition-colors duration-200 flex items-center gap-1
+                className={`uppercase font-bold tracking-wide text-base px-0 py-2 bg-transparent border-none outline-none transition-colors duration-200 flex items-center gap-1 whitespace-nowrap
                   ${openDropdown === item.title || isActive ? 'text-shop_dark_blue' : 'text-gray-700'}
                   hover:text-shop_dark_blue
                   after:block after:h-0.5 after:bg-shop_dark_blue after:transition-all after:duration-200 after:scale-x-0 hover:after:scale-x-100 after:origin-left after:w-full after:mt-1 relative`}
@@ -72,7 +72,7 @@ const HeaderMenu = () => {
           <Link
             key={item?.title}
             href={item?.href}
-            className={`uppercase font-bold tracking-wide text-base px-0 py-2 bg-transparent border-none outline-none transition-colors duration-200 relative
+            className={`uppercase font-bold tracking-wide text-base px-0 py-2 bg-transparent border-none outline-none transition-colors duration-200 relative whitespace-nowrap
               ${isActive ? 'text-shop_dark_blue' : 'text-gray-700'}
               hover:text-shop_dark_blue
               after:block after:h-0.5 after:bg-shop_dark_blue after:transition-all after:duration-200 after:scale-x-0 hover:after:scale-x-100 after:origin-left after:w-full after:mt-1`}

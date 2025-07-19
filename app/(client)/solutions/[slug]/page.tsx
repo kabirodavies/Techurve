@@ -19,7 +19,7 @@ export default async function SolutionDetailPage({ params }: SolutionPageProps) 
   return (
     <main className="bg-white min-h-screen">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-black to-black text-white py-20 px-6 text-center overflow-hidden">
+      <section className="relative bg-gradient-to-br from-black/80 to-black/80 text-white py-20 px-6 text-center overflow-hidden">
         <h1 className="text-4xl md:text-6xl font-bold mb-4 z-10 relative">{solution.title}</h1>
         <p className="text-lg md:text-2xl max-w-2xl mx-auto mb-8 z-10 relative">{solution.summary}</p>
         {solution.industries && solution.industries.length > 0 && (

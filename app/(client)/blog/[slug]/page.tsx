@@ -53,19 +53,14 @@ const SingleBlogPage = async ({ params }: { params: Promise<{ slug: string }> })
   const currentCategories = (blog.blogcategories || []).map((cat: any) => cat.title);
   // Filter blogs in the same category (excluding current)
   const sameCategoryBlogs = allBlogs.filter(
-    (b) =>
+    (b: any) =>
       b.slug?.current !== slug &&
       b.blogcategories?.some((cat: any) => currentCategories.includes(cat.title))
   );
-  // Sort by publishedAt ascending
-  const sortedSameCategory = sameCategoryBlogs.sort((a, b) => new Date(a.publishedAt || '').getTime() - new Date(b.publishedAt || '').getTime());
-  // Find the next blog in the same category (by date)
-  const currentDate = new Date(blog.publishedAt || '').getTime();
-  const nextInCategory = sortedSameCategory.find((b) => new Date(b.publishedAt || '').getTime() > currentDate);
-  // Fallback: random blog in same category (if no next)
-  let nextBlog = nextInCategory;
-  if (!nextBlog && sortedSameCategory.length > 0) {
-    nextBlog = sortedSameCategory[Math.floor(Math.random() * sortedSameCategory.length)];
+  // Always pick a random blog in the same category (if any)
+  let nextBlog = null;
+  if (sameCategoryBlogs.length > 0) {
+    nextBlog = sameCategoryBlogs[Math.floor(Math.random() * sameCategoryBlogs.length)];
   }
 
   // Extract ToC and add anchor IDs to blocks

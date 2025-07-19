@@ -17,6 +17,13 @@ const BlogPage = async () => {
   });
   const categories = Array.from(categoryMap.values());
 
+  // Extract unique tags from all blogs
+  const tagSet = new Set();
+  blogs?.forEach((blog) => {
+    (blog && 'tags' in blog && Array.isArray(blog.tags) ? blog.tags : []).forEach((tag: string) => tagSet.add(tag));
+  });
+  const tags = Array.from(tagSet) as string[];
+
   return (
     <div>
       {/* Hero Section */}
@@ -32,7 +39,7 @@ const BlogPage = async () => {
       <Container>
         <div className="mt-10" />
         <div className="mb-16">
-          <BlogListWithFilter blogs={blogs} categories={categories} />
+          <BlogListWithFilter blogs={blogs} categories={categories} tags={tags} />
         </div>
       </Container>
     </div>

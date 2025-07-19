@@ -6,8 +6,10 @@ import { useState } from 'react'
 import Testimonials from '@/components/Testimonials'
 import { featureIconMap } from '@/constants/featureIcons';
 import { Shield } from 'lucide-react';
+import CaseStudyShowcase from '@/components/CaseStudyShowcase';
+import { getAllCaseStudies } from '@/sanity/queries';
 
-export default function SolutionsPageClient({ solutions, industries, testimonials }: { solutions: any[]; industries: string[]; testimonials: any[] }) {
+export default function SolutionsPageClient({ solutions, industries, testimonials, caseStudies }: { solutions: any[]; industries: string[]; testimonials: any[]; caseStudies: any[] }) {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
 
   const filteredSolutions = solutions;
@@ -97,10 +99,7 @@ export default function SolutionsPageClient({ solutions, industries, testimonial
       <section className="max-w-5xl mx-auto py-16 px-4">
         <h2 className="text-teal-600 text-sm font-bold mb-2 tracking-widest">02. CASE STUDIES</h2>
         <h3 className="text-3xl md:text-4xl font-extrabold mb-8 text-left leading-tight">Our Successful Implementation Stories</h3>
-        {/* Placeholder for case studies grid/list */}
-        <div className="bg-gray-50 rounded-xl p-10 text-center text-gray-400 text-xl font-semibold border border-dashed border-gray-300">
-          Coming soon...
-        </div>
+        <CaseStudyShowcase caseStudies={caseStudies} />
       </section>
 
       {/* How It Works */}
@@ -130,14 +129,6 @@ export default function SolutionsPageClient({ solutions, industries, testimonial
       {/* Testimonials/Case Studies */}
       <Testimonials testimonials={testimonials} />
 
-      {/* CTA Banner */}
-      <section className="bg-blue-600 text-white py-12 text-center">
-        <h2 className="text-2xl font-bold mb-2">Ready to Secure Your Space?</h2>
-        <p className="mb-6">Contact us for a free consultation and discover the right solution for you.</p>
-        <Link href="/contact" className="inline-block bg-white text-blue-600 font-semibold px-6 py-3 rounded-full shadow hover:bg-blue-50 transition">
-          Request Consultation
-        </Link>
-      </section>
     </main>
   )
 } 
