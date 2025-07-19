@@ -6,8 +6,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import React from "react";
 
-const SingleCaseStudyPage = async ({ params }: { params: { slug: string } }) => {
-  const { slug } = params;
+const SingleCaseStudyPage = async ({ params }: { params: Promise<{ slug: string }> }) => {
+  const { slug } = await params;
   const caseStudy = await getSingleCaseStudy(slug);
   if (!caseStudy) return notFound();
 
