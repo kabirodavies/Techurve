@@ -1,6 +1,5 @@
 "use client";
-import { CATEGORIES_WITH_SUBCATEGORIESResult, Product } from "@/sanity.types";
-import type { BRANDS_QUERYResult } from "@/sanity.types";
+import { Product } from "@/sanity.types";
 import React, { useEffect, useState } from "react";
 import Container from "./Container";
 import Title from "./Title";
@@ -8,19 +7,39 @@ import CategoryList from "./shop/CategoryList";
 import { Loader2 } from "lucide-react";
 import NoProductAvailable from "./NoProductAvailable";
 import ProductCard from "./ProductCard";
-import { getCategoriesWithSubcategories, getProductsBySubcategory, getProductsByCategory, getAllProducts } from "@/sanity/queries";
+import { getProductsBySubcategory, getProductsByCategory, getAllProducts } from "@/sanity/queries";
 import { useSearchParams } from "next/navigation";
 
+interface SubcategoryWithCount {
+  _id: string;
+  title: string;
+  slug: any;
+  image?: any;
+  productCount?: number;
+}
+
+interface CategoryWithCount {
+  _id: string;
+  title: string;
+  slug: any;
+  image?: any;
+  productCount?: number;
+  subcategories?: SubcategoryWithCount[];
+}
+
 interface Props {
-  categories: BrandWithCount[]; // should be CategoryWithCount[], but for demonstration, align with the new type
+  categories: CategoryWithCount[];
   brands: BrandWithCount[];
 }
 interface BrandWithCount {
   _id: string;
   title: string;
-  slug: any;
+  slug?: { current?: string };
   productCount?: number;
 }
+
+// For filtering populated brands
+type PopulatedBrand = { title?: string; slug?: { current?: string } };
 const Shop = ({ categories, brands }: Props) => {
   const searchParams = useSearchParams();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -60,7 +79,10 @@ const Shop = ({ categories, brands }: Props) => {
       }
       // Filter by brand name if selected
       if (selectedBrand) {
-        data = data.filter((product) => product.brand && (product.brand as any).title && (product.brand as any).title.toLowerCase() === selectedBrand.toLowerCase());
+        data = data.filter((product) => {
+          const brand = product.brand as PopulatedBrand | undefined;
+          return brand?.title && brand.title.toLowerCase() === selectedBrand.toLowerCase();
+        });
       }
       setProducts(data);
       setLoading(false);

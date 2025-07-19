@@ -5,6 +5,6 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function isAdmin(user: any): boolean {
+export function isAdmin(user: { publicMetadata?: { role?: string } } | null | undefined): boolean {
   return user?.publicMetadata?.role === "admin";
 }

@@ -1,22 +1,19 @@
-import { CATEGORIES_WITH_SUBCATEGORIESResult } from "@/sanity.types";
 import React from "react";
 import Title from "../Title";
-import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
-import { Label } from "../ui/label";
 
 interface CategoryWithCount {
   _id: string;
   title: string;
-  slug: any;
-  image?: any;
+  slug?: { current?: string };
+  image?: { asset?: { _ref: string } };
   productCount?: number;
   subcategories?: SubcategoryWithCount[];
 }
 interface SubcategoryWithCount {
   _id: string;
   title: string;
-  slug: any;
-  image?: any;
+  slug?: { current?: string };
+  image?: { asset?: { _ref: string } };
   productCount?: number;
 }
 
@@ -35,9 +32,6 @@ const CategoryList = ({
   selectedSubcategory,
   setSelectedSubcategory,
 }: Props) => {
-  const selectedCat = categories.find(
-    (cat) => cat._id === selectedCategory
-  );
   return (
     <div className="w-full bg-white p-5">
       <Title className="text-base font-black">Product Categories</Title>

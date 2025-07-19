@@ -2,6 +2,7 @@ import React from "react";
 import Title from "./Title";
 import Link from "next/link";
 import { getAllBrands } from "@/sanity/queries";
+import type { Brand } from "@/sanity.types";
 import Image from "next/image";
 import { urlFor } from "@/sanity/lib/image";
 import { GitCompareArrows, Headset, ShieldCheck, Truck } from "lucide-react";
@@ -50,10 +51,10 @@ const ShopByBrands = async () => {
         </Link>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
-        {brands?.map((brand: any) => (
+        {brands?.map((brand: Brand) => (
           <Link
             key={brand?._id}
-            href={`/shop?brand=${encodeURIComponent(brand?.title)}`}
+            href={`/shop?brand=${encodeURIComponent(brand?.title ?? "")}`}
             className="group bg-gradient-to-br from-white to-gray-50 border border-gray-200 w-full h-28 flex flex-col items-center justify-center rounded-lg overflow-hidden shadow-sm hover:shadow-lg hover:border-shop_btn_dark_blue transition-all duration-200 transform hover:scale-105 relative"
           >
             {brand?.image && (

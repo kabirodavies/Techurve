@@ -1,25 +1,19 @@
 import Container from "@/components/Container";
-import Title from "@/components/Title";
 import { urlFor } from "@/sanity/lib/image";
-import {
-  getBlogCategories,
-  getOthersBlog,
-  getSingleBlog,
-  getAllBlogs,
-} from "@/sanity/queries";
 import dayjs from "dayjs";
-import { Calendar, ChevronLeftIcon, Pencil } from "lucide-react";
+import { Calendar, ChevronLeftIcon } from "lucide-react";
 import { PortableText } from "next-sanity";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import React from "react";
-import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import SocialMedia from "@/components/SocialMedia";
+// import type { Blog, BlockContent } from "@/sanity.types";
+import { getSingleBlog, getAllBlogs } from "@/sanity/queries";
 
 // Helper to extract ToC from PortableText blocks
 type TocItem = { id: string; text: string; level: string };
-function extractToc(blocks: any[]): TocItem[] {
+function extractToc(blocks: any): TocItem[] {
   const toc: TocItem[] = [];
   let headingCount = 0;
   blocks?.forEach((block: any) => {
@@ -33,42 +27,42 @@ function extractToc(blocks: any[]): TocItem[] {
       toc.push({
         id,
         text: block.children?.[0]?.text || `Section ${headingCount}`,
-        level: block.style,
+        level: block.style as string,
       });
-      block._tocId = id; // Attach id for later use
+      (block as any)._tocId = id; // Attach id for later use
     }
   });
   return toc;
 }
 
-const SingleBlogPage = async ({ params }: { params: Promise<{ slug: string }> }) => {
-  const { slug } = await params;
-  let blog = await getSingleBlog(slug);
+const SingleBlogPage = async ({ params }: { params: { slug: string } }) => {
+  const { slug } = params;
+  let blog: any = await getSingleBlog(slug);
   if (Array.isArray(blog)) blog = blog[0] || null;
   if (!blog) return notFound();
 
   // Fetch all blogs to find the next one in the same category
-  const allBlogs = await getAllBlogs(100);
+  const allBlogs: any[] = await getAllBlogs(100);
   // Get current blog categories (by title)
-  const currentCategories = (blog.blogcategories || []).map((cat: any) => cat.title);
+  const currentCategories = (blog.blogcategories || []).map((cat) => (cat as any).title);
   // Filter blogs in the same category (excluding current)
   const sameCategoryBlogs = allBlogs.filter(
-    (b: any) =>
+    (b) =>
       b.slug?.current !== slug &&
-      b.blogcategories?.some((cat: any) => currentCategories.includes(cat.title))
+      b.blogcategories?.some((cat) => currentCategories.includes((cat as any).title))
   );
   // Always pick a random blog in the same category (if any)
-  let nextBlog = null;
+  let nextBlog: any | null = null;
   if (sameCategoryBlogs.length > 0) {
     nextBlog = sameCategoryBlogs[Math.floor(Math.random() * sameCategoryBlogs.length)];
   }
 
   // Extract ToC and add anchor IDs to blocks
-  const blocks = blog.body || [];
+  const blocks: any = blog.body || [];
   const toc = extractToc(blocks);
 
   // Helper to render PortableText with anchor IDs for headings
-  function PortableTextWithAnchors({ value }: { value: any[] }) {
+  function PortableTextWithAnchors({ value }: { value: any }) {
     let headingCount = 0;
     return (
       <PortableText
@@ -89,7 +83,7 @@ const SingleBlogPage = async ({ params }: { params: Promise<{ slug: string }> })
             blockquote: ({ children }: { children?: React.ReactNode }) => <blockquote className="my-5 border-l-2 border-l-gray-300 pl-6 text-base/8 text-gray-950 first:mt-0 last:mb-0">{children}</blockquote>,
           },
           types: {
-            image: ({ value }) => (
+            image: ({ value }: { value: any }) => (
               <Image
                 alt={value.alt || ""}
                 src={urlFor(value).width(2000).url()}
@@ -98,7 +92,7 @@ const SingleBlogPage = async ({ params }: { params: Promise<{ slug: string }> })
                 height={1000}
               />
             ),
-            separator: ({ value }) => {
+            separator: ({ value }: { value: any }) => {
               switch (value.style) {
                 case "line":
                   return <hr className="my-5 border-t border-gray-200" />;
@@ -110,30 +104,29 @@ const SingleBlogPage = async ({ params }: { params: Promise<{ slug: string }> })
             },
           },
           list: {
-            bullet: ({ children }) => <ul className="list-disc pl-4 text-base/8 marker:text-gray-400">{children}</ul>,
-            number: ({ children }) => <ol className="list-decimal pl-4 text-base/8 marker:text-gray-400">{children}</ol>,
+            bullet: ({ children }: { children?: React.ReactNode }) => <ul className="list-disc pl-4 text-base/8 marker:text-gray-400">{children}</ul>,
+            number: ({ children }: { children?: React.ReactNode }) => <ol className="list-decimal pl-4 text-base/8 marker:text-gray-400">{children}</ol>,
           },
           listItem: {
-            bullet: ({ children }) => <li className="my-2 pl-2 has-[br]:mb-8">{children}</li>,
-            number: ({ children }) => <li className="my-2 pl-2 has-[br]:mb-8">{children}</li>,
+            bullet: ({ children }: { children?: React.ReactNode }) => <li className="my-2 pl-2 has-[br]:mb-8">{children}</li>,
+            number: ({ children }: { children?: React.ReactNode }) => <li className="my-2 pl-2 has-[br]:mb-8">{children}</li>,
           },
           marks: {
-            strong: ({ children }) => <strong className="font-semibold text-gray-950">{children}</strong>,
-            code: ({ children }) => <><span aria-hidden>`</span><code className="text-[15px]/8 font-semibold text-gray-950">{children}</code><span aria-hidden>`</span></>,
-            link: ({ value, children }) => <Link href={value.href} className="font-medium text-gray-950 underline decoration-gray-400 underline-offset-4 data-[hover]:decoration-gray-600">{children}</Link>,
+            strong: ({ children }: { children?: React.ReactNode }) => <strong className="font-semibold text-gray-950">{children}</strong>,
+            code: ({ children }: { children?: React.ReactNode }) => <><span aria-hidden>`</span><code className="text-[15px]/8 font-semibold text-gray-950">{children}</code><span aria-hidden>`</span></>,
+            link: (props: { value?: { href?: string }; children?: React.ReactNode }) => {
+              const { value, children } = props;
+              return (
+                <Link href={value?.href || "#"} className="font-medium text-gray-950 underline decoration-gray-400 underline-offset-4 data-[hover]:decoration-gray-600">
+                  {children}
+                </Link>
+              );
+            },
           },
         }}
       />
     );
   }
-
-  // Placeholder featured product
-  const featuredProduct = {
-    name: "A700 FBI FAP 30 Certified Optical Fingerprint Scanner",
-    image: "/images/products/product_3.png",
-    link: "/product/a700-fingerprint-scanner",
-    description: "A compact, high-accuracy fingerprint scanner for secure ID verification.",
-  };
 
   return (
     <div className="py-10">

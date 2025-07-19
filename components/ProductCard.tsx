@@ -12,8 +12,22 @@ import ProductSideMenu from "./ProductSideMenu";
 import AddToCartButton from "./AddToCartButton";
 import { useIsAdmin } from "@/hooks";
 
+// Add these types for populated fields
+// These match the shape returned by GROQ queries in your codebase
+
+type PopulatedBrand = { title?: string; slug?: { current?: string } };
+type PopulatedSubcategory = {
+  title?: string;
+  slug?: { current?: string };
+  parent?: { title?: string; slug?: { current?: string } };
+};
+
 const ProductCard = ({ product }: { product: Product }) => {
   const isAdmin = useIsAdmin();
+
+  // Type assertions for populated fields
+  const brand = product.brand as PopulatedBrand | undefined;
+  const subcategory = product.subcategory as PopulatedSubcategory | undefined;
 
   return (
     <div className="text-sm border-[1px] rounded-md border-darkBlue/20 group bg-white">
@@ -51,12 +65,12 @@ const ProductCard = ({ product }: { product: Product }) => {
       </div>
       <div className="p-3 flex flex-col gap-2">
         {/* Brand Display - Above Product Name */}
-        {product?.brand && (product.brand as any)?.title ? (
+        {brand?.title ? (
           <Link
-            href={`/shop?brand=${encodeURIComponent((product.brand as any).title)}`}
+            href={`/shop?brand=${encodeURIComponent(brand.title)}`}
             className="text-xs text-shop_dark_green hover:text-shop_dark_blue hoverEffect font-medium"
           >
-            {(product.brand as any).title}
+            {brand.title}
           </Link>
         ) : (
           <span className="text-xs text-gray-400 font-medium">Brand</span>
@@ -64,24 +78,24 @@ const ProductCard = ({ product }: { product: Product }) => {
 
         {/* Category and Subcategory Display - Below Brand, Above Product Name */}
         <div className="flex flex-wrap gap-1 text-xs text-gray-600">
-          {product?.subcategory && (product.subcategory as any)?.parent?.title && (
+          {subcategory?.parent?.title && (
             <Link
-              href={`/category/${(product.subcategory as any).parent.slug?.current}`}
+              href={`/category/${subcategory.parent.slug?.current}`}
               className="hover:text-shop_dark_green hoverEffect"
             >
-              {(product.subcategory as any).parent.title}
+              {subcategory.parent.title}
             </Link>
           )}
-          {product?.subcategory && (product.subcategory as any)?.title && (
+          {subcategory?.title && (
             <>
-              {product?.subcategory && (product.subcategory as any)?.parent?.title && (
+              {subcategory?.parent?.title && (
                 <span className="text-gray-400">•</span>
               )}
               <Link
-                href={`/category/${(product.subcategory as any).parent.slug?.current}?subcategory=${(product.subcategory as any).slug?.current}`}
+                href={`/category/${subcategory.parent?.slug?.current}?subcategory=${subcategory.slug?.current}`}
                 className="hover:text-shop_dark_green hoverEffect"
               >
-                {(product.subcategory as any).title}
+                {subcategory.title}
               </Link>
             </>
           )}
