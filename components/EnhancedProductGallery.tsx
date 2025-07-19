@@ -9,20 +9,10 @@ import { AnimatePresence, motion } from "motion/react";
 import Image from "next/image";
 import React, { useState } from "react";
 import { Button } from "./ui/button";
+import { ExpandedProduct } from "@/types/ExpandedProduct";
 
 interface Props {
-  images?: Array<{
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-    _key: string;
-  }>;
+  images?: ExpandedProduct['images'];
   isStock?: number | undefined;
 }
 

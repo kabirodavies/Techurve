@@ -28,6 +28,7 @@ import {
 import { urlFor } from "@/sanity/lib/image";
 import FeatureGrid from "./FeatureGrid";
 import { featureIconMap } from "@/constants/featureIcons";
+import { ExpandedProduct } from "@/types/ExpandedProduct";
 
 const TABS = [
   { key: "overview", label: "Overview", icon: Info },
@@ -61,7 +62,7 @@ interface Product {
   // ...other product fields
 }
 
-const ProductTabs = ({ product, showPrice }: { product: Product; showPrice?: boolean }) => {
+const ProductTabs = ({ product, showPrice }: { product: ExpandedProduct; showPrice?: boolean }) => {
   const [activeTab, setActiveTab] = useState("features");
   const refs = {
     overview: useRef<HTMLDivElement>(null),
@@ -266,7 +267,7 @@ const ProductTabs = ({ product, showPrice }: { product: Product; showPrice?: boo
   {activeTab === "product" && (
     <section ref={refs.product} id="products" className="space-y-8">
       {/* Render your RelatedProducts or similar component here */}
-      {/* Example: <RelatedProducts currentProduct={product as any} relatedProducts={[]} /> */}
+      {/* Example: <RelatedProducts currentProduct={product as ExpandedProduct} relatedProducts={[]} /> */}
     </section>
   )}
 </div>

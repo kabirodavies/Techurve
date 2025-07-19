@@ -1,6 +1,6 @@
 "use client";
 
-import { Product } from "@/sanity.types";
+import { ExpandedProduct } from "@/types/ExpandedProduct";
 import { urlFor } from "@/sanity/lib/image";
 import Image from "next/image";
 import React from "react";
@@ -22,12 +22,11 @@ type PopulatedSubcategory = {
   parent?: { title?: string; slug?: { current?: string } };
 };
 
-const ProductCard = ({ product }: { product: Product }) => {
+const ProductCard = ({ product }: { product: ExpandedProduct }) => {
   const isAdmin = useIsAdmin();
 
-  // Type assertions for populated fields
-  const brand = product.brand as PopulatedBrand | undefined;
-  const subcategory = product.subcategory as PopulatedSubcategory | undefined;
+  const brand = product.brand;
+  const subcategory = product.subcategory;
 
   return (
     <div className="text-sm border-[1px] rounded-md border-darkBlue/20 group bg-white">

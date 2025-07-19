@@ -1,5 +1,4 @@
 import Container from "@/components/Container";
-import Title from "@/components/Title";
 import { getAllCaseStudies } from "@/sanity/queries";
 import React from "react";
 import CaseStudyListWithFilter from "@/components/CaseStudyListWithFilter";
@@ -9,7 +8,7 @@ const CaseStudyPage = async () => {
 
   // Extract unique topics from all case studies
   const topicMap = new Map();
-  caseStudies?.forEach((cs: any) => {
+  caseStudies?.forEach((cs: { topic?: string }) => {
     if (cs?.topic) topicMap.set(cs.topic, cs.topic);
   });
   const topics = Array.from(topicMap.values());

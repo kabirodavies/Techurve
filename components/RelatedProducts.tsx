@@ -9,26 +9,10 @@ import { Badge } from "./ui/badge";
 import Link from "next/link";
 import { urlFor } from "@/sanity/lib/image";
 import { motion } from "motion/react";
-import { cn } from "@/lib/utils";
 import PriceView from "./PriceView";
 import AddToCartButton from "./AddToCartButton";
-
-// Extended Product interface for expanded references
-interface ExpandedProduct extends Omit<Product, 'brand' | 'subcategory'> {
-  brand?: {
-    title?: string;
-    slug?: { current?: string };
-  };
-  subcategory?: {
-    _id?: string;
-    title?: string;
-    slug?: { current?: string };
-    parent?: {
-      title?: string;
-      slug?: { current?: string };
-    };
-  };
-}
+import Image from "next/image";
+import { ExpandedProduct } from "@/types/ExpandedProduct";
 
 interface RelatedProductsProps {
   currentProduct: ExpandedProduct;
@@ -45,7 +29,7 @@ const RelatedProducts = ({
 }: RelatedProductsProps) => {
   const displayProducts = relatedProducts.slice(0, 4); // Limit to 4 products for grid
   const subcategoryTitle = subcategory?.title || currentProduct.variant?.replace(/_/g, ' ');
-  const subcategorySlug = subcategory?.slug?.current || currentProduct.variant;
+  // subcategorySlug removed as it is unused
   
   // Get the parent category ID for shop filtering
   const parentCategoryId = subcategory?.parent?._id || subcategory?._id;
@@ -116,7 +100,7 @@ const RelatedProducts = ({
                   <PriceView price={featuredProduct.price} discount={featuredProduct.discount} className="text-3xl font-bold" showPrice={true} />
                 </div>
                 <div className="flex items-center gap-3">
-                  <AddToCartButton product={featuredProduct as any} />
+                  <AddToCartButton product={featuredProduct as ExpandedProduct} />
                   <Link href={`/product/${featuredProduct.slug?.current}`}>
                     <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
                       View Product
@@ -127,13 +111,15 @@ const RelatedProducts = ({
               </div>
                 <div className="bg-gray-200 rounded-lg aspect-video flex items-center justify-center overflow-hidden">
                   {featuredProduct.images && featuredProduct.images.length > 0 ? (
-                    <img 
-                      src={urlFor(featuredProduct.images[0]).url()} 
+                    <Image
+                      src={urlFor(featuredProduct.images[0]).url()}
                       alt={featuredProduct.name}
                       className="w-full h-full object-cover"
+                      width={400}
+                      height={300}
                     />
                   ) : (
-                <span className="text-gray-500">Product Image</span>
+                    <span className="text-gray-500">Product Image</span>
                   )}
               </div>
             </div>
@@ -145,7 +131,7 @@ const RelatedProducts = ({
         {displayProducts.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {displayProducts.map((product) => (
-            <ProductCard key={product._id} product={product as any} />
+            <ProductCard key={product._id} product={product} />
           ))}
         </div>
         ) : (

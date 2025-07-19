@@ -1,15 +1,10 @@
-import Container from "@/components/Container";
-import Title from "@/components/Title";
 import { urlFor } from "@/sanity/lib/image";
 import { getSingleCaseStudy, getAllCaseStudies } from "@/sanity/queries";
-import dayjs from "dayjs";
-import { Calendar } from "lucide-react";
 import { PortableText } from "next-sanity";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import React from "react";
-import ProductCard from "@/components/ProductCard";
 import { client } from "@/sanity/lib/client";
 import { GET_ALL_SOLUTIONS } from "@/sanity/queries/query";
 
@@ -17,9 +12,6 @@ const SingleCaseStudyPage = async ({ params }: { params: { slug: string } }) => 
   const { slug } = params;
   const caseStudy = await getSingleCaseStudy(slug);
   if (!caseStudy) return notFound();
-
-  // Fetch all solutions
-  const solutions = await client.fetch(GET_ALL_SOLUTIONS);
 
   // Fetch all case studies for next/fallback logic
   const allCaseStudies = await getAllCaseStudies(100);
@@ -156,7 +148,20 @@ const SingleCaseStudyPage = async ({ params }: { params: { slug: string } }) => 
             {caseStudy.solutionProducts?.length > 0 && (
               <div className="w-full md:w-1/2 flex-shrink-0">
                 <div className="flex flex-col gap-6">
-                  {caseStudy.solutionProducts.map((product: any) => {
+                  {caseStudy.solutionProducts.map((product: {
+                    _id: string;
+                    name?: string;
+                    title?: string;
+                    images?: { asset?: { _ref: string }; url?: string }[];
+                    price?: number;
+                    discount?: number;
+                    stock?: number;
+                    status?: string;
+                    brand?: { title?: string; slug?: { current?: string } };
+                    subcategory?: { title?: string; slug?: { current?: string }; parent?: { title?: string; slug?: { current?: string } } };
+                    slug?: { current?: string };
+                    overview?: string | { _type?: string; children?: { text: string }[] }[];
+                  }) => {
                     let overviewLine = '';
                     if (product.overview && typeof product.overview === 'string') {
                       overviewLine = product.overview.split(/[\n\.]/)[0];
@@ -167,13 +172,13 @@ const SingleCaseStudyPage = async ({ params }: { params: { slug: string } }) => 
                       }
                     }
                     return (
-                      <Link href={`/product/${product.slug?.current}`} className="bg-white rounded-xl border border-gray-200 p-6 flex flex-col items-start text-left shadow-sm hover:shadow-md transition max-w-xs w-full mx-auto cursor-pointer no-underline">
+                      <Link key={product._id} href={`/product/${product.slug?.current}`} className="bg-white rounded-xl border border-gray-200 p-6 flex flex-col items-start text-left shadow-sm hover:shadow-md transition max-w-xs w-full mx-auto cursor-pointer no-underline">
                         {/* Product Image */}
                         {product.images && product.images[0] && (
                           <div className="mb-4 w-full flex justify-center">
                             <Image
                               src={urlFor(product.images[0]).url()}
-                              alt={product.name || product.title}
+                              alt={product.name || product.title || ''}
                               width={128}
                               height={176}
                               className="object-contain w-32 h-44"
@@ -181,15 +186,15 @@ const SingleCaseStudyPage = async ({ params }: { params: { slug: string } }) => 
                           </div>
                         )}
                         {/* Device Name */}
-                        <div className="text-lg font-bold text-gray-900 mb-1">{product.name || product.title}</div>
+                        <div className="text-lg font-bold text-gray-900 mb-1">{product.name || product.title || ''}</div>
                         {/* Category/Subcategory */}
-                        {(product.subcategory?.parent?.title || product.subcategory?.title) && (
+                        {product.subcategory && typeof product.subcategory === 'object' && (
                           <div className="uppercase text-xs font-semibold text-teal-500 mb-2 tracking-wide">
-                            {product.subcategory?.parent?.title}
-                            {product.subcategory?.parent?.title && product.subcategory?.title && (
+                            {typeof product.subcategory.parent === 'object' && product.subcategory.parent?.title ? product.subcategory.parent.title : ''}
+                            {typeof product.subcategory.parent === 'object' && product.subcategory.parent?.title && product.subcategory.title && (
                               <span className="mx-1 text-gray-300">/</span>
                             )}
-                            {product.subcategory?.title}
+                            {product.subcategory.title || ''}
                           </div>
                         )}
                         {/* First line from rich overview */}

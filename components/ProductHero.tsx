@@ -1,5 +1,5 @@
 "use client";
-import { Product } from "@/sanity.types";
+import { ExpandedProduct } from "@/types/ExpandedProduct";
 import { getBrand } from "@/sanity/queries";
 import AddToCartButton from "./AddToCartButton";
 import FavoriteButton from "./FavoriteButton";
@@ -13,7 +13,7 @@ import FeatureGrid from "./FeatureGrid";
 import { featureIconMap } from "@/constants/featureIcons";
 
 interface ProductHeroProps {
-  product: Product | null | undefined;
+  product: ExpandedProduct | null | undefined;
   showPrice: boolean;
 }
 

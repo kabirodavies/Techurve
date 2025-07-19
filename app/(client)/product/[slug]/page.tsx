@@ -1,7 +1,3 @@
-import AddToCartButton from "@/components/AddToCartButton";
-import Container from "@/components/Container";
-import FavoriteButton from "@/components/FavoriteButton";
-import EnhancedProductGallery from "@/components/EnhancedProductGallery";
 import ProductHero from "@/components/ProductHero";
 import ProductTabs from "@/components/ProductTabs";
 import RelatedProducts from "@/components/RelatedProducts";
@@ -10,6 +6,8 @@ import { currentUser } from "@clerk/nextjs/server";
 import { isAdmin } from "@/lib/utils";
 import { notFound } from "next/navigation";
 import React from "react";
+import type { PRODUCT_BY_SLUG_QUERYResult, PRODUCTS_BY_SUBCATEGORYResult } from "@/sanity.types";
+import { ExpandedProduct, toExpandedProduct } from "@/types/ExpandedProduct";
 
 const SingleProductPage = async ({
   params,
@@ -17,32 +15,31 @@ const SingleProductPage = async ({
   params: Promise<{ slug: string }>;
 }) => {
   const { slug } = await params;
-  const product = await getProductBySlug(slug);
+  const product = toExpandedProduct(await getProductBySlug(slug));
   const user = await currentUser();
-  const showPrice = isAdmin(user);
   
   if (!product) {
     return notFound();
   }
 
   // Fetch related products in the same subcategory
-  let relatedProducts: any[] = [];
-  let featuredProduct: any = null;
+  let relatedProducts: ExpandedProduct[] = [];
+  let featuredProduct: ExpandedProduct | null = null;
   let subcategory = null;
-  if (product.subcategory && product.subcategory._id) {
-    relatedProducts = await getProductsBySubcategory(product.subcategory._id);
+  if (product.subcategory && (product.subcategory as any)._id) {
+    relatedProducts = (await getProductsBySubcategory((product.subcategory as any)._id)).map(toExpandedProduct);
     // Exclude current product
-    relatedProducts = relatedProducts.filter((p: any) => p._id !== product._id);
+    relatedProducts = relatedProducts.filter((p) => p._id !== product._id);
     
     // Collect all featured products (including current product if featured)
-    const allFeaturedProducts: any[] = [];
+    const allFeaturedProducts: ExpandedProduct[] = [];
     
     if (product.isFeatured) {
       allFeaturedProducts.push(product);
     }
     
     // Add featured products from related products
-    const relatedFeatured = relatedProducts.filter((p: any) => !!p.isFeatured);
+    const relatedFeatured = relatedProducts.filter((p) => !!p.isFeatured);
     allFeaturedProducts.push(...relatedFeatured);
     
     // Select featured product - random if multiple, direct if only one
@@ -60,7 +57,7 @@ const SingleProductPage = async ({
     }
     
     // Remove all featured from relatedProducts
-    relatedProducts = relatedProducts.filter((p: any) => !p.isFeatured || p._id === featuredProduct?._id);
+    relatedProducts = relatedProducts.filter((p) => !p.isFeatured || p._id === featuredProduct?._id);
     
     // Get subcategory info for button
     subcategory = product.subcategory;
@@ -69,9 +66,9 @@ const SingleProductPage = async ({
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <ProductHero product={product} showPrice={showPrice} />
+      <ProductHero product={product} showPrice={isAdmin(user)} />
       {/* Sticky Tab Navigation */}
-      <ProductTabs product={product} showPrice={showPrice} />
+      <ProductTabs product={product} showPrice={isAdmin(user)} />
       {/* Related Products */}
       <RelatedProducts 
         currentProduct={product} 

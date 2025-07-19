@@ -1,5 +1,6 @@
 "use client";
-import { Category, Product, Subcategory } from "@/sanity.types";
+import { Category, Subcategory } from "@/sanity.types";
+import { ExpandedProduct, toExpandedProduct } from "@/types/ExpandedProduct";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -19,7 +20,7 @@ interface Props {
 const CategoryProducts = ({ categories, slug }: Props) => {
   const [currentSlug, setCurrentSlug] = useState(slug);
   const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(null);
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<ExpandedProduct[]>([]);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -48,14 +49,14 @@ const CategoryProducts = ({ categories, slug }: Props) => {
     const fetchProducts = async () => {
       setLoading(true);
       try {
-        let data: Product[] = [];
+        let data: ExpandedProduct[] = [];
         if (selectedSubcategory) {
           const subcat = (selectedCat?.subcategories as Subcategory[] | undefined)?.find((s: Subcategory) => s.slug?.current === selectedSubcategory);
           if (subcat) {
-            data = await getProductsBySubcategory(subcat._id);
+            data = (await getProductsBySubcategory(subcat._id)).map(toExpandedProduct);
           }
         } else if (selectedCat) {
-          data = await getProductsByCategory(selectedCat._id);
+          data = (await getProductsByCategory(selectedCat._id)).map(toExpandedProduct);
         }
         setProducts(data);
       } catch (error) {
@@ -107,7 +108,7 @@ const CategoryProducts = ({ categories, slug }: Props) => {
           </div>
         ) : products?.length > 0 ? (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2.5">
-            {products?.map((product: Product) => (
+            {products?.map((product: ExpandedProduct) => (
               <AnimatePresence key={product._id}>
                 <motion.div>
                   <ProductCard product={product} />

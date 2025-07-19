@@ -1,5 +1,5 @@
 "use client";
-import { Product } from "@/sanity.types";
+import { ExpandedProduct, toExpandedProduct } from "@/types/ExpandedProduct";
 import React, { useEffect, useState } from "react";
 import Container from "./Container";
 import Title from "./Title";
@@ -13,16 +13,16 @@ import { useSearchParams } from "next/navigation";
 interface SubcategoryWithCount {
   _id: string;
   title: string;
-  slug: any;
-  image?: any;
+  slug: { current?: string };
+  image?: { asset?: { _ref: string } };
   productCount?: number;
 }
 
 interface CategoryWithCount {
   _id: string;
   title: string;
-  slug: any;
-  image?: any;
+  slug: { current?: string };
+  image?: { asset?: { _ref: string } };
   productCount?: number;
   subcategories?: SubcategoryWithCount[];
 }
@@ -45,7 +45,7 @@ const Shop = ({ categories, brands }: Props) => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(null);
   const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<ExpandedProduct[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedPrice, setSelectedPrice] = useState<string | null>(null);
 
@@ -69,13 +69,13 @@ const Shop = ({ categories, brands }: Props) => {
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
-      let data: Product[] = [];
+      let data: ExpandedProduct[] = [];
       if (selectedSubcategory) {
-        data = await getProductsBySubcategory(selectedSubcategory);
+        data = (await getProductsBySubcategory(selectedSubcategory)).map(toExpandedProduct);
       } else if (selectedCategory) {
-        data = await getProductsByCategory(selectedCategory);
+        data = (await getProductsByCategory(selectedCategory)).map(toExpandedProduct);
       } else {
-        data = await getAllProducts();
+        data = (await getAllProducts()).map(toExpandedProduct);
       }
       // Filter by brand name if selected
       if (selectedBrand) {
@@ -162,7 +162,7 @@ const Shop = ({ categories, brands }: Props) => {
                 </div>
               ) : products?.length > 0 ? (
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5">
-                  {products?.map((product) => (
+                  {products?.map((product: ExpandedProduct) => (
                     <ProductCard key={product?._id} product={product} />
                   ))}
                 </div>

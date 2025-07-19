@@ -8,16 +8,16 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import React from "react";
 import SocialMedia from "@/components/SocialMedia";
-// import type { Blog, BlockContent } from "@/sanity.types";
+import type { SINGLE_BLOG_QUERYResult, GET_ALL_BLOGResult } from "@/sanity.types";
 import { getSingleBlog, getAllBlogs } from "@/sanity/queries";
 
 // Helper to extract ToC from PortableText blocks
 type TocItem = { id: string; text: string; level: string };
-function extractToc(blocks: any): TocItem[] {
+function extractToc(blocks: any[]): TocItem[] {
   const toc: TocItem[] = [];
   let headingCount = 0;
   blocks?.forEach((block: any) => {
-    if (block._type === "block" && (block.style === "h2" || block.style === "h3")) {
+    if (block && block._type === "block" && (block.style === "h2" || block.style === "h3")) {
       headingCount++;
       const id =
         (block.children?.[0]?.text || `section-${headingCount}`)
@@ -29,7 +29,7 @@ function extractToc(blocks: any): TocItem[] {
         text: block.children?.[0]?.text || `Section ${headingCount}`,
         level: block.style as string,
       });
-      (block as any)._tocId = id; // Attach id for later use
+      // (block as any)._tocId = id; // Attach id for later use (not needed for type safety)
     }
   });
   return toc;
@@ -37,32 +37,32 @@ function extractToc(blocks: any): TocItem[] {
 
 const SingleBlogPage = async ({ params }: { params: { slug: string } }) => {
   const { slug } = params;
-  let blog: any = await getSingleBlog(slug);
-  if (Array.isArray(blog)) blog = blog[0] || null;
+  const blogResult = await getSingleBlog(slug);
+  const blog = Array.isArray(blogResult) ? blogResult[0] : blogResult;
   if (!blog) return notFound();
 
   // Fetch all blogs to find the next one in the same category
-  const allBlogs: any[] = await getAllBlogs(100);
+  const allBlogs: GET_ALL_BLOGResult = await getAllBlogs(100);
   // Get current blog categories (by title)
-  const currentCategories = (blog.blogcategories || []).map((cat) => (cat as any).title);
+  const currentCategories = (blog.blogcategories || []).map((cat) => cat.title);
   // Filter blogs in the same category (excluding current)
   const sameCategoryBlogs = allBlogs.filter(
     (b) =>
       b.slug?.current !== slug &&
-      b.blogcategories?.some((cat) => currentCategories.includes((cat as any).title))
+      b.blogcategories?.some((cat) => currentCategories.includes(cat.title ?? ""))
   );
   // Always pick a random blog in the same category (if any)
-  let nextBlog: any | null = null;
+  let nextBlog: typeof allBlogs[number] | null = null;
   if (sameCategoryBlogs.length > 0) {
     nextBlog = sameCategoryBlogs[Math.floor(Math.random() * sameCategoryBlogs.length)];
   }
 
   // Extract ToC and add anchor IDs to blocks
-  const blocks: any = blog.body || [];
+  const blocks: any[] = blog.body ?? [];
   const toc = extractToc(blocks);
 
   // Helper to render PortableText with anchor IDs for headings
-  function PortableTextWithAnchors({ value }: { value: any }) {
+  function PortableTextWithAnchors({ value }: { value: any[] }) {
     let headingCount = 0;
     return (
       <PortableText
@@ -83,7 +83,7 @@ const SingleBlogPage = async ({ params }: { params: { slug: string } }) => {
             blockquote: ({ children }: { children?: React.ReactNode }) => <blockquote className="my-5 border-l-2 border-l-gray-300 pl-6 text-base/8 text-gray-950 first:mt-0 last:mb-0">{children}</blockquote>,
           },
           types: {
-            image: ({ value }: { value: any }) => (
+            image: ({ value }: { value: { alt?: string } }) => (
               <Image
                 alt={value.alt || ""}
                 src={urlFor(value).width(2000).url()}
@@ -92,7 +92,7 @@ const SingleBlogPage = async ({ params }: { params: { slug: string } }) => {
                 height={1000}
               />
             ),
-            separator: ({ value }: { value: any }) => {
+            separator: ({ value }: { value: { style?: string } }) => {
               switch (value.style) {
                 case "line":
                   return <hr className="my-5 border-t border-gray-200" />;

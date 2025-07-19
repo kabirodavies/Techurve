@@ -153,7 +153,7 @@ const CartPage = () => {
                             <div className="h-full flex flex-1 flex-col justify-between py-1">
                               <div className="flex flex-col gap-0.5 md:gap-1.5">
                                 {/* Brand Display - Above Product Name */}
-                                {product?.brand && (product.brand as any)?.title && (
+                                {product?.brand && typeof (product.brand as any).title === 'string' && (
                                   <div className="flex items-center gap-1">
                                     <span className="text-xs text-gray-400 font-medium">Brand:</span>
                                     <span className="text-xs text-gray-500 font-medium">

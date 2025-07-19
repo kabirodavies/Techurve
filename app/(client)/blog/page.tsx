@@ -1,7 +1,5 @@
 import Container from "@/components/Container";
-import Title from "@/components/Title";
 import { getAllBlogs } from "@/sanity/queries";
-import Link from "next/link";
 import React from "react";
 import BlogListWithFilter from "@/components/BlogListWithFilter";
 

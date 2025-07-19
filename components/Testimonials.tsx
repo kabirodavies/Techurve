@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react'
-import Head from 'next/head';
 
 export interface Testimonial {
   _id: string;
@@ -59,9 +58,6 @@ const Testimonials: React.FC<TestimonialsProps> = ({ testimonials }) => {
 
   return (
     <>
-      <Head>
-        <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap" rel="stylesheet" />
-      </Head>
       <section className="max-w-6xl mx-auto py-16 px-4 text-center">
         <h2 className="text-3xl font-bold mb-10 text-blue-800">What Our Clients Say</h2>
         <div className="relative flex items-center justify-center">
