@@ -3,7 +3,7 @@ import React, { useRef, useState } from "react";
 import EnhancedProductGallery from "./EnhancedProductGallery";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./ui/accordion";
 import { Button } from "./ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Card, CardContent } from "./ui/card";
 import { 
   Download, 
   Info, 
@@ -39,23 +39,7 @@ interface ProductFeature {
   description?: string;
 }
 
-interface ProductSpecification {
-  category: string; // Should match keys in specCategoryIconMap
-  specs: { label: string; value: string }[];
-}
-
-interface Product {
-  name: string;
-  description?: string;
-  heroImage?: any;
-  images?: any[];
-  keyFeatures?: ProductFeature[];
-  specifications?: ProductSpecification[];
-  downloads?: { title: string; type: string; size: string; icon: string; url: any }[]; // Added downloads field
-  // ...other product fields
-}
-
-const ProductTabs = ({ product, showPrice }: { product: ExpandedProduct; showPrice?: boolean }) => {
+const ProductTabs = ({ product }: { product: ExpandedProduct }) => {
   const [activeTab, setActiveTab] = useState("features");
   const refs = {
     overview: useRef<HTMLDivElement>(null),
@@ -147,9 +131,7 @@ const ProductTabs = ({ product, showPrice }: { product: ExpandedProduct; showPri
             <div className="flex-shrink-0">
               <Image
                 src={
-                  (product as any).heroImage
-                    ? urlFor((product as any).heroImage).width(400).height(400).url() || '/placeholder.png'
-                    : product.images?.[0]
+                  product.images?.[0]
                     ? urlFor(product.images[0]).width(400).height(400).url() || '/placeholder.png'
                     : '/placeholder.png'
                 }
@@ -182,31 +164,7 @@ const ProductTabs = ({ product, showPrice }: { product: ExpandedProduct; showPri
           Comprehensive technical details and performance specifications
         </p>
       </div>
-      {((product as any)?.specifications && (product as any).specifications.length > 0) ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {(product as any).specifications.map((category: any, idx: number) => (
-            <div key={idx} className="bg-white rounded-xl shadow p-6 flex flex-col gap-4 border border-gray-100">
-              <div className="flex items-center gap-2 mb-2">
-                {(() => {
-                  const Icon = specCategoryIconMap[category.category] || Cpu; // Fallback icon
-                  return <Icon className="w-5 h-5 text-blue-600" />;
-                })()}
-                <span className="text-xl font-semibold text-blue-700">{category.category}</span>
-              </div>
-              <ul className="divide-y divide-gray-100">
-                {category.specs.map((spec: { label: string; value: string }, i: number) => (
-                  <li key={i} className="flex justify-between items-center py-2">
-                    <span className="text-gray-600">{spec.label}</span>
-                    <span className="font-semibold text-gray-900">{spec.value}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div className="text-center text-gray-400">No technical specifications available.</div>
-      )}
+      <div className="text-center text-gray-400">No technical specifications available.</div>
     </section>
   )}
 
@@ -219,42 +177,7 @@ const ProductTabs = ({ product, showPrice }: { product: ExpandedProduct; showPri
           Access product documentation and software tools
         </p>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {(product as any).downloads && (product as any).downloads.length > 0 ? (
-          (product as any).downloads.map((file: any, index: number) => {
-            const Icon = downloadIconMap[file.icon] || FileText;
-            const fileUrl = file.url?.asset?.url || file.url?.url;
-            return (
-              <Card key={index} className="hover:shadow-lg transition-shadow">
-                <CardContent className="p-6">
-                  <div className="flex items-start gap-4">
-                    <Icon className="w-8 h-8 text-blue-600 mt-1" />
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-gray-900">{file.title}</h3>
-                      <p className="text-sm text-gray-600">{file.type} • {file.size}</p>
-                      {fileUrl ? (
-                        <a href={fileUrl} target="_blank" rel="noopener noreferrer">
-                          <Button variant="outline" size="sm" className="mt-3">
-                            <Download className="w-4 h-4 mr-2" />
-                            Download
-                          </Button>
-                        </a>
-                      ) : (
-                        <Button variant="outline" size="sm" className="mt-3" disabled>
-                          <Download className="w-4 h-4 mr-2" />
-                          Download
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })
-        ) : (
-          <div className="text-center text-gray-400 col-span-full">No downloads available.</div>
-        )}
-      </div>
+      <div className="text-center text-gray-400 col-span-full">No downloads available.</div>
     </section>
   )}
 
