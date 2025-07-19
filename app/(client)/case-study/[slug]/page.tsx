@@ -19,7 +19,7 @@ const SingleCaseStudyPage = async ({ params }: { params: { slug: string } }) => 
   const currentTopic = caseStudy.topic;
   // Filter case studies in the same topic (excluding current)
   const sameTopicCaseStudies = allCaseStudies.filter(
-    (cs: any) => cs.slug?.current !== slug && cs.topic === currentTopic
+    (cs: { slug?: { current?: string }; topic?: string }) => cs.slug?.current !== slug && cs.topic === currentTopic
   );
   // Always pick a random case study in the same topic (if any)
   let nextCaseStudy = null;
@@ -166,7 +166,7 @@ const SingleCaseStudyPage = async ({ params }: { params: { slug: string } }) => 
                     if (product.overview && typeof product.overview === 'string') {
                       overviewLine = product.overview.split(/[\n\.]/)[0];
                     } else if (Array.isArray(product.overview) && product.overview.length > 0) {
-                      const block = product.overview.find((b: any) => b._type === 'block');
+                      const block = product.overview.find((b: { _type?: string }) => b._type === 'block');
                       if (block && block.children && block.children.length > 0) {
                         overviewLine = block.children[0].text.split(/[\n\.]/)[0];
                       }

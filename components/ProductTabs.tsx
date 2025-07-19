@@ -4,15 +4,9 @@ import { Button } from "./ui/button";
 import { 
   Download, 
   Info, 
-  Wrench, 
-  FileText, 
   Sliders, 
   Shield, 
-  Zap, 
   ShoppingCart,
-  Wifi, 
-  Settings,
-  Cpu // <-- Add this import
 } from "lucide-react";
 import { urlFor } from "@/sanity/lib/image";
 import FeatureGrid from "./FeatureGrid";

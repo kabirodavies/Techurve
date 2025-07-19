@@ -6,8 +6,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import { isAdmin } from "@/lib/utils";
 import { notFound } from "next/navigation";
 import React from "react";
-import type { PRODUCT_BY_SLUG_QUERYResult, PRODUCTS_BY_SUBCATEGORYResult } from "@/sanity.types";
-import { ExpandedProduct, toExpandedProduct } from "@/types/ExpandedProduct";
+import type { ExpandedProduct, toExpandedProduct } from "@/types/ExpandedProduct";
 
 const SingleProductPage = async ({
   params,
@@ -25,9 +24,9 @@ const SingleProductPage = async ({
   // Fetch related products in the same subcategory
   let relatedProducts: ExpandedProduct[] = [];
   let featuredProduct: ExpandedProduct | null = null;
-  let subcategory = null;
-  if (product.subcategory && (product.subcategory as any)._id) {
-    relatedProducts = (await getProductsBySubcategory((product.subcategory as any)._id)).map(toExpandedProduct);
+  let subcategory: { _id?: string } | null = null;
+  if (product.subcategory && (product.subcategory as { _id?: string })._id) {
+    relatedProducts = (await getProductsBySubcategory((product.subcategory as { _id?: string })._id)).map(toExpandedProduct);
     // Exclude current product
     relatedProducts = relatedProducts.filter((p) => p._id !== product._id);
     

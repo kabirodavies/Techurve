@@ -45,7 +45,7 @@ const LatestBlog = async () => {
             <div className="p-4 flex flex-col flex-1 justify-center">
               <h3 className="font-bold text-lg md:text-xl text-black group-hover:text-shop_dark_blue mb-2 line-clamp-2 text-left flex-1 flex items-center transition-colors duration-200">{blog?.title}</h3>
               <div className="flex flex-wrap gap-2 mt-auto">
-                {blog?.blogcategories?.map((cat: any, idx: any) => (
+                {blog?.blogcategories?.map((cat: { title: string }, idx: number) => (
                   <span key={idx} className="text-gray-500 text-xs font-normal">
                     {cat?.title}
                   </span>

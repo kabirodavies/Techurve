@@ -1,7 +1,6 @@
 "use client";
 
 import Link from 'next/link'
-import Image from 'next/image'
 import { useState } from 'react'
 import Testimonials from '@/components/Testimonials'
 import { featureIconMap } from '@/constants/featureIcons';
@@ -9,7 +8,7 @@ import { Shield } from 'lucide-react';
 import CaseStudyShowcase from '@/components/CaseStudyShowcase';
 import { getAllCaseStudies } from '@/sanity/queries';
 
-export default function SolutionsPageClient({ solutions, industries, testimonials, caseStudies }: { solutions: any[]; industries: string[]; testimonials: any[]; caseStudies: any[] }) {
+export default function SolutionsPageClient({ solutions, testimonials, caseStudies }: { solutions: unknown[]; testimonials: unknown[]; caseStudies: unknown[] }) {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
 
   const filteredSolutions = solutions;
@@ -34,7 +33,7 @@ export default function SolutionsPageClient({ solutions, industries, testimonial
           {filteredSolutions.length === 0 && (
             <div className="text-center text-gray-500">No solutions found for this industry.</div>
           )}
-          {filteredSolutions.map((solution: any, idx: number) => {
+          {filteredSolutions.map((solution: unknown, idx: number) => {
             console.log('Solution:', solution.title, 'Icon:', solution.icon);
             const isOpen = openIndex === idx;
             // Defensive, deterministic icon rendering

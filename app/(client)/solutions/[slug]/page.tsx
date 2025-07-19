@@ -1,6 +1,5 @@
 import { client } from '@/sanity/lib/client'
 import { GET_SOLUTION_BY_SLUG, GET_TESTIMONIALS } from '@/sanity/queries/query'
-import SplitQA from '@/components/SplitQA'
 import Testimonials from '@/components/Testimonials'
 import Link from 'next/link'
 import React from 'react'

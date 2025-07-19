@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ChevronRight, Search, X } from "lucide-react";
 
-export default function CaseStudyListWithFilter({ caseStudies, topics, linkBase = "/case-study" }: { caseStudies: any[]; topics: string[]; linkBase?: string }) {
+export default function CaseStudyListWithFilter({ caseStudies, linkBase = "/case-study" }: { caseStudies: unknown[]; linkBase?: string }) {
   const [search, setSearch] = useState("");
   const [filtered, setFiltered] = useState(caseStudies);
   const [dropdownOpen, setDropdownOpen] = useState(false);

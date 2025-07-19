@@ -8,7 +8,7 @@ interface CaseStudy {
   title: string;
   slug: { current: string };
   summary?: string;
-  mainImage: any;
+  mainImage: unknown;
   location?: string;
   product?: string;
   topic?: string;

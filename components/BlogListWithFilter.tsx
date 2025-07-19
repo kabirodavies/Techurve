@@ -3,11 +3,21 @@ import React, { useState, useEffect } from "react";
 import { urlFor } from "@/sanity/lib/image";
 import Image from "next/image";
 import Link from "next/link";
-import { ChevronRight, Search, X } from "lucide-react";
+import { Search, X } from "lucide-react";
+import type { Blog } from "@/sanity.types";
 
-export default function BlogListWithFilter({ blogs, categories, tags = [], linkBase = "/blog" }: { blogs: any[]; categories: string[]; tags?: string[]; linkBase?: string }) {
+function getCategoryTitles(blog: Blog): string[] {
+  // blogcategories is an array of references, but queries may project title
+  // Defensive: check for title property
+  if (!Array.isArray(blog.blogcategories)) return [];
+  return blog.blogcategories
+    .map((cat: unknown) => typeof cat === 'object' && cat && 'title' in cat && typeof cat.title === 'string' ? cat.title : null)
+    .filter((title): title is string => !!title);
+}
+
+export default function BlogListWithFilter({ blogs, categories, tags = [], linkBase = "/blog" }: { blogs: Blog[]; categories: string[]; tags?: string[]; linkBase?: string }) {
   const [search, setSearch] = useState("");
-  const [filtered, setFiltered] = useState(blogs);
+  const [filtered, setFiltered] = useState<Blog[]>(blogs);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string | null>(null); // null means ALL
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
@@ -15,19 +25,16 @@ export default function BlogListWithFilter({ blogs, categories, tags = [], linkB
   useEffect(() => {
     let result = blogs;
     if (activeCategory && activeCategory !== "ALL") {
-      result = result.filter((b) => (b.blogcategories || []).some((c: any) => c.title === activeCategory));
+      result = result.filter((b) => getCategoryTitles(b).includes(activeCategory));
     }
     if (selectedTags.length > 0) {
-      result = result.filter((b) =>
-        selectedTags.some((tag) => (b.tags || []).includes(tag))
-      );
+      result = result.filter((b) => Array.isArray((b as Blog).tags) && selectedTags.some((tag) => (b as Blog).tags.includes(tag)));
     }
     if (search.trim() !== "") {
       const s = search.trim().toLowerCase();
       result = result.filter(
         (b) =>
-          b.title?.toLowerCase().includes(s) ||
-          b.summary?.toLowerCase?.().includes?.(s)
+          (b.title?.toLowerCase().includes(s) ?? false)
       );
     }
     setFiltered(result);
@@ -143,7 +150,7 @@ export default function BlogListWithFilter({ blogs, categories, tags = [], linkB
               <div className="relative h-48 w-full overflow-hidden">
                 <Image
                   src={urlFor(blog?.mainImage).url()}
-                  alt={blog.title}
+                  alt={blog.title ?? "Blog image"}
                   fill
                   className="object-cover w-full h-full rounded-t-xl transition-transform duration-300 group-hover:scale-105"
                 />
@@ -153,11 +160,15 @@ export default function BlogListWithFilter({ blogs, categories, tags = [], linkB
             <div className="p-4 flex flex-col flex-1 justify-center">
               <h3 className="font-bold text-lg md:text-xl text-black group-hover:text-shop_dark_blue mb-2 line-clamp-2 text-left flex-1 flex items-center transition-colors duration-200">{blog?.title}</h3>
               <div className="flex flex-wrap gap-2 mt-auto">
-                {blog?.blogcategories?.map((cat: any, idx: any) => (
-                  <span key={idx} className="text-gray-500 text-xs font-normal">
-                    {cat?.title}
-                  </span>
-                ))}
+                {Array.isArray(blog?.blogcategories) && blog.blogcategories.length > 0 ? (
+                  getCategoryTitles(blog).map((title, idx) => (
+                    <span key={idx} className="text-gray-500 text-xs font-normal">
+                      {title}
+                    </span>
+                  ))
+                ) : (
+                  <span className="text-gray-400 text-xs font-normal">No Category</span>
+                )}
               </div>
             </div>
           </Link>

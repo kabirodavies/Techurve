@@ -1,7 +1,6 @@
 import Shop from "@/components/Shop";
 import { getCategoriesWithSubcategories, getAllBrands } from "@/sanity/queries";
 import React from "react";
-import Link from 'next/link'
 
 const ShopPage = async () => {
   const categories = await getCategoriesWithSubcategories();

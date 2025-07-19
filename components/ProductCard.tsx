@@ -15,13 +15,6 @@ import { useIsAdmin } from "@/hooks";
 // Add these types for populated fields
 // These match the shape returned by GROQ queries in your codebase
 
-type PopulatedBrand = { title?: string; slug?: { current?: string } };
-type PopulatedSubcategory = {
-  title?: string;
-  slug?: { current?: string };
-  parent?: { title?: string; slug?: { current?: string } };
-};
-
 const ProductCard = ({ product }: { product: ExpandedProduct }) => {
   const isAdmin = useIsAdmin();
 

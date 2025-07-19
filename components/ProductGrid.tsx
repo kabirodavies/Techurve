@@ -12,18 +12,12 @@ import {
   Shield, 
   Globe, 
   Zap, 
-  Users, 
   Building2, 
   CheckCircle2,
   ArrowRight,
   Database,
   Network,
-  Smartphone,
-  Lightbulb,
-  Target,
-  Handshake,
-  Settings,
-  Headphones
+  Smartphone
 } from "lucide-react";
 
 const ProductGrid = () => {

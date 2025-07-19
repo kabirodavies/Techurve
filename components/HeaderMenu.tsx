@@ -53,7 +53,7 @@ const HeaderMenu = () => {
               </button>
               {openDropdown === item.title && (
                 <div className="absolute left-0 mt-1 min-w-[180px] bg-white border border-gray-100 rounded-xl shadow-xl z-20 py-2 flex flex-col">
-                  {item.children.map((child: any) => (
+                  {item.children.map((child: unknown) => (
                     <Link
                       key={child.title}
                       href={child.href}
