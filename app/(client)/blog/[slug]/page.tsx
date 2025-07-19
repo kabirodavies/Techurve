@@ -39,7 +39,9 @@ function extractToc(blocks: BlockContent): TocItem[] {
   return toc;
 }
 
-const SingleBlogPage = async ({ params }: { params: { slug: string } }) => {
+type PageProps = { params: { slug: string } };
+
+const SingleBlogPage = async ({ params }: PageProps) => {
   const { slug } = params;
   const blogResult = await getSingleBlog(slug);
   const blog = Array.isArray(blogResult) ? blogResult[0] : blogResult;
