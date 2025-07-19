@@ -1,15 +1,15 @@
 "use client";
-import { Category, Product } from "@/sanity.types";
+import { Category, Subcategory } from "@/sanity.types";
+import { ExpandedProduct, toExpandedProduct } from "@/types/ExpandedProduct";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { Button } from "./ui/button";
-import { client } from "@/sanity/lib/client";
 import { AnimatePresence, motion } from "motion/react";
 import { Loader2 } from "lucide-react";
 import NoProductAvailable from "./NoProductAvailable";
 import ProductCard from "./ProductCard";
-import { getCategoriesWithSubcategories, getProductsBySubcategory, getProductsByCategory } from "@/sanity/queries";
+import { getProductsBySubcategory, getProductsByCategory } from "@/sanity/queries";
 import Title from "@/components/Title";
 
 interface Props {
@@ -20,11 +20,11 @@ interface Props {
 const CategoryProducts = ({ categories, slug }: Props) => {
   const [currentSlug, setCurrentSlug] = useState(slug);
   const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(null);
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<ExpandedProduct[]>([]);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
-  const selectedCat = categories.find((cat) => cat.slug?.current === currentSlug) as Category & { subcategories?: any[] };
+  const selectedCat = categories.find((cat) => cat.slug?.current === currentSlug) as Category & { subcategories?: Subcategory[] };
 
   const handleCategoryChange = (newSlug: string) => {
     if (newSlug === currentSlug) return;
@@ -49,14 +49,14 @@ const CategoryProducts = ({ categories, slug }: Props) => {
     const fetchProducts = async () => {
       setLoading(true);
       try {
-        let data = [];
+        let data: ExpandedProduct[] = [];
         if (selectedSubcategory) {
-          const subcat = (selectedCat?.subcategories as any[])?.find((s: any) => s.slug?.current === selectedSubcategory);
+          const subcat = (selectedCat?.subcategories as Subcategory[] | undefined)?.find((s: Subcategory) => s.slug?.current === selectedSubcategory);
           if (subcat) {
-            data = await getProductsBySubcategory(subcat._id);
+            data = (await getProductsBySubcategory(subcat._id)).map(toExpandedProduct);
           }
         } else if (selectedCat) {
-          data = await getProductsByCategory(selectedCat._id);
+          data = (await getProductsByCategory(selectedCat._id)).map(toExpandedProduct);
         }
         setProducts(data);
       } catch (error) {
@@ -67,12 +67,12 @@ const CategoryProducts = ({ categories, slug }: Props) => {
       }
     };
     fetchProducts();
-  }, [currentSlug, selectedSubcategory, router]);
+  }, [currentSlug, selectedSubcategory, selectedCat]);
 
   return (
     <div className="py-5 flex flex-col md:flex-row items-start gap-5">
       <div className="flex flex-col md:min-w-40 border">
-        {categories?.map((item) => (
+        {categories?.map((item: Category) => (
           <Button
             onClick={() => handleCategoryChange(item?.slug?.current as string)}
             key={item?._id}
@@ -81,11 +81,11 @@ const CategoryProducts = ({ categories, slug }: Props) => {
             <p className="w-full text-left px-2">{item?.title}</p>
           </Button>
         ))}
-        {selectedCat && (selectedCat.subcategories as any[]) && (selectedCat.subcategories as any[]).length > 0 && (
+        {selectedCat && selectedCat.subcategories && selectedCat.subcategories.length > 0 && (
           <div className="mt-4">
             <Title className="text-sm font-semibold">Subcategories</Title>
             <div className="flex flex-col gap-2 mt-2">
-              {(selectedCat.subcategories as any[]).map((subcat: any) => (
+              {selectedCat.subcategories.map((subcat: Subcategory) => (
                 <button
                   key={subcat._id}
                   className={`text-left px-2 py-1 rounded hover:bg-shop_dark_green/10 ${selectedSubcategory === subcat.slug?.current ? "bg-shop_dark_green text-white" : ""}`}
@@ -108,7 +108,7 @@ const CategoryProducts = ({ categories, slug }: Props) => {
           </div>
         ) : products?.length > 0 ? (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2.5">
-            {products?.map((product: Product) => (
+            {products?.map((product: ExpandedProduct) => (
               <AnimatePresence key={product._id}>
                 <motion.div>
                   <ProductCard product={product} />

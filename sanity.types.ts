@@ -189,6 +189,7 @@ export type Product = {
   _updatedAt: string;
   _rev: string;
   name?: string;
+  overview?: string;
   slug?: Slug;
   images?: Array<{
     asset?: {
@@ -224,6 +225,13 @@ export type Product = {
   isFeatured?: boolean;
   features?: string[];
   usage?: string[];
+  trustIndicators?: string[];
+  keyHighlights?: string[];
+  keyFeatures?: Array<{
+    id: string;
+    label: string;
+    value: string;
+  }>;
 };
 
 export type Brand = {
@@ -598,6 +606,7 @@ export type PRODUCT_BY_SLUG_QUERYResult = {
   _updatedAt: string;
   _rev: string;
   name?: string;
+  overview?: string;
   slug?: Slug;
   images?: Array<{
     asset?: {

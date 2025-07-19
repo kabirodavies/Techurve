@@ -6,6 +6,11 @@ interface Props {
 }
 
 const PriceFormatter = ({ amount, className }: Props) => {
+  // Return null if amount is 0 or undefined
+  if (!amount || amount === 0) {
+    return null;
+  }
+
   const formattedPrice = new Number(amount).toLocaleString("en-US", {
     currency: "KES",
     style: "currency",

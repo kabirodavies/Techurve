@@ -1,6 +1,5 @@
 "use client";
-import { CATEGORIES_WITH_SUBCATEGORIESResult, Product } from "@/sanity.types";
-import type { BRANDS_QUERYResult } from "@/sanity.types";
+import { ExpandedProduct, toExpandedProduct } from "@/types/ExpandedProduct";
 import React, { useEffect, useState } from "react";
 import Container from "./Container";
 import Title from "./Title";
@@ -8,50 +7,86 @@ import CategoryList from "./shop/CategoryList";
 import { Loader2 } from "lucide-react";
 import NoProductAvailable from "./NoProductAvailable";
 import ProductCard from "./ProductCard";
-import { getCategoriesWithSubcategories, getProductsBySubcategory, getProductsByCategory, getAllProducts } from "@/sanity/queries";
+import { getProductsBySubcategory, getProductsByCategory, getAllProducts } from "@/sanity/queries";
 import { useSearchParams } from "next/navigation";
 
+interface SubcategoryWithCount {
+  _id: string;
+  title: string;
+  slug: { current?: string };
+  image?: { asset?: { _ref: string } };
+  productCount?: number;
+}
+
+interface CategoryWithCount {
+  _id: string;
+  title: string;
+  slug: { current?: string };
+  image?: { asset?: { _ref: string } };
+  productCount?: number;
+  subcategories?: SubcategoryWithCount[];
+}
+
 interface Props {
-  categories: BrandWithCount[]; // should be CategoryWithCount[], but for demonstration, align with the new type
+  categories: CategoryWithCount[];
   brands: BrandWithCount[];
 }
 interface BrandWithCount {
   _id: string;
   title: string;
-  slug: any;
+  slug?: { current?: string };
   productCount?: number;
 }
+
+// For filtering populated brands
+type PopulatedBrand = { title?: string; slug?: { current?: string } };
 const Shop = ({ categories, brands }: Props) => {
   const searchParams = useSearchParams();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(null);
   const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<ExpandedProduct[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedPrice, setSelectedPrice] = useState<string | null>(null);
 
-  // Set selectedBrand from query param on mount
+  // Set selected filters from query params on mount
   useEffect(() => {
     const brandParam = searchParams.get("brand");
+    const categoryParam = searchParams.get("category");
+    const subcategoryParam = searchParams.get("subcategory");
+    
     if (brandParam) {
       setSelectedBrand(brandParam);
+    }
+    if (categoryParam) {
+      setSelectedCategory(categoryParam);
+    }
+    if (subcategoryParam) {
+      setSelectedSubcategory(subcategoryParam);
     }
   }, [searchParams]);
 
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
-      let data: Product[] = [];
+      let data: ExpandedProduct[] = [];
       if (selectedSubcategory) {
-        data = await getProductsBySubcategory(selectedSubcategory);
+        data = (await getProductsBySubcategory(selectedSubcategory)).map(toExpandedProduct);
       } else if (selectedCategory) {
-        data = await getProductsByCategory(selectedCategory);
+        data = (await getProductsByCategory(selectedCategory)).map(toExpandedProduct);
       } else {
-        data = await getAllProducts();
+        data = (await getAllProducts()).map(toExpandedProduct);
       }
       // Filter by brand name if selected
       if (selectedBrand) {
+<<<<<<< HEAD
         data = data.filter((product) => product.brand && (product.brand as any).title && (product.brand as any).title.toLowerCase() === selectedBrand.toLowerCase());
+=======
+        data = data.filter((product) => {
+          const brand = product.brand as PopulatedBrand | undefined;
+          return brand?.title && brand.title.toLowerCase() === selectedBrand.toLowerCase();
+        });
+>>>>>>> test
       }
       setProducts(data);
       setLoading(false);
@@ -131,7 +166,7 @@ const Shop = ({ categories, brands }: Props) => {
                 </div>
               ) : products?.length > 0 ? (
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5">
-                  {products?.map((product) => (
+                  {products?.map((product: ExpandedProduct) => (
                     <ProductCard key={product?._id} product={product} />
                   ))}
                 </div>

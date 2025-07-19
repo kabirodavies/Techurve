@@ -1,6 +1,12 @@
+<<<<<<< HEAD
 "use client"
 
 import { Product } from "@/sanity.types";
+=======
+"use client";
+
+import { ExpandedProduct } from "@/types/ExpandedProduct";
+>>>>>>> test
 import { urlFor } from "@/sanity/lib/image";
 import Image from "next/image";
 import React from "react";
@@ -10,13 +16,27 @@ import PriceView from "./PriceView";
 import Title from "./Title";
 import ProductSideMenu from "./ProductSideMenu";
 import AddToCartButton from "./AddToCartButton";
+<<<<<<< HEAD
 import ProductAdminControls from "./ProductAdminControls";
 
 const ProductCard = ({ product }: { product: Product }) => {
+=======
+import { useIsAdmin } from "@/hooks";
+
+// Add these types for populated fields
+// These match the shape returned by GROQ queries in your codebase
+
+const ProductCard = ({ product }: { product: ExpandedProduct }) => {
+  const isAdmin = useIsAdmin();
+
+  const brand = product.brand;
+  const subcategory = product.subcategory;
+
+>>>>>>> test
   return (
     <div className="text-sm border-[1px] rounded-md border-darkBlue/20 group bg-white">
       <div className="relative group overflow-hidden bg-shop_light_bg">
-        {product?.images && (
+        {product?.images && product.images[0] && (
           <Link href={`/product/${product?.slug?.current}`}>
             <Image
               src={urlFor(product.images[0]).url()}
@@ -48,6 +68,7 @@ const ProductCard = ({ product }: { product: Product }) => {
         )}
       </div>
       <div className="p-3 flex flex-col gap-2">
+<<<<<<< HEAD
         {/* Brand, Category, Subcategory */}
         <div className="flex flex-wrap gap-2 text-xs text-gray-500 font-medium">
           {product?.brand && (product.brand as any).title && (
@@ -56,21 +77,46 @@ const ProductCard = ({ product }: { product: Product }) => {
                 {(product.brand as any).title}
               </Link>
             </span>
+=======
+        {/* Brand Display - Above Product Name */}
+        {brand?.title ? (
+          <Link
+            href={`/shop?brand=${encodeURIComponent(brand.title)}`}
+            className="text-xs text-shop_dark_green hover:text-shop_dark_blue hoverEffect font-medium"
+          >
+            {brand.title}
+          </Link>
+        ) : (
+          <span className="text-xs text-gray-400 font-medium">Brand</span>
+        )}
+
+        {/* Category and Subcategory Display - Below Brand, Above Product Name */}
+        <div className="flex flex-wrap gap-1 text-xs text-gray-600">
+          {subcategory?.parent?.title && (
+            <Link
+              href={`/category/${subcategory.parent.slug?.current}`}
+              className="hover:text-shop_dark_green hoverEffect"
+            >
+              {subcategory.parent.title}
+            </Link>
+>>>>>>> test
           )}
-          {(product?.subcategory && (product.subcategory as any).parent?.title && (product.subcategory as any).parent?.slug && (product.subcategory as any).title && (product.subcategory as any).slug) && (
-            <span>
-              <Link href={`/category/${(product.subcategory as any).parent.slug.current}`} className="hover:underline text-shop_dark_blue">
-                {(product.subcategory as any).parent.title}
+          {subcategory?.title && (
+            <>
+              {subcategory?.parent?.title && (
+                <span className="text-gray-400">•</span>
+              )}
+              <Link
+                href={`/category/${subcategory.parent?.slug?.current}?subcategory=${subcategory.slug?.current}`}
+                className="hover:text-shop_dark_green hoverEffect"
+              >
+                {subcategory.title}
               </Link>
-              {" > "}
-              <Link href={{ pathname: `/category/${(product.subcategory as any).parent.slug.current}`, query: { subcategory: (product.subcategory as any).slug.current } }} className="hover:underline text-shop_dark_blue">
-                {(product.subcategory as any).title}
-              </Link>
-            </span>
+            </>
           )}
         </div>
-        <Title className="text-sm line-clamp-1">{product?.name}</Title>
 
+        <Title className="text-sm line-clamp-1">{product?.name}</Title>
 
         <div className="flex items-center gap-2.5">
           <p className="font-medium">In Stock</p>
@@ -81,7 +127,16 @@ const ProductCard = ({ product }: { product: Product }) => {
           </p>
         </div>
 
+<<<<<<< HEAD
         <ProductAdminControls product={product} />
+=======
+        <PriceView
+          price={product?.price}
+          discount={product?.discount}
+          className="text-sm"
+          showPrice={isAdmin}
+        />
+>>>>>>> test
         <AddToCartButton product={product} className="w-36 rounded-full" />
       </div>
     </div>

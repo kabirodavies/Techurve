@@ -45,22 +45,18 @@ export const metadata: Metadata = {
   description: "Discover curated security solutions at Techurve, blending technology to elevate your peace of mind and protect your digital and physical assets.",
 };
 
-export default function RootLayout({
+export default function ClientLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en">
-        <body className="font-poppins antialiased">
-          <div className="flex flex-col min-h-screen bg-gray-100">
-            <Header />
-            <main className="flex-1">{children}</main>
-            <Footer />
-          </div>
-        </body>
-      </html>
+      <div className="flex flex-col min-h-screen bg-gray-100">
+        <Header />
+        <main className="flex-1">{children}</main>
+        <Footer />
+      </div>
     </ClerkProvider>
   );
 }

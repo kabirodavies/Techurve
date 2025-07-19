@@ -1,10 +1,21 @@
 import { title } from "process";
 
 export const headerData = [
-  { title: "Home", href: "/" },
-  { title: "Shop", href: "/shop" },
-  { title: "Blog", href: "/blog" },
-  { title: "Deal", href: "/deal" },
+  // { title: "Home", href: "/" },
+  { title: "Products", href: "/shop" },
+  { title: "Solutions", href: "/solutions" },
+  { title: "Case Study", href: "/case-study" },
+
+  {
+    title: "Company",
+    href: "#",
+    children: [
+      { title: "Contact", href: "/contact" },
+      { title: "About", href: "/about" },
+      { title: "Resources", href: "#" },
+      { title: "Blog", href: "/blog" },
+    ],
+  },
 ];
 export const quickLinksData = [
   { title: "About us", href: "/about" },

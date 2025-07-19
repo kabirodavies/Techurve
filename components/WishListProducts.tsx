@@ -11,10 +11,14 @@ import toast from "react-hot-toast";
 import Image from "next/image";
 import { urlFor } from "@/sanity/lib/image";
 import AddToCartButton from "./AddToCartButton";
+import { useIsAdmin } from "@/hooks";
+import PriceFormatter from "./PriceFormatter";
 
 const WishListProducts = () => {
   const [visibleProducts, setVisibleProducts] = useState(7);
   const { favoriteProduct, removeFromFavorite, resetFavorite } = useStore();
+  const isAdmin = useIsAdmin();
+  
   const loadMore = () => {
     setVisibleProducts((prev) => Math.min(prev + 5, favoriteProduct.length));
   };
@@ -38,9 +42,6 @@ const WishListProducts = () => {
               <thead className="border-b">
                 <tr className="bg-black/5">
                   <th className="p-2 text-left">Image</th>
-                  <th className="p-2 text-left hidden md:table-cell">
-                    Category
-                  </th>
                   <th className="p-2 text-left hidden md:table-cell">Type</th>
                   <th className="p-2 text-left hidden md:table-cell">Status</th>
                   <th className="p-2 text-left">Price</th>
@@ -78,13 +79,6 @@ const WishListProducts = () => {
                         <p className="line-clamp-1">{product?.name}</p>
                       </td>
                       <td className="p-2 capitalize hidden md:table-cell">
-                        {product?.categories && (
-                          <p className="uppercase line-clamp-1 text-xs font-medium">
-                            {product.categories.map((cat) => cat).join(", ")}
-                          </p>
-                        )}
-                      </td>
-                      <td className="p-2 capitalize hidden md:table-cell">
                         {product?.variant}
                       </td>
                       <td
@@ -99,7 +93,15 @@ const WishListProducts = () => {
                           : "Out of Stock"}
                       </td>
                       <td className="p-2">
-                        {/* <PriceFormatter amount={product?.price} /> */}
+                        {isAdmin ? (
+                          product?.price && product.price > 0 ? (
+                            <PriceFormatter amount={product?.price} />
+                          ) : (
+                            <span className="text-sm text-gray-700 font-medium">Request Quote</span>
+                          )
+                        ) : (
+                          <span className="text-sm text-gray-700 font-medium">Request Quote</span>
+                        )}
                       </td>
                       <td className="p-2">
                         <AddToCartButton product={product} className="w-full" />

@@ -29,7 +29,8 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { useIsAdmin } from "@/hooks/useIsAdmin";
+import { useIsAdmin } from "@/hooks";
+
 const countryCities = {
   Kenya: ["Nairobi", "Mombasa", "Kisumu"],
   Uganda: ["Kampala", "Entebbe", "Gulu"],
@@ -49,6 +50,7 @@ const CartPage = () => {
   const groupedItems = useStore((state) => state.getGroupedItems());
   const { isSignedIn } = useAuth();
   const { user } = useUser();
+  const isAdmin = useIsAdmin();
   const {
     register,
     handleSubmit,
@@ -56,7 +58,6 @@ const CartPage = () => {
     watch,
   } = useForm();
   const router = useRouter();
-  const isAdmin = useIsAdmin();
 
   const selectedCountry = watch("country") as keyof typeof countryCities | undefined;
 
@@ -133,14 +134,14 @@ const CartPage = () => {
                           className="border-b p-2.5 last:border-b-0 flex items-center justify-between gap-5"
                         >
                           <div className="flex flex-1 items-start gap-2 h-36 md:h-44">
-                            {product?.images && (
+                            {product?.images && product.images[0] && (
                               <Link
                                 href={`/product/${product?.slug?.current}`}
                                 className="border p-0.5 md:p-1 mr-2 rounded-md
                                  overflow-hidden group"
                               >
                                 <Image
-                                  src={urlFor(product?.images[0]).url()}
+                                  src={urlFor(product.images[0]).url()}
                                   alt="productImage"
                                   width={500}
                                   height={500}
@@ -151,14 +152,29 @@ const CartPage = () => {
                             )}
                             <div className="h-full flex flex-1 flex-col justify-between py-1">
                               <div className="flex flex-col gap-0.5 md:gap-1.5">
+                                {/* Brand Display - Above Product Name */}
+                                {product?.brand && typeof (product.brand as { title?: string }).title === 'string' && (
+                                  <div className="flex items-center gap-1">
+                                    <span className="text-xs text-gray-400 font-medium">Brand:</span>
+                                    <span className="text-xs text-gray-500 font-medium">
+                                      {(product.brand as { title?: string }).title}
+                                    </span>
+                                  </div>
+                                )}
                                 <h2 className="text-base font-semibold line-clamp-1">
                                   {product?.name}
                                 </h2>
-                                {isAdmin && (
-                                  <PriceFormatter amount={product?.price} className="text-sm text-gray-700" />
+                                {isAdmin ? (
+                                  product?.price && product.price > 0 ? (
+                                    <PriceFormatter amount={product?.price} className="text-sm text-gray-700" />
+                                  ) : (
+                                    <span className="text-sm text-gray-700 font-medium">Request Quote</span>
+                                  )
+                                ) : (
+                                  <span className="text-sm text-gray-700 font-medium">Request Quote</span>
                                 )}
                                 <p className="text-sm text-gray-600 line-clamp-3">
-                                  {product?.description}
+                                  {product?.overview}
                                 </p>
                               </div>
                               <div className="flex items-center gap-2">
@@ -223,16 +239,29 @@ const CartPage = () => {
                               <span>SubTotal</span>
                               <PriceFormatter amount={getSubTotalPrice()} />
                             </div>
-                            <div className="flex items-center justify-between">
-                              <span>Discount</span>
-                              <PriceFormatter amount={getSubTotalPrice() - getTotalPrice()} />
-                            </div>
+                            {getSubTotalPrice() - getTotalPrice() > 0 && (
+                              <div className="flex items-center justify-between">
+                                <span>Discount</span>
+                                <PriceFormatter
+                                  amount={getSubTotalPrice() - getTotalPrice()}
+                                />
+                              </div>
+                            )}
                             <Separator />
                             <div className="flex items-center justify-between font-semibold text-lg">
                               <span>Total</span>
-                              <PriceFormatter amount={getTotalPrice()} className="text-lg font-bold text-black" />
+                              <PriceFormatter
+                                amount={getTotalPrice()}
+                                className="text-lg font-bold text-black"
+                              />
                             </div>
                           </>
+                        )}
+                        {!isAdmin && (
+                          <div className="text-center py-4">
+                            <p className="text-gray-600 mb-2">Prices are hidden for non-admin users</p>
+                            <p className="text-sm text-gray-500">Request a quote to see pricing</p>
+                          </div>
                         )}
                       </div>
                     </div>
@@ -316,18 +345,29 @@ const CartPage = () => {
                   <div className="bg-white p-4 rounded-lg border mx-4">
                     <h2>Order Summary</h2>
                     <div className="space-y-4">
-                      {isAdmin && (
+                      {isAdmin ? (
                         <>
-                          <div className="flex items-center justify-between">
-                            <span>Discount</span>
-                            <PriceFormatter amount={getSubTotalPrice() - getTotalPrice()} />
-                          </div>
+                          {getSubTotalPrice() - getTotalPrice() > 0 && (
+                            <div className="flex items-center justify-between">
+                              <span>Discount</span>
+                              <PriceFormatter
+                                amount={getSubTotalPrice() - getTotalPrice()}
+                              />
+                            </div>
+                          )}
                           <Separator />
                           <div className="flex items-center justify-between font-semibold text-lg">
                             <span>Total</span>
-                            <PriceFormatter amount={getTotalPrice()} className="text-lg font-bold text-black" />
+                            <PriceFormatter
+                              amount={getTotalPrice()}
+                              className="text-lg font-bold text-black"
+                            />
                           </div>
                         </>
+                      ) : (
+                        <div className="text-center py-2">
+                          <p className="text-sm text-gray-600">Request a quote to see pricing</p>
+                        </div>
                       )}
                       <form onSubmit={handleSubmit(handleGetQuote)}>
                         <Button

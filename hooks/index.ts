@@ -1,4 +1,8 @@
+"use client";
+
 import { useEffect, useRef } from "react";
+import { useUser } from "@clerk/nextjs";
+import { isAdmin } from "@/lib/utils";
 
 export function useOutsideClick<T extends HTMLElement>(callback: () => void) {
   const ref = useRef<T>(null);
@@ -16,3 +20,8 @@ export function useOutsideClick<T extends HTMLElement>(callback: () => void) {
   }, [callback]);
   return ref;
 }
+
+export const useIsAdmin = () => {
+  const { user } = useUser();
+  return isAdmin(user);
+};

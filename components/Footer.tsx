@@ -6,6 +6,7 @@ import SocialMedia from "./SocialMedia";
 import { SubText, SubTitle } from "./ui/text";
 import { usefulLinksData, quickLinksData, contactInfoData } from "@/constants/data";
 import Link from "next/link";
+import { Info, Mail, Book, ShoppingBag, HelpCircle, Shield, FileText, MessageSquare } from "lucide-react";
 
 const Footer = () => {
   return (
@@ -28,31 +29,71 @@ const Footer = () => {
           <div>
             <SubTitle>Quick Links</SubTitle>
             <ul className="space-y-3 mt-4">
-              {quickLinksData?.map((item) => (
-                <li key={item?.title}>
-                  <Link
-                    href={item?.href}
-                    className="hover:text-shop_dark_blue hoverEffect font-medium flex items-center gap-2"
-                  >
-                    <span className="text-lg">&gt;&gt;</span> {item?.title}
-                  </Link>
-                </li>
-              ))}
+              {quickLinksData?.map((item) => {
+                let Icon;
+                switch (item.title) {
+                  case "About us":
+                    Icon = Info;
+                    break;
+                  case "Contact us":
+                    Icon = Mail;
+                    break;
+                  case "Blog":
+                    Icon = Book;
+                    break;
+                  case "Orders":
+                    Icon = ShoppingBag;
+                    break;
+                  default:
+                    Icon = Info;
+                }
+                return (
+                  <li key={item?.title}>
+                    <Link
+                      href={item?.href}
+                      className="hover:text-shop_dark_blue hoverEffect font-medium flex items-center gap-2 group"
+                    >
+                      <Icon className="w-5 h-5 text-shop_dark_blue/70 group-hover:text-shop_dark_blue transition-colors" />
+                      {item?.title}
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </div>
           <div>
             <SubTitle>Useful Links</SubTitle>
             <ul className="space-y-3 mt-4">
-              {usefulLinksData?.map((item) => (
-                <li key={item?.title}>
-                  <Link
-                    href={`/category/${item?.title}`}
-                    className="hover:text-shop_dark_blue hoverEffect font-medium flex items-center gap-2"
-                  >
-                    <span className="text-lg">&gt;&gt;</span> {item?.title}
-                  </Link>
-                </li>
-              ))}
+              {usefulLinksData?.map((item) => {
+                let Icon;
+                switch (item.title) {
+                  case "Help":
+                    Icon = HelpCircle;
+                    break;
+                  case "Privacy Policy":
+                    Icon = Shield;
+                    break;
+                  case "Terms & Conditions":
+                    Icon = FileText;
+                    break;
+                  case "FAQs":
+                    Icon = MessageSquare;
+                    break;
+                  default:
+                    Icon = Info;
+                }
+                return (
+                  <li key={item?.title}>
+                    <Link
+                      href={item?.href}
+                      className="hover:text-shop_dark_blue hoverEffect font-medium flex items-center gap-2 group"
+                    >
+                      <Icon className="w-5 h-5 text-shop_dark_blue/70 group-hover:text-shop_dark_blue transition-colors" />
+                      {item?.title}
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </div>
           <div>

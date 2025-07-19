@@ -4,55 +4,55 @@ import { getLatestBlogs } from "@/sanity/queries";
 import Image from "next/image";
 import { urlFor } from "@/sanity/lib/image";
 import Link from "next/link";
-import { Calendar } from "lucide-react";
-import dayjs from "dayjs";
+import { ArrowRightCircle } from "lucide-react";
 
 const LatestBlog = async () => {
   const blogs = await getLatestBlogs();
   return (
     <div className="mb-10 lg:mb-20">
-      <Title>Latest Blog</Title>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mt-5">
-        {blogs?.map((blog) => (
-          <div key={blog?._id} className="rounded-lg overflow-hidden hover:shadow-lg shadow-shop_dark_green/80 hoverEffect">
+      <div className="flex items-end justify-between mb-4 gap-4">
+        <Title className="min-h-[3.5rem] flex items-end">Explore Techurve Latest News<br/>and Insights.</Title>
+        <Link
+          href="/blog"
+          className="inline-flex items-center gap-4 px-5 py-2 rounded-full border border-gray-300 bg-white text-black font-semibold shadow hover:bg-gray-100 transition-colors text-sm md:text-base"
+        >
+          <span className="text-black">VIEW ALL NEWS</span>
+          <span className="ml-2 inline-flex items-center justify-center rounded-full bg-shop_dark_blue w-8 h-8">
+            <ArrowRightCircle className="w-5 h-5 md:w-6 md:h-6 text-white" />
+          </span>
+        </Link>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
+        {blogs?.slice(0, 3).map((blog) => (
+          <Link
+            key={blog?._id}
+            href={`/blog/${blog?.slug?.current}`}
+            className="group bg-white rounded-xl border border-gray-200 hover:border-gray-400 transition flex flex-col overflow-hidden focus:outline-none"
+            tabIndex={0}
+            aria-label={blog?.title}
+          >
             {blog?.mainImage && (
-              <Link href={`/blog/${blog?.slug?.current}`}>
+              <div className="relative h-48 w-full overflow-hidden">
                 <Image
                   src={urlFor(blog?.mainImage).url()}
-                  alt="blogImage"
-                  width={500}
-                  height={500}
-                  className="w-full max-h-80 object-cover"
+                  alt={blog.title || 'blogImage'}
+                  fill
+                  className="object-cover w-full h-full rounded-t-xl transition-transform duration-300 group-hover:scale-105"
                 />
-              </Link>
-            )}
-            <div className="bg-shop_light_bg p-5">
-              <div className="text-xs flex items-center gap-5">
-                <div className="flex items-center relative group cursor-pointer">
-                  {blog?.blogcategories?.map((item, index) => (
-                    <p
-                      key={index}
-                      className="font-semibold text-shop_dark_green tracking-wider"
-                    >
-                      {item?.title}
-                    </p>
-                  ))}
-                  <span className="absolute left-0 -bottom-1.5 bg-lightColor/30 inline-block w-full h-[2px] group-hover:bg-shop_dark_green hover:cursor-pointer hoverEffect" />
-                </div>
-                <p className="flex items-center gap-1 text-lightColor relative group hover:cursor-pointer hover:text-shop_dark_green hoverEffect">
-                  <Calendar size={15} />{" "}
-                  {dayjs(blog.publishedAt).format("MMMM D, YYYY")}
-                  <span className="absolute left-0 -bottom-1.5 bg-lightColor/30 inline-block w-full h-[2px] group-hover:bg-shop_dark_green hoverEffect" />
-                </p>
+                <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black/40 to-transparent" />
               </div>
-              <Link
-                href={`/blog/${blog?.slug?.current}`}
-                className="text-base font-semibold tracking-wide mt-5 line-clamp-2 hover:text-shop_dark_green hoverEffect"
-              >
-                {blog?.title}
-              </Link>
+            )}
+            <div className="p-4 flex flex-col flex-1 justify-center">
+              <h3 className="font-bold text-lg md:text-xl text-black group-hover:text-shop_dark_blue mb-2 line-clamp-2 text-left flex-1 flex items-center transition-colors duration-200">{blog?.title}</h3>
+              <div className="flex flex-wrap gap-2 mt-auto">
+                {blog?.blogcategories?.map((cat: { title: string }, idx: number) => (
+                  <span key={idx} className="text-gray-500 text-xs font-normal">
+                    {cat?.title}
+                  </span>
+                ))}
+              </div>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </div>

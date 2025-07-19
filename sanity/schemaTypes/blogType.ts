@@ -52,6 +52,12 @@ export const blogType = defineType({
       name: "body",
       type: "blockContent",
     }),
+    defineField({
+      name: "tags",
+      title: "Tags",
+      type: "array",
+      of: [{ type: "string" }],
+    }),
   ],
   preview: {
     select: {

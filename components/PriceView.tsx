@@ -7,13 +7,31 @@ interface Props {
   discount: number | undefined;
   className?: string;
   hideTotal?: boolean; // To hide the total price
-  hidden?: boolean; // NEW
+  showPrice?: boolean; // To show/hide price based on admin status
 }
-const PriceView = ({ price, discount, className, hideTotal, hidden }: Props) => {
-  if (hidden) return null;
+
+const PriceView = ({ price, discount, className, hideTotal, showPrice = true }: Props) => {
+  // Calculate the final price after discount (discount is a fixed amount, not percentage)
+  const numericDiscount = Number(discount) || 0;
+  const finalPrice = price ? price - numericDiscount : 0;
+  
+  // Show "Request Quote" if price is not shown or if final price is 0
+  if (!showPrice || !price || finalPrice === 0) {
+    return (
+      <div className="flex items-center justify-between gap-5">
+        <div className="flex items-center gap-2">
+          <span className={cn("text-shop_dark_green font-medium", className)}>
+            Request Quote
+          </span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex items-center justify-between gap-5">
       <div className="flex items-center gap-2">
+<<<<<<< HEAD
         {typeof price === 'number' && (
           <PriceFormatter
             amount={price}
@@ -21,8 +39,15 @@ const PriceView = ({ price, discount, className, hideTotal, hidden }: Props) => 
           />
         )}
         {typeof price === 'number' && typeof discount === 'number' && discount > 0 && !hideTotal && (
+=======
+        <PriceFormatter
+          amount={finalPrice}
+          className={cn("text-shop_dark_green", className)}
+        />
+        {price && numericDiscount > 0 && !hideTotal && (
+>>>>>>> test
           <PriceFormatter
-            amount={price + (discount * price) / 100}
+            amount={price}
             className={twMerge(
               "line-through text-xs font-normal text-zinc-500",
               className

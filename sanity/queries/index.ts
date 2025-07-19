@@ -155,8 +155,58 @@ const getAllProducts = async () => {
   return await client.fetch(ALL_PRODUCTS_QUERY);
 };
 
+<<<<<<< HEAD
 const getProductsByBrandSlug = async (brandSlug: string) => {
   return await client.fetch(PRODUCTS_BY_BRAND_SLUG, { brandSlug });
+=======
+export const getAllCaseStudies = async (limit = 100) => {
+  const query = `*[_type == "caseStudy"]|order(publishedAt desc)[0...$limit]{
+    _id,
+    title,
+    slug,
+    summary,
+    mainImage,
+    publishedAt,
+    location,
+    product,
+    topic,
+    tags,
+  }`;
+  return await client.fetch(query, { limit });
+};
+
+export const getSingleCaseStudy = async (slug: string) => {
+  const query = `*[_type == "caseStudy" && slug.current == $slug][0]{
+    _id,
+    title,
+    slug,
+    summary,
+    mainImage,
+    publishedAt,
+    location,
+    product,
+    topic,
+    tags,
+    overview,
+    challenges,
+    solution,
+    solutionProducts[]->{
+      _id,
+      title,
+      name,
+      images,
+      price,
+      discount,
+      stock,
+      status,
+      brand->{title,slug},
+      subcategory->{title,slug,parent->{title,slug}},
+      slug,
+      overview
+    }
+  }`;
+  return await client.fetch(query, { slug });
+>>>>>>> test
 };
 
 export {
