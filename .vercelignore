@@ -1,0 +1,9 @@
+# Ignore TypeScript configuration
+tsconfig.json
+
+# Ignore ESLint configuration
+.eslintrc*
+
+# Ignore test files
+**/*.test.*
+**/*.spec.* 
