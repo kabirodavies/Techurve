@@ -2,8 +2,9 @@
 import { useIsAdmin } from "@/hooks/useIsAdmin";
 import PriceView from "./PriceView";
 import React from "react";
+import { ExpandedProduct } from "@/types/ExpandedProduct";
 
-export default function ProductAdminControls({ product }: { product: any }) {
+export default function ProductAdminControls({ product }: { product: ExpandedProduct }) {
   const isAdmin = useIsAdmin();
   if (!isAdmin) return null;
   return (

@@ -27,7 +27,7 @@ export default function CaseStudyShowcase({ caseStudies }: { caseStudies: CaseSt
       {caseStudies.map((cs, idx) => {
         const isEven = idx % 2 === 1;
         return (
-          <React.Fragment key={cs._id}>
+          <React.Fragment key={typeof cs._id === 'string' ? cs._id : `${cs.title}-${idx}`}>
             <div
               className={`group flex flex-col md:flex-row ${isEven ? 'md:flex-row-reverse' : ''} items-center bg-white rounded-2xl overflow-hidden md:gap-10`}
             >

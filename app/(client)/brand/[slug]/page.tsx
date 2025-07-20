@@ -4,8 +4,10 @@ import { getProductsByBrandSlug, getAllBrands } from "@/sanity/queries";
 import ProductCard from "@/components/ProductCard";
 import Title from "@/components/Title";
 import { Button } from "@/components/ui/button";
+import { ExpandedProduct } from "@/types/ExpandedProduct";
+import { Brand } from "@/sanity.types";
 
-export default function BrandPageClient({ initialProducts, brands, brand }: { initialProducts: any[]; brands: any[]; brand: any }) {
+export default function BrandPageClient({ initialProducts, brand }: { initialProducts: ExpandedProduct[]; brand: Brand }) {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [products] = useState(initialProducts || []);
 
@@ -13,16 +15,16 @@ export default function BrandPageClient({ initialProducts, brands, brand }: { in
   const categories = useMemo(() => Array.from(
     new Map(
       (products || [])
-        .map((p: any) => p.subcategory?.parent)
-        .filter((cat: any) => cat && cat.title && cat.slug?.current)
-        .map((cat: any) => [cat.slug.current, cat])
+        .map((p: ExpandedProduct) => p.subcategory?.parent)
+        .filter((cat): cat is { title?: string; slug?: { current?: string } } => !!cat && !!cat.title && !!cat.slug?.current)
+        .map((cat) => [cat.slug.current, cat])
     ).values()
   ), [products]);
 
   const filteredProducts = useMemo(() => {
     if (!selectedCategory) return products;
     return (products || []).filter(
-      (p: any) => p.subcategory?.parent?.slug?.current === selectedCategory
+      (p: ExpandedProduct) => p.subcategory?.parent?.slug?.current === selectedCategory
     );
   }, [products, selectedCategory]);
 
@@ -40,20 +42,22 @@ export default function BrandPageClient({ initialProducts, brands, brand }: { in
           >
             All
           </Button>
-          {categories.map((cat: any) => (
-            <Button
-              key={cat.slug.current}
-              onClick={() => setSelectedCategory(cat.slug.current)}
-              className={`capitalize px-4 py-2 rounded ${selectedCategory === cat.slug.current ? "bg-shop_orange text-white" : "bg-gray-100 text-gray-700"}`}
-            >
-              {cat.title}
-            </Button>
+          {categories.map((cat) => (
+            cat.slug && cat.slug.current ? (
+              <Button
+                key={cat.slug.current}
+                onClick={() => setSelectedCategory(cat.slug!.current!)}
+                className={`capitalize px-4 py-2 rounded ${selectedCategory === cat.slug!.current! ? "bg-shop_orange text-white" : "bg-gray-100 text-gray-700"}`}
+              >
+                {cat.title}
+              </Button>
+            ) : null
           ))}
         </div>
       )}
       {filteredProducts?.length > 0 ? (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {filteredProducts.map((product: any) => (
+          {filteredProducts.map((product) => (
             <ProductCard key={product._id} product={product} />
           ))}
         </div>
@@ -69,6 +73,6 @@ export async function BrandPage({ params }: { params: { slug: string } }) {
   const { slug } = params;
   const products = await getProductsByBrandSlug(slug);
   const brands = await getAllBrands();
-  const brand = brands.find((b: any) => b.slug?.current === slug);
-  return <BrandPageClient initialProducts={products || []} brands={brands} brand={brand} />;
+  const brand = brands.find((b: Brand) => b.slug?.current === slug);
+  return <BrandPageClient initialProducts={products || []} brand={brand} />;
 }

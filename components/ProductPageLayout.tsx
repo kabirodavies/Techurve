@@ -6,10 +6,12 @@ import { Button } from "./ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
 import { Product } from "@/sanity.types";
 import ImageView from "@/components/ImageView";
-import ProductPriceSection from "@/components/ProductPriceSection";
+import PriceView from "@/components/PriceView";
 import AddToCartButton from "@/components/AddToCartButton";
 import FavoriteButton from "@/components/FavoriteButton";
 import Link from "next/link";
+import { ExpandedProduct } from "@/types/ExpandedProduct";
+import Image from "next/image";
 
 const TABS = [
   { label: "Features", id: "features" },
@@ -40,29 +42,29 @@ const ProductPageLayout: React.FC<ProductPageLayoutProps> = ({ product }) => {
           <div>
             {/* Category, Subcategory info (above name) */}
             <div className="flex flex-wrap gap-2 text-xs text-gray-500 font-medium mt-2 mb-2">
-              {(product?.subcategory && (product.subcategory as any).parent?.title && (product.subcategory as any).parent?.slug && (product.subcategory as any).title && (product.subcategory as any).slug) && (
+              {(product?.subcategory && (product.subcategory as ExpandedProduct).parent?.title && (product.subcategory as ExpandedProduct).parent?.slug && (product.subcategory as ExpandedProduct).title && (product.subcategory as ExpandedProduct).slug) && (
                 <span>
-                  <Link href={`/category/${(product.subcategory as any).parent.slug.current}`} className="hover:underline text-shop_dark_blue">{(product.subcategory as any).parent.title}</Link>
+                  <Link href={`/category/${(product.subcategory as ExpandedProduct).parent.slug.current}`} className="hover:underline text-shop_dark_blue">{(product.subcategory as ExpandedProduct).parent.title}</Link>
                   {" > "}
-                  <Link href={`/category/${(product.subcategory as any).parent.slug.current}?subcategory=${(product.subcategory as any).slug.current}`} className="hover:underline text-shop_dark_blue">{(product.subcategory as any).title}</Link>
+                  <Link href={`/category/${(product.subcategory as ExpandedProduct).parent.slug.current}?subcategory=${(product.subcategory as ExpandedProduct).slug.current}`} className="hover:underline text-shop_dark_blue">{(product.subcategory as ExpandedProduct).title}</Link>
                 </span>
               )}
             </div>
             <h1 className="text-3xl font-bold mb-2">{product?.name || "Product Name Placeholder"}</h1>
             <p className="text-lg text-gray-600 mb-2">{product?.description || "Short product tagline or description goes here."}</p>
             {/* Brand info (below description) */}
-            {product?.brand && (product.brand as any).title && (
+            {product?.brand && (product.brand as ExpandedProduct).title && (
               <div className="mb-2 text-xs text-gray-500 font-medium">
-                Brand: <Link href={`/shop?brand=${encodeURIComponent((product.brand as any).title)}`} className="hover:underline text-shop_dark_blue font-semibold">{(product.brand as any).title}</Link>
+                Brand: <Link href={`/shop?brand=${encodeURIComponent((product.brand as ExpandedProduct).title)}`} className="hover:underline text-shop_dark_blue font-semibold">{(product.brand as ExpandedProduct).title}</Link>
               </div>
             )}
-            <ProductPriceSection price={typeof product?.price === 'number' ? product.price : 0} discount={typeof product?.discount === 'number' ? product.discount : 0} />
+            <PriceView price={typeof product?.price === 'number' ? product.price : 0} discount={typeof product?.discount === 'number' ? product.discount : 0} />
             <p className={`px-4 py-1.5 text-sm text-center inline-block font-semibold rounded-lg ${product?.stock === 0 ? "bg-red-100 text-red-600" : "text-green-600 bg-green-100"} mt-2`}>
               {(product?.stock as number) > 0 ? "In Stock" : "Out of Stock"}
             </p>
           </div>
           <div className="flex gap-2 items-center">
-            <AddToCartButton product={product as any} />
+            <AddToCartButton product={product as ExpandedProduct} />
             <FavoriteButton showProduct={true} product={product} />
             <Dialog open={compareOpen} onOpenChange={setCompareOpen}>
               <DialogTrigger asChild>
@@ -136,7 +138,7 @@ const ProductPageLayout: React.FC<ProductPageLayoutProps> = ({ product }) => {
                 <AccordionTrigger>Step 1: Unbox</AccordionTrigger>
                 <AccordionContent>
                   <div className="flex gap-4 items-center">
-                    <img src="/placeholder1.png" alt="Step 1" className="w-24 h-24 object-cover rounded" />
+                    <Image src="/placeholder1.png" alt="Step 1" width={96} height={96} className="w-24 h-24 object-cover rounded" />
                     <span>Unbox the product and check all components.</span>
                   </div>
                 </AccordionContent>
@@ -145,7 +147,7 @@ const ProductPageLayout: React.FC<ProductPageLayoutProps> = ({ product }) => {
                 <AccordionTrigger>Step 2: Setup</AccordionTrigger>
                 <AccordionContent>
                   <div className="flex gap-4 items-center">
-                    <img src="/placeholder2.png" alt="Step 2" className="w-24 h-24 object-cover rounded" />
+                    <Image src="/placeholder2.png" alt="Step 2" width={96} height={96} className="w-24 h-24 object-cover rounded" />
                     <span>Follow the setup instructions in the manual.</span>
                   </div>
                 </AccordionContent>

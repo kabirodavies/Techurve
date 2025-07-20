@@ -61,7 +61,7 @@ export default function SolutionsPageClient({ solutions, testimonials, caseStudi
             // Defensive, deterministic icon rendering
             const Icon = (typeof solution.icon === 'string' && featureIconMap[solution.icon]) ? featureIconMap[solution.icon] : Shield;
             return (
-              <div key={solution.slug}>
+              <div key={typeof solution.slug === 'string' ? solution.slug : solution.slug?.current ?? idx}>
                 {/* Solution Row */}
                 <div
                   className="flex items-center w-full px-2 md:px-6 py-6 md:py-8"
@@ -102,7 +102,7 @@ export default function SolutionsPageClient({ solutions, testimonials, caseStudi
                   onMouseLeave={() => setOpenIndex(null)}
                 >
                   <p className="text-gray-600 mb-4 text-base md:text-lg">{solution.summary}</p>
-                  <Link href={`/solutions/${solution.slug}`} className="inline-flex items-center gap-1 text-shop_dark_blue font-semibold hover:underline transition">
+                  <Link href={`/solutions/${typeof solution.slug === 'string' ? solution.slug : solution.slug.current}`} className="inline-flex items-center gap-1 text-shop_dark_blue font-semibold hover:underline transition">
                     Learn More <span aria-hidden>→</span>
                   </Link>
                 </div>
