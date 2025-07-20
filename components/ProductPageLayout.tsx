@@ -61,7 +61,7 @@ const ProductPageLayout: React.FC<ProductPageLayoutProps> = ({ product }) => {
                     {(product.subcategory as any).title}
                   </Link>
                 </span>
-              )}
+              }
             </div>
             <h1 className="text-3xl font-bold mb-2">{product?.name || "Product Name Placeholder"}</h1>
             <p className="text-lg text-gray-600 mb-2">{product?.description || "Short product tagline or description goes here."}</p>
