@@ -22,8 +22,8 @@ const BlogPage = async () => {
   // Extract unique tags from all blogs
   const tagSet = new Set<string>();
   blogs?.forEach((blog) => {
-    const tags = (blog && 'tags' in blog && Array.isArray((blog as { tags?: string[] }).tags) ? (blog as { tags?: string[] }).tags : []);
-    tags.forEach((tag: string) => tagSet.add(tag));
+    const tags = (blog && 'tags' in blog && Array.isArray((blog as { tags?: string[] }).tags)) ? (blog as { tags?: string[] }).tags : [];
+    (tags ?? []).forEach((tag: string) => tagSet.add(tag));
   });
   const tags = Array.from(tagSet) as string[];
 
