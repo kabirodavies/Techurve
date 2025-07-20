@@ -4,11 +4,25 @@ import React from "react";
 import BlogListWithFilter from "@/components/BlogListWithFilter";
 
 const BlogPage = async () => {
-  const blogs = await getAllBlogs(100); // Fetch more blogs to allow filtering
+  const blogsRaw = await getAllBlogs(100); // Fetch more blogs to allow filtering
+
+  // Transform blogs to match Blog type
+  const blogs = blogsRaw.map(blog => ({
+    ...blog,
+    blogcategories: Array.isArray(blog.blogcategories)
+      ? blog.blogcategories
+          .filter(cat => cat && typeof cat.title === "string")
+          .map((cat, idx) => ({
+            _ref: `dummy-ref-${idx}`,
+            _type: "reference",
+            _key: `dummy-key-${idx}`,
+          }))
+      : undefined,
+  }));
 
   // Extract unique categories from all blogs
   const categoryMap = new Map();
-  blogs?.forEach((blog) => {
+  blogsRaw?.forEach((blog) => {
     blog?.blogcategories?.forEach((cat) => {
       if (cat?.title) categoryMap.set(cat.title, cat.title);
     });
