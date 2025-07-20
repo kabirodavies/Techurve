@@ -95,7 +95,14 @@ const GET_ALL_BLOG = defineQuery(
   `*[_type == 'blog' && !('Portfolio' in blogcategories[]->title)] | order(publishedAt desc)[0...$quantity]{
     ...,
     blogcategories[]->{
-      title
+      _id,
+      _type,
+      _createdAt,
+      _updatedAt,
+      _rev,
+      title,
+      slug,
+      description
     }
   }`
 );

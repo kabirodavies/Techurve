@@ -2,37 +2,28 @@ import Container from "@/components/Container";
 import { getAllBlogs } from "@/sanity/queries";
 import React from "react";
 import BlogListWithFilter from "@/components/BlogListWithFilter";
+import type { Blogcategory } from "@/sanity.types";
+import type { GET_ALL_BLOGResult } from "@/sanity.types";
 
 const BlogPage = async () => {
-  const blogsRaw = await getAllBlogs(100); // Fetch more blogs to allow filtering
+  const blogsRaw: GET_ALL_BLOGResult = await getAllBlogs(100); // Fetch more blogs to allow filtering
 
-  // Transform blogs to match Blog type
-  const blogs = blogsRaw.map(blog => ({
-    ...blog,
-    blogcategories: Array.isArray(blog.blogcategories)
-      ? blog.blogcategories
-          .filter(cat => cat && typeof cat.title === "string")
-          .map((cat, idx) => ({
-            _ref: `dummy-ref-${idx}`,
-            _type: "reference",
-            _key: `dummy-key-${idx}`,
-          }))
-      : undefined,
-  }));
+  // No need to transform blogs; use as is
+  const blogs = blogsRaw;
 
   // Extract unique categories from all blogs
-  const categoryMap = new Map();
+  const categoryMap = new Map<string, string>();
   blogsRaw?.forEach((blog) => {
-    blog?.blogcategories?.forEach((cat) => {
+    blog?.blogcategories?.forEach((cat: { title: string | null }) => {
       if (cat?.title) categoryMap.set(cat.title, cat.title);
     });
   });
   const categories = Array.from(categoryMap.values());
 
   // Extract unique tags from all blogs
-  const tagSet = new Set();
+  const tagSet = new Set<string>();
   blogs?.forEach((blog) => {
-    (blog && 'tags' in blog && Array.isArray(blog.tags) ? blog.tags : []).forEach((tag: string) => tagSet.add(tag));
+    (blog && 'tags' in blog && Array.isArray((blog as any).tags) ? (blog as any).tags : []).forEach((tag: string) => tagSet.add(tag));
   });
   const tags = Array.from(tagSet) as string[];
 
