@@ -1,5 +1,4 @@
 import { BrandPageClient } from "./BrandPageClient";
-import { Brand } from "@/sanity.types";
 import { getProductsByBrandSlug, getAllBrands } from "@/sanity/queries";
 
 // Server wrapper to fetch data and pass as props
