@@ -7,6 +7,6 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   const { slug } = await params;
   const products = await getProductsByBrandSlug(slug);
   const brands = await getAllBrands();
-  const brand = brands.find((b: Brand) => b.slug?.current === slug);
+  const brand = brands.find((b) => b.slug?.current === slug);
   return <BrandPageClient initialProducts={products || []} brand={brand} />;
 }
