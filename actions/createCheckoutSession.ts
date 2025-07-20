@@ -55,7 +55,7 @@ export async function createCheckoutSession(
           unit_amount: Math.round(item?.product?.price! * 100),
           product_data: {
             name: item?.product?.name || "Unknown Product",
-            description: item?.product?.overview ?? item?.product?.description ?? "",
+            description: (item?.product as any)?.overview ?? item?.product?.description ?? "",
             metadata: { id: item?.product?._id },
             images:
               item?.product?.images
