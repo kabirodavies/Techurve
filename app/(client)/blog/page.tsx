@@ -2,7 +2,6 @@ import Container from "@/components/Container";
 import { getAllBlogs } from "@/sanity/queries";
 import React from "react";
 import BlogListWithFilter from "@/components/BlogListWithFilter";
-import type { Blogcategory } from "@/sanity.types";
 import type { GET_ALL_BLOGResult } from "@/sanity.types";
 
 const BlogPage = async () => {
@@ -23,7 +22,8 @@ const BlogPage = async () => {
   // Extract unique tags from all blogs
   const tagSet = new Set<string>();
   blogs?.forEach((blog) => {
-    (blog && 'tags' in blog && Array.isArray((blog as any).tags) ? (blog as any).tags : []).forEach((tag: string) => tagSet.add(tag));
+    const tags = (blog && 'tags' in blog && Array.isArray((blog as { tags?: string[] }).tags) ? (blog as { tags?: string[] }).tags : []);
+    tags.forEach((tag: string) => tagSet.add(tag));
   });
   const tags = Array.from(tagSet) as string[];
 
