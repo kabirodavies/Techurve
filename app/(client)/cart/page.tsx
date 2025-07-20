@@ -174,7 +174,7 @@ const CartPage = () => {
                                   <span className="text-sm text-gray-700 font-medium">Request Quote</span>
                                 )}
                                 <p className="text-sm text-gray-600 line-clamp-3">
-                                  {product?.overview}
+                                  {product?.description}
                                 </p>
                               </div>
                               <div className="flex items-center gap-2">
