@@ -10,7 +10,14 @@ const BlogPage = async () => {
   // Map blogsRaw to Blog[] by converting blogcategories to reference format
   const blogs = blogsRaw.map((blog) => ({
     ...blog,
-    blogcategories: blog.blogcategories ?? []
+    blogcategories: blog.blogcategories
+      ? blog.blogcategories.map((cat, idx) => ({
+          _ref: cat._id ?? `unknown-id-${idx}`,
+          _type: "reference",
+          _key: `cat-${idx}`,
+          title: cat.title // Keep title for display purposes
+        }))
+      : []
   }));
 
   // Extract unique categories from all blogs
