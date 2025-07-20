@@ -1,3 +1,4 @@
+/*
 "use client";
 import React, { useState, useMemo } from "react";
 import ProductCard from "@/components/ProductCard";
@@ -65,4 +66,5 @@ export function BrandPageClient({ initialProducts, brand }: { initialProducts: E
       )}
     </div>
   );
-} 
+}
+*/ 

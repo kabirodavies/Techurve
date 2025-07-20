@@ -1,3 +1,4 @@
+/*
 import { BrandPageClient } from "./BrandPageClient";
 import { getProductsByBrandSlug, getAllBrands } from "@/sanity/queries";
 import { Product } from "@/sanity.types";
@@ -18,3 +19,4 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   const brand = brands.find((b) => b.slug?.current === slug);
   return <BrandPageClient initialProducts={products || []} brand={brand} />;
 }
+*/
