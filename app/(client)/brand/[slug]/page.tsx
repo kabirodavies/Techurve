@@ -69,7 +69,7 @@ export default function BrandPageClient({ initialProducts, brand }: { initialPro
 }
 
 // Server wrapper to fetch data and pass as props
-export async function BrandPage({ params }: { params: { slug: string } }) {
+export default async function Page({ params }: { params: { slug: string } }) {
   const { slug } = params;
   const products = await getProductsByBrandSlug(slug);
   const brands = await getAllBrands();
