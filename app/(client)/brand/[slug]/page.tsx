@@ -3,8 +3,8 @@ import { Brand } from "@/sanity.types";
 import { getProductsByBrandSlug, getAllBrands } from "@/sanity/queries";
 
 // Server wrapper to fetch data and pass as props
-export default async function Page({ params }: { params: { slug: string } }) {
-  const { slug } = params;
+export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   const products = await getProductsByBrandSlug(slug);
   const brands = await getAllBrands();
   const brand = brands.find((b: Brand) => b.slug?.current === slug);
