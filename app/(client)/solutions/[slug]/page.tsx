@@ -5,15 +5,12 @@ import Link from 'next/link'
 import React from 'react'
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion'
 
-interface SolutionPageProps {
-  params: { slug: string }
-}
-
-export default async function SolutionDetailPage({ params }: SolutionPageProps) {
-  const solution = await client.fetch(GET_SOLUTION_BY_SLUG, { slug: params.slug })
-  const testimonials = await client.fetch(GET_TESTIMONIALS)
+export default async function SolutionDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const solution = await client.fetch(GET_SOLUTION_BY_SLUG, { slug });
+  const testimonials = await client.fetch(GET_TESTIMONIALS);
   if (!solution) {
-    return <div className="max-w-2xl mx-auto py-20 text-center text-gray-500">Solution not found.</div>
+    return <div className="max-w-2xl mx-auto py-20 text-center text-gray-500">Solution not found.</div>;
   }
   return (
     <main className="bg-white min-h-screen">

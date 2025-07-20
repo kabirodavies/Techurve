@@ -44,14 +44,9 @@ const SingleProductPage = async ({
       const relatedFeatured = relatedProducts.filter((p) => !!p.isFeatured);
       allFeaturedProducts.push(...relatedFeatured);
       
-      // Select featured product - random if multiple, direct if only one
+      // Select featured product - deterministic: always pick the first
       if (allFeaturedProducts.length > 0) {
-        if (allFeaturedProducts.length === 1) {
-          featuredProduct = allFeaturedProducts[0];
-        } else {
-          const randomIndex = Math.floor(Math.random() * allFeaturedProducts.length);
-          featuredProduct = allFeaturedProducts[randomIndex];
-        }
+        featuredProduct = allFeaturedProducts[0];
       } else if (relatedProducts.length > 0) {
         // Fallback: show the first related product as featured
         featuredProduct = relatedProducts[0];
