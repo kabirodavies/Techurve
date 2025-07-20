@@ -36,5 +36,5 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 =======
-# Techurve
+# Techurve S
 >>>>>>> 97b22dd08f381d6d47e72732d2e891a539209f89
