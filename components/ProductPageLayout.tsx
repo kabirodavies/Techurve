@@ -10,7 +10,6 @@ import PriceView from "@/components/PriceView";
 import AddToCartButton from "@/components/AddToCartButton";
 import FavoriteButton from "@/components/FavoriteButton";
 import Link from "next/link";
-import { ExpandedProduct } from "@/types/ExpandedProduct";
 import Image from "next/image";
 
 const TABS = [
@@ -53,12 +52,12 @@ const ProductPageLayout: React.FC<ProductPageLayoutProps> = ({ product }) => {
                 'title' in product.subcategory &&
                 'slug' in product.subcategory &&
                 <span>
-                  <Link href={`/category/${(product.subcategory.parent as any).slug.current}`} className="hover:underline text-shop_dark_blue">
-                    {(product.subcategory.parent as any).title}
+                  <Link href={`/category/${(product.subcategory.parent && typeof product.subcategory.parent === 'object' && 'slug' in product.subcategory.parent && (product.subcategory.parent as { slug?: { current?: string } }).slug?.current) ?? ''}`} className="hover:underline text-shop_dark_blue">
+                    {(product.subcategory.parent && typeof product.subcategory.parent === 'object' && 'title' in product.subcategory.parent && (product.subcategory.parent as { title?: string }).title) ?? ''}
                   </Link>
                   {" > "}
-                  <Link href={`/category/${(product.subcategory.parent as any).slug.current}?subcategory=${(product.subcategory as any).slug.current}`} className="hover:underline text-shop_dark_blue">
-                    {(product.subcategory as any).title}
+                  <Link href={`/category/${(product.subcategory.parent && typeof product.subcategory.parent === 'object' && 'slug' in product.subcategory.parent && (product.subcategory.parent as { slug?: { current?: string } }).slug?.current) ?? ''}?subcategory=${(product.subcategory && typeof product.subcategory === 'object' && 'slug' in product.subcategory && (product.subcategory as { slug?: { current?: string } }).slug?.current) ?? ''}`} className="hover:underline text-shop_dark_blue">
+                    {(product.subcategory && typeof product.subcategory === 'object' && 'title' in product.subcategory && (product.subcategory as { title?: string }).title) ?? ''}
                   </Link>
                 </span>
               }
@@ -71,7 +70,7 @@ const ProductPageLayout: React.FC<ProductPageLayoutProps> = ({ product }) => {
               product.brand !== null &&
               'title' in product.brand && (
                 <div className="mb-2 text-xs text-gray-500 font-medium">
-                  Brand: <Link href={`/shop?brand=${encodeURIComponent((product.brand as any).title)}`} className="hover:underline text-shop_dark_blue font-semibold">{(product.brand as any).title}</Link>
+                  Brand: <Link href={`/shop?brand=${encodeURIComponent((product.brand && typeof product.brand === 'object' && 'title' in product.brand && (product.brand as { title?: string }).title) ?? '')}`} className="hover:underline text-shop_dark_blue font-semibold">{(product.brand && typeof product.brand === 'object' && 'title' in product.brand && (product.brand as { title?: string }).title) ?? ''}</Link>
                 </div>
               )}
             <PriceView price={typeof product?.price === 'number' ? product.price : 0} discount={typeof product?.discount === 'number' ? product.discount : 0} />
