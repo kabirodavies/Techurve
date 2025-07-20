@@ -30,7 +30,7 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { useIsAdmin } from "@/hooks";
-import { ExpandedProduct, toExpandedProduct } from "@/types/ExpandedProduct";
+import { toExpandedProduct } from "@/types/ExpandedProduct";
 
 const countryCities = {
   Kenya: ["Nairobi", "Mombasa", "Kisumu"],
