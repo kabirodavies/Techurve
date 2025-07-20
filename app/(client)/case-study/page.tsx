@@ -6,14 +6,6 @@ import CaseStudyListWithFilter from "@/components/CaseStudyListWithFilter";
 const CaseStudyPage = async () => {
   const caseStudies = await getAllCaseStudies(100);
 
-  // Extract unique topics from all case studies
-  const topicMap = new Map();
-  caseStudies?.forEach((cs: { topic?: string }) => {
-    if (cs?.topic) topicMap.set(cs.topic, cs.topic);
-  });
-  const topics = Array.from(topicMap.values());
-
-  // Reuse BlogListWithFilter but adapt props for case studies
   return (
     <div>
       <section className="relative bg-gradient-to-br from-black to-black text-white py-20 px-6 text-center overflow-hidden">
@@ -26,7 +18,7 @@ const CaseStudyPage = async () => {
       <Container>
         <div className="mt-10" />
         <div className="mb-16">
-          <CaseStudyListWithFilter caseStudies={caseStudies} topics={topics} linkBase="/case-study" />
+          <CaseStudyListWithFilter caseStudies={caseStudies} linkBase="/case-study" />
         </div>
       </Container>
     </div>
