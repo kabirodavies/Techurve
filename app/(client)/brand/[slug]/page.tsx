@@ -17,7 +17,7 @@ export default function BrandPageClient({ initialProducts, brand }: { initialPro
       (products || [])
         .map((p: ExpandedProduct) => p.subcategory?.parent)
         .filter((cat): cat is { title?: string; slug?: { current?: string } } => !!cat && !!cat.title && !!cat.slug?.current)
-        .map((cat) => [cat.slug.current, cat])
+        .map((cat) => [cat.slug!.current!, cat])
     ).values()
   ), [products]);
 

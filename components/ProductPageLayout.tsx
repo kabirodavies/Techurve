@@ -42,29 +42,45 @@ const ProductPageLayout: React.FC<ProductPageLayoutProps> = ({ product }) => {
           <div>
             {/* Category, Subcategory info (above name) */}
             <div className="flex flex-wrap gap-2 text-xs text-gray-500 font-medium mt-2 mb-2">
-              {(product?.subcategory && (product.subcategory as ExpandedProduct).parent?.title && (product.subcategory as ExpandedProduct).parent?.slug && (product.subcategory as ExpandedProduct).title && (product.subcategory as ExpandedProduct).slug) && (
+              {product?.subcategory &&
+                typeof product.subcategory === 'object' &&
+                product.subcategory !== null &&
+                'parent' in product.subcategory &&
+                typeof product.subcategory.parent === 'object' &&
+                product.subcategory.parent !== null &&
+                'title' in product.subcategory.parent &&
+                'slug' in product.subcategory.parent &&
+                'title' in product.subcategory &&
+                'slug' in product.subcategory &&
                 <span>
-                  <Link href={`/category/${(product.subcategory as ExpandedProduct).parent.slug.current}`} className="hover:underline text-shop_dark_blue">{(product.subcategory as ExpandedProduct).parent.title}</Link>
+                  <Link href={`/category/${(product.subcategory.parent as any).slug.current}`} className="hover:underline text-shop_dark_blue">
+                    {(product.subcategory.parent as any).title}
+                  </Link>
                   {" > "}
-                  <Link href={`/category/${(product.subcategory as ExpandedProduct).parent.slug.current}?subcategory=${(product.subcategory as ExpandedProduct).slug.current}`} className="hover:underline text-shop_dark_blue">{(product.subcategory as ExpandedProduct).title}</Link>
+                  <Link href={`/category/${(product.subcategory.parent as any).slug.current}?subcategory=${(product.subcategory as any).slug.current}`} className="hover:underline text-shop_dark_blue">
+                    {(product.subcategory as any).title}
+                  </Link>
                 </span>
               )}
             </div>
             <h1 className="text-3xl font-bold mb-2">{product?.name || "Product Name Placeholder"}</h1>
             <p className="text-lg text-gray-600 mb-2">{product?.description || "Short product tagline or description goes here."}</p>
             {/* Brand info (below description) */}
-            {product?.brand && (product.brand as ExpandedProduct).title && (
-              <div className="mb-2 text-xs text-gray-500 font-medium">
-                Brand: <Link href={`/shop?brand=${encodeURIComponent((product.brand as ExpandedProduct).title)}`} className="hover:underline text-shop_dark_blue font-semibold">{(product.brand as ExpandedProduct).title}</Link>
-              </div>
-            )}
+            {product?.brand &&
+              typeof product.brand === 'object' &&
+              product.brand !== null &&
+              'title' in product.brand && (
+                <div className="mb-2 text-xs text-gray-500 font-medium">
+                  Brand: <Link href={`/shop?brand=${encodeURIComponent((product.brand as any).title)}`} className="hover:underline text-shop_dark_blue font-semibold">{(product.brand as any).title}</Link>
+                </div>
+              )}
             <PriceView price={typeof product?.price === 'number' ? product.price : 0} discount={typeof product?.discount === 'number' ? product.discount : 0} />
             <p className={`px-4 py-1.5 text-sm text-center inline-block font-semibold rounded-lg ${product?.stock === 0 ? "bg-red-100 text-red-600" : "text-green-600 bg-green-100"} mt-2`}>
               {(product?.stock as number) > 0 ? "In Stock" : "Out of Stock"}
             </p>
           </div>
           <div className="flex gap-2 items-center">
-            <AddToCartButton product={product as ExpandedProduct} />
+            {product && <AddToCartButton product={product} />}
             <FavoriteButton showProduct={true} product={product} />
             <Dialog open={compareOpen} onOpenChange={setCompareOpen}>
               <DialogTrigger asChild>

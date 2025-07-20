@@ -1,5 +1,5 @@
 "use client";
-import { useIsAdmin } from "@/hooks/useIsAdmin";
+import { useIsAdmin } from "@/hooks";
 import PriceView from "./PriceView";
 import React from "react";
 import { ExpandedProduct } from "@/types/ExpandedProduct";
