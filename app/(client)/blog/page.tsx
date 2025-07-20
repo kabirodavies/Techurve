@@ -12,8 +12,15 @@ const BlogPage = async () => {
     ...blog,
     blogcategories: blog.blogcategories
       ? blog.blogcategories.map((cat, idx) => ({
-          _ref: cat && typeof cat.title === 'string' ? cat.title : `unknown-${idx}`,
-          _type: 'reference',
+          _id: cat._id ?? `unknown-id-${idx}`,
+          _type: cat._type ?? 'blogcategory',
+          _createdAt: cat._createdAt ?? '',
+          _updatedAt: cat._updatedAt ?? '',
+          _rev: cat._rev ?? '',
+          title: cat.title ?? '',
+          slug: cat.slug ?? undefined,
+          description: cat.description ?? '',
+          _ref: cat._id ?? `unknown-id-${idx}`,
           _key: `cat-${idx}`
         }))
       : [],
