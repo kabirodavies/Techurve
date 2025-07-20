@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+const path = require('path');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -12,6 +13,12 @@ const nextConfig = {
     // Warning: This allows production builds to successfully complete even if
     // your project has ESLint errors.
     ignoreDuringBuilds: true,
+  },
+  webpack: (config) => {
+    config.resolve = config.resolve || {};
+    config.resolve.alias = config.resolve.alias || {};
+    config.resolve.alias['@'] = path.resolve(__dirname);
+    return config;
   },
   /* config options here */
   images: {
