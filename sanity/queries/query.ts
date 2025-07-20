@@ -255,6 +255,18 @@ export const GET_ALL_SOLUTION_INDUSTRIES = defineQuery(`
   array::unique(*[_type=="solution"].industries[])
 `);
 
+export const GET_ALL_SOLUTIONS = defineQuery(`
+  *[_type == "solution"] | order(title asc) {
+    _id,
+    title,
+    slug,
+    summary,
+    icon,
+    industries,
+    body
+  }
+`);
+
 export const GET_TESTIMONIALS = `*[_type == "testimonial"] | order(_createdAt desc){
   _id, quote, clientName, company, "companyLogo": companyLogo.asset->url
 }`;
