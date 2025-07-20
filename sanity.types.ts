@@ -189,7 +189,6 @@ export type Product = {
   _updatedAt: string;
   _rev: string;
   name?: string;
-  overview?: string;
   slug?: Slug;
   images?: Array<{
     asset?: {
@@ -223,15 +222,6 @@ export type Product = {
   status?: "new" | "hot" | "sale";
   variant?: "cctv" | "biometrics" | "perimeter_security" | "intrusion_detection" | "smart_homes" | "parking_management" | "digital_boards" | "software" | "connectivity" | "services";
   isFeatured?: boolean;
-  features?: string[];
-  usage?: string[];
-  trustIndicators?: string[];
-  keyHighlights?: string[];
-  keyFeatures?: Array<{
-    id: string;
-    label: string;
-    value: string;
-  }>;
 };
 
 export type Brand = {
@@ -465,17 +455,12 @@ export type AllSanitySchemaTypes = Address | Blogcategory | Blog | Author | Orde
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ./sanity/queries/query.ts
 // Variable: BRANDS_QUERY
-// Query: *[_type=='brand'] | order(name asc)
+// Query: *[_type=='brand'] | order(name asc) {  _id,  title,  slug,  image,  "productCount": count(*[_type == 'product' && brand._ref == ^._id])}
 export type BRANDS_QUERYResult = Array<{
   _id: string;
-  _type: "brand";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title?: string;
-  slug?: Slug;
-  description?: string;
-  image?: {
+  title: string | null;
+  slug: Slug | null;
+  image: {
     asset?: {
       _ref: string;
       _type: "reference";
@@ -486,7 +471,8 @@ export type BRANDS_QUERYResult = Array<{
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     _type: "image";
-  };
+  } | null;
+  productCount: number;
 }>;
 // Variable: LATEST_BLOG_QUERY
 // Query: *[_type == 'blog' && isLatest == true]|order(name asc){      ...,      blogcategories[]->{      title    }    }
@@ -554,7 +540,7 @@ export type LATEST_BLOG_QUERYResult = Array<{
   }>;
 }>;
 // Variable: DEAL_PRODUCTS
-// Query: *[_type == 'product' && status == 'hot'] | order(name asc){    ...,"categories": categories[]->title  }
+// Query: *[_type == 'product' && status == 'hot'] | order(name asc){    ...,    brand->{      title,      slug    },    subcategory->{      title,      slug,      parent->{        title,        slug      }    }  }
 export type DEAL_PRODUCTSResult = Array<{
   _id: string;
   _type: "product";
@@ -579,26 +565,25 @@ export type DEAL_PRODUCTSResult = Array<{
   description?: string;
   price?: number;
   discount?: number;
-  subcategory?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "subcategory";
-  };
+  subcategory: {
+    title: string | null;
+    slug: Slug | null;
+    parent: {
+      title: string | null;
+      slug: Slug | null;
+    } | null;
+  } | null;
   stock?: number;
-  brand?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "brand";
-  };
+  brand: {
+    title: string | null;
+    slug: Slug | null;
+  } | null;
   status?: "hot" | "new" | "sale";
   variant?: "biometrics" | "cctv" | "connectivity" | "digital_boards" | "intrusion_detection" | "parking_management" | "perimeter_security" | "services" | "smart_homes" | "software";
   isFeatured?: boolean;
-  categories: null;
 }>;
 // Variable: PRODUCT_BY_SLUG_QUERY
-// Query: *[_type == "product" && slug.current == $slug] | order(name asc) [0]
+// Query: *[_type == "product" && slug.current == $slug] | order(name asc) [0]{    ...,    brand->{      title,      slug    },    subcategory->{      _id,      title,      slug,      parent->{        title,        slug      }    },    downloads[]{      ...,      url{        ...,        asset->{          url        }      }    }  }
 export type PRODUCT_BY_SLUG_QUERYResult = {
   _id: string;
   _type: "product";
@@ -606,7 +591,6 @@ export type PRODUCT_BY_SLUG_QUERYResult = {
   _updatedAt: string;
   _rev: string;
   name?: string;
-  overview?: string;
   slug?: Slug;
   images?: Array<{
     asset?: {
@@ -624,22 +608,24 @@ export type PRODUCT_BY_SLUG_QUERYResult = {
   description?: string;
   price?: number;
   discount?: number;
-  subcategory?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "subcategory";
-  };
+  subcategory: {
+    _id: string;
+    title: string | null;
+    slug: Slug | null;
+    parent: {
+      title: string | null;
+      slug: Slug | null;
+    } | null;
+  } | null;
   stock?: number;
-  brand?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "brand";
-  };
+  brand: {
+    title: string | null;
+    slug: Slug | null;
+  } | null;
   status?: "hot" | "new" | "sale";
   variant?: "biometrics" | "cctv" | "connectivity" | "digital_boards" | "intrusion_detection" | "parking_management" | "perimeter_security" | "services" | "smart_homes" | "software";
   isFeatured?: boolean;
+  downloads: null;
 } | null;
 // Variable: BRAND_QUERY
 // Query: *[_type == "product" && slug.current == $slug]{  "brandName": brand->title  }
@@ -787,7 +773,7 @@ export type ALL_ORDERS_QUERYResult = Array<{
   orderDate?: string;
 }>;
 // Variable: GET_ALL_BLOG
-// Query: *[_type == 'blog' && !('Portfolio' in blogcategories[]->title)] | order(publishedAt desc)[0...$quantity]{    ...,    blogcategories[]->{      title    }  }
+// Query: *[_type == 'blog' && !('Portfolio' in blogcategories[]->title)] | order(publishedAt desc)[0...$quantity]{    ...,    blogcategories[]->{      _id,      _type,      _createdAt,      _updatedAt,      _rev,      title,      slug,      description    }  }
 export type GET_ALL_BLOGResult = Array<{
   _id: string;
   _type: "blog";
@@ -815,7 +801,14 @@ export type GET_ALL_BLOGResult = Array<{
     _type: "image";
   };
   blogcategories: Array<{
+    _id: string;
+    _type: "blogcategory";
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
     title: string | null;
+    slug: Slug | null;
+    description: string | null;
   }> | null;
   publishedAt?: string;
   isLatest?: boolean;
@@ -1040,7 +1033,7 @@ export type OTHERS_BLOG_QUERYResult = Array<{
   categories: null;
 }>;
 // Variable: CATEGORIES_WITH_SUBCATEGORIES
-// Query: *[_type == "category"]{    _id,    title,    slug,    image,    "subcategories": *[_type == "subcategory" && parent._ref == ^._id]{      _id,      title,      slug,      image    }  }
+// Query: *[_type == "category"]{    _id,    title,    slug,    image,    "productCount": count(*[_type == "product" && subcategory->parent._ref == ^._id]),    "subcategories": *[_type == "subcategory" && parent._ref == ^._id]{      _id,      title,      slug,      image,      "productCount": count(*[_type == "product" && subcategory._ref == ^._id])    }  }
 export type CATEGORIES_WITH_SUBCATEGORIESResult = Array<{
   _id: string;
   title: string | null;
@@ -1057,6 +1050,7 @@ export type CATEGORIES_WITH_SUBCATEGORIESResult = Array<{
     crop?: SanityImageCrop;
     _type: "image";
   } | null;
+  productCount: number;
   subcategories: Array<{
     _id: string;
     title: string | null;
@@ -1073,10 +1067,11 @@ export type CATEGORIES_WITH_SUBCATEGORIESResult = Array<{
       crop?: SanityImageCrop;
       _type: "image";
     } | null;
+    productCount: number;
   }>;
 }>;
 // Variable: PRODUCTS_BY_SUBCATEGORY
-// Query: *[_type == "product" && subcategory._ref == $subcategoryId] | order(name asc){    ...  }
+// Query: *[_type == "product" && subcategory._ref == $subcategoryId] | order(name asc){    ...,    brand->{      title,      slug    },    subcategory->{      title,      slug,      parent->{      title,      slug      }    }  }
 export type PRODUCTS_BY_SUBCATEGORYResult = Array<{
   _id: string;
   _type: "product";
@@ -1101,25 +1096,25 @@ export type PRODUCTS_BY_SUBCATEGORYResult = Array<{
   description?: string;
   price?: number;
   discount?: number;
-  subcategory?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "subcategory";
-  };
+  subcategory: {
+    title: string | null;
+    slug: Slug | null;
+    parent: {
+      title: string | null;
+      slug: Slug | null;
+    } | null;
+  } | null;
   stock?: number;
-  brand?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "brand";
-  };
+  brand: {
+    title: string | null;
+    slug: Slug | null;
+  } | null;
   status?: "hot" | "new" | "sale";
   variant?: "biometrics" | "cctv" | "connectivity" | "digital_boards" | "intrusion_detection" | "parking_management" | "perimeter_security" | "services" | "smart_homes" | "software";
   isFeatured?: boolean;
 }>;
 // Variable: PRODUCTS_BY_CATEGORY
-// Query: *[_type == "product" && subcategory->parent._ref == $categoryId] | order(name asc){    ...  }
+// Query: *[_type == "product" && subcategory->parent._ref == $categoryId] | order(name asc){    ...,    brand->{      title,      slug    },    subcategory->{      title,      slug,      parent->{      title,      slug      }    }  }
 export type PRODUCTS_BY_CATEGORYResult = Array<{
   _id: string;
   _type: "product";
@@ -1144,42 +1139,142 @@ export type PRODUCTS_BY_CATEGORYResult = Array<{
   description?: string;
   price?: number;
   discount?: number;
-  subcategory?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "subcategory";
-  };
+  subcategory: {
+    title: string | null;
+    slug: Slug | null;
+    parent: {
+      title: string | null;
+      slug: Slug | null;
+    } | null;
+  } | null;
   stock?: number;
-  brand?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "brand";
-  };
+  brand: {
+    title: string | null;
+    slug: Slug | null;
+  } | null;
   status?: "hot" | "new" | "sale";
   variant?: "biometrics" | "cctv" | "connectivity" | "digital_boards" | "intrusion_detection" | "parking_management" | "perimeter_security" | "services" | "smart_homes" | "software";
   isFeatured?: boolean;
 }>;
+// Variable: ALL_PRODUCTS_QUERY
+// Query: *[_type == "product"] | order(name asc) {    ...,    brand->{      title,      slug    },    subcategory->{      title,      slug,      parent->{      title,      slug      }    }  }
+export type ALL_PRODUCTS_QUERYResult = Array<{
+  _id: string;
+  _type: "product";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  name?: string;
+  slug?: Slug;
+  images?: Array<{
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+    _key: string;
+  }>;
+  description?: string;
+  price?: number;
+  discount?: number;
+  subcategory: {
+    title: string | null;
+    slug: Slug | null;
+    parent: {
+      title: string | null;
+      slug: Slug | null;
+    } | null;
+  } | null;
+  stock?: number;
+  brand: {
+    title: string | null;
+    slug: Slug | null;
+  } | null;
+  status?: "hot" | "new" | "sale";
+  variant?: "biometrics" | "cctv" | "connectivity" | "digital_boards" | "intrusion_detection" | "parking_management" | "perimeter_security" | "services" | "smart_homes" | "software";
+  isFeatured?: boolean;
+}>;
+// Variable: PRODUCTS_BY_BRAND_SLUG
+// Query: *[_type == "product" && brand->slug.current == $brandSlug] | order(name asc) {    ...,    brand->{      title,      slug    },    subcategory->{      title,      slug,      parent->{        title,        slug      }    }  }
+export type PRODUCTS_BY_BRAND_SLUGResult = Array<{
+  _id: string;
+  _type: "product";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  name?: string;
+  slug?: Slug;
+  images?: Array<{
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+    _key: string;
+  }>;
+  description?: string;
+  price?: number;
+  discount?: number;
+  subcategory: {
+    title: string | null;
+    slug: Slug | null;
+    parent: {
+      title: string | null;
+      slug: Slug | null;
+    } | null;
+  } | null;
+  stock?: number;
+  brand: {
+    title: string | null;
+    slug: Slug | null;
+  } | null;
+  status?: "hot" | "new" | "sale";
+  variant?: "biometrics" | "cctv" | "connectivity" | "digital_boards" | "intrusion_detection" | "parking_management" | "perimeter_security" | "services" | "smart_homes" | "software";
+  isFeatured?: boolean;
+}>;
+// Variable: GET_SOLUTION_BY_SLUG
+// Query: *[_type == "solution" && slug.current == $slug][0] {    _id,    title,    summary,    heroImage,    industries,    body,    qa  }
+export type GET_SOLUTION_BY_SLUGResult = null;
+// Variable: GET_ALL_SOLUTION_INDUSTRIES
+// Query: array::unique(*[_type=="solution"].industries[])
+export type GET_ALL_SOLUTION_INDUSTRIESResult = Array<never>;
+// Variable: GET_ALL_SOLUTIONS
+// Query: *[_type == "solution"] | order(title asc) {    _id,    title,    slug,    summary,    icon,    industries,    body  }
+export type GET_ALL_SOLUTIONSResult = Array<never>;
 
 // Query TypeMap
 import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
-    "*[_type=='brand'] | order(name asc) ": BRANDS_QUERYResult;
+    "*[_type=='brand'] | order(name asc) {\n  _id,\n  title,\n  slug,\n  image,\n  \"productCount\": count(*[_type == 'product' && brand._ref == ^._id])\n}": BRANDS_QUERYResult;
     " *[_type == 'blog' && isLatest == true]|order(name asc){\n      ...,\n      blogcategories[]->{\n      title\n    }\n    }": LATEST_BLOG_QUERYResult;
-    "*[_type == 'product' && status == 'hot'] | order(name asc){\n    ...,\"categories\": categories[]->title\n  }": DEAL_PRODUCTSResult;
-    "*[_type == \"product\" && slug.current == $slug] | order(name asc) [0]": PRODUCT_BY_SLUG_QUERYResult;
+    "*[_type == 'product' && status == 'hot'] | order(name asc){\n    ...,\n    brand->{\n      title,\n      slug\n    },\n    subcategory->{\n      title,\n      slug,\n      parent->{\n        title,\n        slug\n      }\n    }\n  }": DEAL_PRODUCTSResult;
+    "*[_type == \"product\" && slug.current == $slug] | order(name asc) [0]{\n    ...,\n    brand->{\n      title,\n      slug\n    },\n    subcategory->{\n      _id,\n      title,\n      slug,\n      parent->{\n        title,\n        slug\n      }\n    },\n    downloads[]{\n      ...,\n      url{\n        ...,\n        asset->{\n          url\n        }\n      }\n    }\n  }": PRODUCT_BY_SLUG_QUERYResult;
     "*[_type == \"product\" && slug.current == $slug]{\n  \"brandName\": brand->title\n  }": BRAND_QUERYResult;
     "*[_type == 'order' && clerkUserId == $userId] | order(orderDate desc){\n...,products[]{\n  ...,product->\n}\n}": MY_ORDERS_QUERYResult;
     "*[_type == 'order'] | order(orderDate desc){\n...,products[]{\n  ...,product->\n}\n}": ALL_ORDERS_QUERYResult;
-    "*[_type == 'blog' && !('Portfolio' in blogcategories[]->title)] | order(publishedAt desc)[0...$quantity]{\n    ...,\n    blogcategories[]->{\n      title\n    }\n  }": GET_ALL_BLOGResult;
+    "*[_type == 'blog' && !('Portfolio' in blogcategories[]->title)] | order(publishedAt desc)[0...$quantity]{\n    ...,\n    blogcategories[]->{\n      _id,\n      _type,\n      _createdAt,\n      _updatedAt,\n      _rev,\n      title,\n      slug,\n      description\n    }\n  }": GET_ALL_BLOGResult;
     "*[_type == 'blog' && 'Portfolio' in blogcategories[]->title] | order(publishedAt desc)[0...$quantity]{\n    ...,\n    blogcategories[]->{\n      title\n    }\n  }": GET_PORTFOLIO_BLOGSResult;
     "*[_type == \"blog\" && slug.current == $slug][0]{\n  ..., \n    author->{\n    name,\n    image,\n  },\n  blogcategories[]->{\n    title,\n    \"slug\": slug.current,\n  },\n}": SINGLE_BLOG_QUERYResult;
     "*[_type == \"blog\"]{\n     blogcategories[]->{\n    ...\n    }\n  }": BLOG_CATEGORIESResult;
     "*[\n  _type == \"blog\"\n  && defined(slug.current)\n  && slug.current != $slug\n]|order(publishedAt desc)[0...$quantity]{\n...\n  publishedAt,\n  title,\n  mainImage,\n  slug,\n  author->{\n    name,\n    image,\n  },\n  categories[]->{\n    title,\n    \"slug\": slug.current,\n  }\n}": OTHERS_BLOG_QUERYResult;
-    "\n  *[_type == \"category\"]{\n    _id,\n    title,\n    slug,\n    image,\n    \"subcategories\": *[_type == \"subcategory\" && parent._ref == ^._id]{\n      _id,\n      title,\n      slug,\n      image\n    }\n  }\n": CATEGORIES_WITH_SUBCATEGORIESResult;
-    "\n  *[_type == \"product\" && subcategory._ref == $subcategoryId] | order(name asc){\n    ...\n  }\n": PRODUCTS_BY_SUBCATEGORYResult;
-    "\n  *[_type == \"product\" && subcategory->parent._ref == $categoryId] | order(name asc){\n    ...\n  }\n": PRODUCTS_BY_CATEGORYResult;
+    "\n  *[_type == \"category\"]{\n    _id,\n    title,\n    slug,\n    image,\n    \"productCount\": count(*[_type == \"product\" && subcategory->parent._ref == ^._id]),\n    \"subcategories\": *[_type == \"subcategory\" && parent._ref == ^._id]{\n      _id,\n      title,\n      slug,\n      image,\n      \"productCount\": count(*[_type == \"product\" && subcategory._ref == ^._id])\n    }\n  }\n": CATEGORIES_WITH_SUBCATEGORIESResult;
+    "\n  *[_type == \"product\" && subcategory._ref == $subcategoryId] | order(name asc){\n    ...,\n    brand->{\n      title,\n      slug\n    },\n    subcategory->{\n      title,\n      slug,\n      parent->{\n      title,\n      slug\n      }\n    }\n  }\n": PRODUCTS_BY_SUBCATEGORYResult;
+    "\n  *[_type == \"product\" && subcategory->parent._ref == $categoryId] | order(name asc){\n    ...,\n    brand->{\n      title,\n      slug\n    },\n    subcategory->{\n      title,\n      slug,\n      parent->{\n      title,\n      slug\n      }\n    }\n  }\n": PRODUCTS_BY_CATEGORYResult;
+    "\n  *[_type == \"product\"] | order(name asc) {\n    ...,\n    brand->{\n      title,\n      slug\n    },\n    subcategory->{\n      title,\n      slug,\n      parent->{\n      title,\n      slug\n      }\n    }\n  }\n": ALL_PRODUCTS_QUERYResult;
+    "\n  *[_type == \"product\" && brand->slug.current == $brandSlug] | order(name asc) {\n    ...,\n    brand->{\n      title,\n      slug\n    },\n    subcategory->{\n      title,\n      slug,\n      parent->{\n        title,\n        slug\n      }\n    }\n  }\n": PRODUCTS_BY_BRAND_SLUGResult;
+    "\n  *[_type == \"solution\" && slug.current == $slug][0] {\n    _id,\n    title,\n    summary,\n    heroImage,\n    industries,\n    body,\n    qa\n  }\n": GET_SOLUTION_BY_SLUGResult;
+    "\n  array::unique(*[_type==\"solution\"].industries[])\n": GET_ALL_SOLUTION_INDUSTRIESResult;
+    "\n  *[_type == \"solution\"] | order(title asc) {\n    _id,\n    title,\n    slug,\n    summary,\n    icon,\n    industries,\n    body\n  }\n": GET_ALL_SOLUTIONSResult;
   }
 }
