@@ -2,6 +2,7 @@ import CategoryProducts from "@/components/CategoryProducts";
 import Container from "@/components/Container";
 import Title from "@/components/Title";
 import { getCategoriesWithSubcategories } from "@/sanity/queries";
+import { Category } from "@/sanity.types";
 import React from "react";
 
 const CategoryPage = async ({
@@ -9,7 +10,15 @@ const CategoryPage = async ({
 }: {
   params: Promise<{ slug: string }>;
 }) => {
-  const categories = await getCategoriesWithSubcategories();
+  const rawCategories = await getCategoriesWithSubcategories();
+  const categories = rawCategories.map(cat => ({
+    ...cat,
+    _type: "category",
+    _createdAt: new Date().toISOString(),
+    _updatedAt: new Date().toISOString(),
+    _rev: "",
+  })) as Category[];
+  
   const { slug } = await params;
   return (
     <div className="py-10">
