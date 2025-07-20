@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-import ProductPageLayout from "@/components/ProductPageLayout";
-import { getProductBySlug } from "@/sanity/queries";
-import { notFound } from "next/navigation";
-import React from "react";
-=======
 import ProductHero from "@/components/ProductHero";
 import ProductTabs from "@/components/ProductTabs";
 import RelatedProducts from "@/components/RelatedProducts";
@@ -13,7 +7,6 @@ import { isAdmin } from "@/lib/utils";
 import { notFound } from "next/navigation";
 import React from "react";
 import { ExpandedProduct, toExpandedProduct } from "@/types/ExpandedProduct";
->>>>>>> test
 
 const SingleProductPage = async ({
   params,
@@ -24,16 +17,10 @@ const SingleProductPage = async ({
   const productData = await getProductBySlug(slug);
   const product = productData ? toExpandedProduct(productData) : undefined;
   const user = await currentUser();
-  
+
   if (!product) {
     return notFound();
   }
-<<<<<<< HEAD
-  
-  return (
-    <div className="min-h-screen bg-white">
-      <ProductPageLayout product={product} />
-=======
 
   // Fetch related products in the same subcategory
   let relatedProducts: ExpandedProduct[] = [];
@@ -92,7 +79,6 @@ const SingleProductPage = async ({
         relatedProducts={relatedProducts}
         subcategory={subcategory || undefined}
       />
->>>>>>> test
     </div>
   );
 };

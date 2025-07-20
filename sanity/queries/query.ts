@@ -239,18 +239,6 @@ const PRODUCTS_BY_BRAND_SLUG = defineQuery(`
   }
 `);
 
-export const GET_ALL_SOLUTIONS = defineQuery(`
-  *[_type == "solution"] | order(title asc) {
-    _id,
-    title,
-    "slug": slug.current,
-    summary,
-    icon,
-    industries,
-    body
-  }
-`);
-
 export const GET_SOLUTION_BY_SLUG = defineQuery(`
   *[_type == "solution" && slug.current == $slug][0] {
     _id,
@@ -289,8 +277,4 @@ export {
   PRODUCTS_BY_CATEGORY,
   ALL_PRODUCTS_QUERY,
   PRODUCTS_BY_BRAND_SLUG,
-  GET_ALL_SOLUTIONS,
-  GET_SOLUTION_BY_SLUG,
-  GET_ALL_SOLUTION_INDUSTRIES,
-  GET_TESTIMONIALS,
 };
