@@ -58,8 +58,10 @@ export async function createCheckoutSession(
             description: item?.product?.overview ?? item?.product?.description ?? "",
             metadata: { id: item?.product?._id },
             images:
-              item?.product?.images && item?.product?.images?.length > 0
-                ? item.product.images.map((img) => img.asset?._ref)
+              item?.product?.images
+                ? item.product.images
+                    .map((img) => img.asset?._ref)
+                    .filter((url): url is string => !!url)
                 : [],
           },
         },
