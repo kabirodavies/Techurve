@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { ExpandedProduct } from "@/types/ExpandedProduct";
 import { Brand } from "@/sanity.types";
 
-export default function BrandPageClient({ initialProducts, brand }: { initialProducts: ExpandedProduct[]; brand: Brand }) {
+export function BrandPageClient({ initialProducts, brand }: { initialProducts: ExpandedProduct[]; brand: Brand }) {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [products] = useState(initialProducts || []);
 
