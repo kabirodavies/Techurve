@@ -7,8 +7,17 @@ import type { GET_ALL_BLOGResult } from "@/sanity.types";
 const BlogPage = async () => {
   const blogsRaw: GET_ALL_BLOGResult = await getAllBlogs(100); // Fetch more blogs to allow filtering
 
-  // No need to transform blogs; use as is
-  const blogs = blogsRaw;
+  // Map blogsRaw to Blog[] by converting blogcategories to reference format
+  const blogs = blogsRaw.map((blog) => ({
+    ...blog,
+    blogcategories: blog.blogcategories
+      ? blog.blogcategories.map((cat, idx) => ({
+          _ref: cat && typeof cat.title === 'string' ? cat.title : `unknown-${idx}`,
+          _type: 'reference',
+          _key: `cat-${idx}`
+        }))
+      : [],
+  }));
 
   // Extract unique categories from all blogs
   const categoryMap = new Map<string, string>();
