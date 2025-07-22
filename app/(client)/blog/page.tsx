@@ -8,17 +8,17 @@ import HeroSection from "@/components/HeroSection";
 const BlogPage = async () => {
   const blogsRaw: GET_ALL_BLOGResult = await getAllBlogs(100); // Fetch more blogs to allow filtering
 
-  // Map blogsRaw to Blog[] by converting blogcategories to reference format
-  const blogs = blogsRaw.map((blog) => ({
-    ...blog,
-    blogcategories: blog.blogcategories
-      ? blog.blogcategories.map((cat, idx) => ({
-          _ref: cat._id ?? `unknown-id-${idx}`,
-          _type: "reference" as const,
-          _key: `cat-${idx}`
-        }))
-      : []
-  }));
+  // Remove the remapping of blogcategories
+  // const blogs = blogsRaw.map((blog) => ({
+  //   ...blog,
+  //   blogcategories: blog.blogcategories
+  //     ? blog.blogcategories.map((cat, idx) => ({
+  //         _ref: cat._id ?? `unknown-id-${idx}`,
+  //         _type: "reference" as const,
+  //         _key: `cat-${idx}`
+  //       }))
+  //     : []
+  // }));
 
   // Extract unique categories from all blogs
   const categoryMap = new Map<string, string>();
@@ -31,7 +31,7 @@ const BlogPage = async () => {
 
   // Extract unique tags from all blogs
   const tagSet = new Set<string>();
-  blogs?.forEach((blog) => {
+  blogsRaw?.forEach((blog) => {
     const tags = (blog && 'tags' in blog && Array.isArray((blog as { tags?: string[] }).tags)) ? (blog as { tags?: string[] }).tags : [];
     (tags ?? []).forEach((tag: string) => tagSet.add(tag));
   });
@@ -48,7 +48,7 @@ const BlogPage = async () => {
       <Container>
         <div className="mt-10" />
         <div className="mb-16">
-          <BlogListWithFilter blogs={blogs} categories={categories} tags={tags} />
+          <BlogListWithFilter blogs={blogsRaw} categories={categories} tags={tags} />
         </div>
       </Container>
     </div>

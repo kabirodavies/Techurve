@@ -52,7 +52,3 @@
 - **Professional Presentation**: Enterprise-grade design and content
 - **Support Information**: Comprehensive support and documentation access
 - **Certification Display**: Professional compliance and certification badges
-
----
-
-The new product page now matches the professional, detailed approach while maintaining your existing functionality and brand identity. The design is perfect for enterprise security products and provides all the information technical buyers need to make informed decisions. 

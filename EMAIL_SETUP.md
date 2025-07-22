@@ -29,7 +29,7 @@ The system now sends email notifications in the following scenarios:
 1. **New Order Creation**: When a customer creates an order from the cart
 2. **Status Updates**: When an admin updates the order status
 
-## Email Templates
+## Email Templates.
 
 The emails include:
 - Customer name and email
