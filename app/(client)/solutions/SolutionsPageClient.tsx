@@ -7,6 +7,7 @@ import { featureIconMap } from '@/constants/featureIcons';
 import { Shield } from 'lucide-react';
 import CaseStudyShowcase from '@/components/CaseStudyShowcase';
 import type { Testimonial } from '@/components/Testimonials';
+import HeroSection from "@/components/HeroSection";
 
 // Solution type based on schema and usage
 interface Solution {
@@ -38,13 +39,12 @@ export default function SolutionsPageClient({ solutions, testimonials, caseStudi
   return (
     <main className="bg-white min-h-screen">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-black to-black text-white py-20 px-6 text-center overflow-hidden">
-        <h1 className="text-4xl md:text-6xl font-bold mb-4 z-10 relative">Smart Security & Automation Solutions</h1>
-        <p className="text-lg md:text-2xl max-w-2xl mx-auto mb-8 z-10 relative">
-          Discover tailored solutions for access control, attendance, surveillance, and more—designed for every industry.
-        </p>
-        <div className="absolute inset-0 opacity-10 bg-cover bg-center z-0" style={{ backgroundImage: "url('/images/solutions-bg.jpg')" }} />
-      </section>
+      <HeroSection
+        title="Smart Security & Automation Solutions"
+        subtitle="Discover tailored solutions for access control, attendance, surveillance, and more—designed for every industry."
+        bannerAlt="Solutions Banner"
+        showImage={false}
+      />
 
 
       {/* Solutions Accordion Grid */}
@@ -117,7 +117,7 @@ export default function SolutionsPageClient({ solutions, testimonials, caseStudi
       </section>
 
       {/* Case Studies Section */}
-      <section className="max-w-5xl mx-auto py-16 px-4">
+      <section className="max-w-5xl mx-auto py-16 px-4 mb-20">
         <h2 className="text-teal-600 text-sm font-bold mb-2 tracking-widest">02. CASE STUDIES</h2>
         <h3 className="text-3xl md:text-4xl font-extrabold mb-8 text-left leading-tight">Our Successful Implementation Stories</h3>
         <CaseStudyShowcase caseStudies={caseStudies} />
@@ -151,5 +151,5 @@ export default function SolutionsPageClient({ solutions, testimonials, caseStudi
       <Testimonials testimonials={testimonials} />
 
     </main>
-  )
-} 
+  );
+}

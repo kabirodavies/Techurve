@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import React from "react";
+import HeroSection from "@/components/HeroSection";
 
 const SingleCaseStudyPage = async ({ params }: { params: Promise<{ slug: string }> }) => {
   const { slug } = await params;
@@ -27,30 +28,28 @@ const SingleCaseStudyPage = async ({ params }: { params: Promise<{ slug: string 
 
   return (
     <div className="py-10">
-      <section className="relative bg-gradient-to-br text-black py-20 px-6 text-left overflow-hidden mb-4">
-        <h1 className="text-4xl md:text-6xl font-bold mb-4 z-10 relative">{caseStudy?.title}</h1>
+      <HeroSection title={caseStudy?.title} showImage={false}>
         <div className="flex flex-wrap items-center gap-8 text-base py-2 px-0 mb-2 z-10 relative">
           {caseStudy?.location && (
             <div className="flex items-center gap-2">
-              <span className="font-semibold text-gray-500 uppercase text-xs">Location</span>
-              <span className="text-black text-base font-semibold">{caseStudy.location}</span>
+              <span className="font-semibold text-whiteuppercase text-xs">Location</span>
+              <span className="text-gray-500 text-base font-semibold">{caseStudy.location}</span>
             </div>
           )}
           {caseStudy?.product && (
             <div className="flex items-center gap-2">
-              <span className="font-semibold text-gray-500 uppercase text-xs">Product</span>
-              <span className="text-black text-base font-semibold">{caseStudy.product}</span>
+              <span className="font-semibold text-white uppercase text-xs">Product</span>
+              <span className="text-gray-500 text-base font-semibold">{caseStudy.product}</span>
             </div>
           )}
           {caseStudy?.topic && (
             <div className="flex items-center gap-2">
-              <span className="font-semibold text-gray-500 uppercase text-xs">Topic</span>
-              <span className="text-black text-base font-semibold">{caseStudy.topic}</span>
+              <span className="font-semibold text-white uppercase text-xs">Topic</span>
+              <span className="text-gray-500 text-base font-semibold">{caseStudy.topic}</span>
             </div>
           )}
         </div>
-        <div className="absolute inset-0 opacity-10 bg-cover bg-center z-0" style={{ backgroundImage: "url('/images/blog-bg.jpg')" }} />
-      </section>
+      </HeroSection>
 
       {/* Overview Section with SVG Pattern and Main Image */}
       <section className="relative py-16 px-4 md:px-0 bg-white overflow-visible">

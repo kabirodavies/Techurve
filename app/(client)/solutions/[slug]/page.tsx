@@ -4,6 +4,7 @@ import Testimonials from '@/components/Testimonials'
 import Link from 'next/link'
 import React from 'react'
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion'
+import HeroSection from "@/components/HeroSection";
 
 export default async function SolutionDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -15,9 +16,7 @@ export default async function SolutionDetailPage({ params }: { params: Promise<{
   return (
     <main className="bg-white min-h-screen">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-black/80 to-black/80 text-white py-20 px-6 text-center overflow-hidden">
-        <h1 className="text-4xl md:text-6xl font-bold mb-4 z-10 relative">{solution.title}</h1>
-        <p className="text-lg md:text-2xl max-w-2xl mx-auto mb-8 z-10 relative">{solution.summary}</p>
+      <HeroSection title={solution.title} subtitle={solution.summary} bannerAlt="Solution Banner" showImage={false}>
         {solution.industries && solution.industries.length > 0 && (
           <div className="flex flex-wrap justify-center gap-2 mb-2 z-10 relative">
             {solution.industries.map((industry: string) => (
@@ -27,8 +26,7 @@ export default async function SolutionDetailPage({ params }: { params: Promise<{
             ))}
           </div>
         )}
-        <div className="absolute inset-0 opacity-10 bg-cover bg-center z-0" style={{ backgroundImage: "url('/images/solutions-bg.jpg')" }} />
-      </section>
+      </HeroSection>
 
         {/* Q&A Section */}
         <section className="max-w-5xl mx-auto py-16 px-4">

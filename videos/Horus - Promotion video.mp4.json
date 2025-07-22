@@ -1,0 +1,23 @@
+{
+  "status": "ready",
+  "originalFilePath": "videos\\Horus - Promotion video.mp4",
+  "provider": "mux",
+  "providerMetadata": {
+    "mux": {
+      "uploadId": "nbKUM8j02XVbtBnoogKTmndgFsSHLnqtcq8w00xVCPF1c",
+      "assetId": "027FlFfOlxuUG7ZgRRa8bdtmubCCbDJB00vY57zhQS5MQ",
+      "playbackId": "hPthtXB2E9wOOipb7bUWsmsoZLiXqJXQP43IG00dNB004"
+    }
+  },
+  "createdAt": 1753085213324,
+  "updatedAt": 1753085292510,
+  "size": 112682860,
+  "sources": [
+    {
+      "src": "https://stream.mux.com/hPthtXB2E9wOOipb7bUWsmsoZLiXqJXQP43IG00dNB004.m3u8",
+      "type": "application/x-mpegURL"
+    }
+  ],
+  "poster": "https://image.mux.com/hPthtXB2E9wOOipb7bUWsmsoZLiXqJXQP43IG00dNB004/thumbnail.webp",
+  "blurDataURL": "data:image/webp;base64,UklGRmYAAABXRUJQVlA4IFoAAADQAQCdASoQAAkAAQAcJZwCdAD2OuE4AAD+/yImy2Yxq+iTpLNyC3s4PMs3OC8M1YFQBxqVMA7PR/WeT8TT4GX/H2fyVSnAoi3u4FG3EEKPuU3W0VcaUr4AAAA="
+}

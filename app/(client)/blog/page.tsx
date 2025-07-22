@@ -3,6 +3,7 @@ import { getAllBlogs } from "@/sanity/queries";
 import React from "react";
 import BlogListWithFilter from "@/components/BlogListWithFilter";
 import type { GET_ALL_BLOGResult } from "@/sanity.types";
+import HeroSection from "@/components/HeroSection";
 
 const BlogPage = async () => {
   const blogsRaw: GET_ALL_BLOGResult = await getAllBlogs(100); // Fetch more blogs to allow filtering
@@ -38,16 +39,12 @@ const BlogPage = async () => {
 
   return (
     <div>
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-black to-black text-white py-20 px-6 text-center overflow-hidden">
-        <h1 className="text-4xl md:text-6xl font-bold mb-4 z-10 relative">News, Events & Thoughts.</h1>
-        <p className="text-lg md:text-2xl max-w-2xl mx-auto mb-8 z-10 relative">
-          Stay informed with the latest trends, tips, and news in security, automation, and technology.
-        </p>
-
-        <div className="absolute inset-0 opacity-10 bg-cover bg-center z-0" style={{ backgroundImage: "url('/images/blog-bg.jpg')" }} />
-      </section>
-
+      <HeroSection
+        title="News, Events & Thoughts."
+        subtitle="Stay informed with the latest trends, tips, and news in security, automation, and technology."
+        bannerAlt="Blog Banner"
+        showImage={false}
+      />
       <Container>
         <div className="mt-10" />
         <div className="mb-16">

@@ -1,3 +1,4 @@
+import HeroSection from "@/components/HeroSection";
 import ProductHero from "@/components/ProductHero";
 import ProductTabs from "@/components/ProductTabs";
 import RelatedProducts from "@/components/RelatedProducts";
@@ -64,6 +65,7 @@ const SingleProductPage = async ({
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
+      <HeroSection title={product.title} subtitle={product.shortDescription || undefined} showImage={true} />
       <ProductHero product={product} showPrice={isAdmin(user)} />
       {/* Sticky Tab Navigation */}
       <ProductTabs product={product} />

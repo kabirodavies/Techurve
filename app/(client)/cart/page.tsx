@@ -3,6 +3,7 @@
 import Container from "@/components/Container";
 import EmptyCart from "@/components/EmptyCart";
 // import FloatingPopup from "@/components/FloatngPopup";
+import HeroSection from "@/components/HeroSection";
 import NoAccess from "@/components/NoAccess";
 import PriceFormatter from "@/components/PriceFormatter";
 import ProductSideMenu from "@/components/ProductSideMenu";
@@ -115,131 +116,241 @@ const CartPage = () => {
     }
   };
   return (
-    <div className="bg-gray-50 pb-52 md:pb-10">
-      {isSignedIn ? (
-        <Container>
-          {groupedItems?.length ? (
-            <>
-              <div className="flex items-center gap-2 py-5">
-                {/* <FloatingPopup /> */}
-                <ShoppingBag className="text-darkColor" />
-                <Title>Shopping Cart</Title>
-              </div>
-              <div className="grid lg:grid-cols-3 md:gap-8">
-                <div className="lg:col-span-2 rounded-lg">
-                  <div className="border bg-white rounded-md">
-                    {groupedItems?.map(({ product }) => {
-                      return (
-                        <div
-                          key={product?._id}
-                          className="border-b p-2.5 last:border-b-0 flex items-center justify-between gap-5"
-                        >
-                          <div className="flex flex-1 items-start gap-2 h-36 md:h-44">
-                            {product?.images && product.images[0] && (
-                              <Link
-                                href={`/product/${product?.slug?.current}`}
-                                className="border p-0.5 md:p-1 mr-2 rounded-md
-                                 overflow-hidden group"
-                              >
-                                <Image
-                                  src={urlFor(product.images[0]).url()}
-                                  alt="productImage"
-                                  width={500}
-                                  height={500}
-                                  loading="lazy"
-                                  className="w-32 md:w-40 h-32 md:h-40 object-cover group-hover:scale-105 hoverEffect"
-                                />
-                              </Link>
-                            )}
-                            <div className="h-full flex flex-1 flex-col justify-between py-1">
-                              <div className="flex flex-col gap-0.5 md:gap-1.5">
-                                {/* Brand Display - Above Product Name */}
-                                {product?.brand && typeof (product.brand as { title?: string }).title === 'string' && (
-                                  <div className="flex items-center gap-1">
-                                    <span className="text-xs text-gray-400 font-medium">Brand:</span>
-                                    <span className="text-xs text-gray-500 font-medium">
-                                      {(product.brand as { title?: string }).title}
-                                    </span>
-                                  </div>
-                                )}
-                                <h2 className="text-base font-semibold line-clamp-1">
-                                  {product?.name}
-                                </h2>
-                                {isAdmin ? (
-                                  product?.price && product.price > 0 ? (
-                                    <PriceFormatter amount={product?.price} className="text-sm text-gray-700" />
+    <>
+      <HeroSection title="Your Shopping Cart" subtitle="Review your selected products and proceed to checkout!" showImage={true} />
+      <div className="bg-gray-50 pb-52 md:pb-10">
+        {isSignedIn ? (
+          <Container>
+            {groupedItems?.length ? (
+              <>
+                <div className="flex items-center gap-2 py-5">
+                  {/* <FloatingPopup /> */}
+                  <ShoppingBag className="text-darkColor" />
+                  <Title>Shopping Cart</Title>
+                </div>
+                <div className="grid lg:grid-cols-3 md:gap-8">
+                  <div className="lg:col-span-2 rounded-lg">
+                    <div className="border bg-white rounded-md">
+                      {groupedItems?.map(({ product }) => {
+                        return (
+                          <div
+                            key={product?._id}
+                            className="border-b p-2.5 last:border-b-0 flex items-center justify-between gap-5"
+                          >
+                            <div className="flex flex-1 items-start gap-2 h-36 md:h-44">
+                              {product?.images && product.images[0] && (
+                                <Link
+                                  href={`/product/${product?.slug?.current}`}
+                                  className="border p-0.5 md:p-1 mr-2 rounded-md
+                                   overflow-hidden group"
+                                >
+                                  <Image
+                                    src={urlFor(product.images[0]).url()}
+                                    alt="productImage"
+                                    width={500}
+                                    height={500}
+                                    loading="lazy"
+                                    className="w-32 md:w-40 h-32 md:h-40 object-cover group-hover:scale-105 hoverEffect"
+                                  />
+                                </Link>
+                              )}
+                              <div className="h-full flex flex-1 flex-col justify-between py-1">
+                                <div className="flex flex-col gap-0.5 md:gap-1.5">
+                                  {/* Brand Display - Above Product Name */}
+                                  {product?.brand && typeof (product.brand as { title?: string }).title === 'string' && (
+                                    <div className="flex items-center gap-1">
+                                      <span className="text-xs text-gray-400 font-medium">Brand:</span>
+                                      <span className="text-xs text-gray-500 font-medium">
+                                        {(product.brand as { title?: string }).title}
+                                      </span>
+                                    </div>
+                                  )}
+                                  <h2 className="text-base font-semibold line-clamp-1">
+                                    {product?.name}
+                                  </h2>
+                                  {isAdmin ? (
+                                    product?.price && product.price > 0 ? (
+                                      <PriceFormatter amount={product?.price} className="text-sm text-gray-700" />
+                                    ) : (
+                                      <span className="text-sm text-gray-700 font-medium">Request Quote</span>
+                                    )
                                   ) : (
                                     <span className="text-sm text-gray-700 font-medium">Request Quote</span>
-                                  )
-                                ) : (
-                                  <span className="text-sm text-gray-700 font-medium">Request Quote</span>
-                                )}
-                                <p className="text-sm text-gray-600 line-clamp-3">
-                                  {product?.description}
-                                </p>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <TooltipProvider>
-                                  <Tooltip>
-                                    <TooltipTrigger>
-                                      <ProductSideMenu
-                                        product={product}
-                                        className="relative top-0 right-0"
-                                      />
-                                    </TooltipTrigger>
-                                    <TooltipContent className="font-bold">
-                                      Add to Favorite
-                                    </TooltipContent>
-                                  </Tooltip>
-                                  <Tooltip>
-                                    <TooltipTrigger>
-                                      <Trash
-                                        onClick={() => {
-                                          deleteCartProduct(product?._id);
-                                          toast.success(
-                                            "Product deleted successfully!"
-                                          );
-                                        }}
-                                        className="w-4 h-4 md:w-5 md:h-5 mr-1 text-gray-500 hover:text-red-600 hoverEffect"
-                                      />
-                                    </TooltipTrigger>
-                                    <TooltipContent className="font-bold bg-red-600">
-                                      Delete product
-                                    </TooltipContent>
-                                  </Tooltip>
-                                </TooltipProvider>
+                                  )}
+                                  <p className="text-sm text-gray-600 line-clamp-3">
+                                    {product?.description}
+                                  </p>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <TooltipProvider>
+                                    <Tooltip>
+                                      <TooltipTrigger>
+                                        <ProductSideMenu
+                                          product={product}
+                                          className="relative top-0 right-0"
+                                        />
+                                      </TooltipTrigger>
+                                      <TooltipContent className="font-bold">
+                                        Add to Favorite
+                                      </TooltipContent>
+                                    </Tooltip>
+                                    <Tooltip>
+                                      <TooltipTrigger>
+                                        <Trash
+                                          onClick={() => {
+                                            deleteCartProduct(product?._id);
+                                            toast.success(
+                                              "Product deleted successfully!"
+                                            );
+                                          }}
+                                          className="w-4 h-4 md:w-5 md:h-5 mr-1 text-gray-500 hover:text-red-600 hoverEffect"
+                                        />
+                                      </TooltipTrigger>
+                                      <TooltipContent className="font-bold bg-red-600">
+                                        Delete product
+                                      </TooltipContent>
+                                    </Tooltip>
+                                  </TooltipProvider>
+                                </div>
                               </div>
                             </div>
+                            <div className="flex flex-col items-start justify-between h-36 md:h-44 p-0.5 md:p-1">
+                              <QuantityButtons product={toExpandedProduct(product)} />
+                            </div>
                           </div>
-                          <div className="flex flex-col items-start justify-between h-36 md:h-44 p-0.5 md:p-1">
-                            <QuantityButtons product={toExpandedProduct(product)} />
-                          </div>
-                        </div>
-                      );
-                    })}
-                    <Button
-                      onClick={handleResetCart}
-                      className="m-5 font-semibold"
-                      variant="destructive"
-                    >
-                      Reset Cart
-                    </Button>
+                        );
+                      })}
+                      <Button
+                        onClick={handleResetCart}
+                        className="m-5 font-semibold"
+                        variant="destructive"
+                      >
+                        Reset Cart
+                      </Button>
+                    </div>
                   </div>
-                </div>
-                <div>
-                  <div className="lg:col-span-1">
-                    {/* Order Summary for desktop view */}
-                    <div className="hidden md:inline-block w-full bg-white p-6 rounded-lg border mb-6">
-                      <h2 className="text-xl font-semibold mb-4">
-                        Order Summary
-                      </h2>
-                      <div className="space-y-4">
-                        {isAdmin && (
-                          <>
-                            <div className="flex items-center justify-between">
-                              <span>SubTotal</span>
-                              <PriceFormatter amount={getSubTotalPrice()} />
+                  <div>
+                    <div className="lg:col-span-1">
+                      {/* Order Summary for desktop view */}
+                      <div className="hidden md:inline-block w-full bg-white p-6 rounded-lg border mb-6">
+                        <h2 className="text-xl font-semibold mb-4">
+                          Order Summary
+                        </h2>
+                        <div className="space-y-4">
+                          {isAdmin && (
+                            <>
+                              <div className="flex items-center justify-between">
+                                <span>SubTotal</span>
+                                <PriceFormatter amount={getSubTotalPrice()} />
+                              </div>
+                              {getSubTotalPrice() - getTotalPrice() > 0 && (
+                                <div className="flex items-center justify-between">
+                                  <span>Discount</span>
+                                  <PriceFormatter
+                                    amount={getSubTotalPrice() - getTotalPrice()}
+                                  />
+                                </div>
+                              )}
+                              <Separator />
+                              <div className="flex items-center justify-between font-semibold text-lg">
+                                <span>Total</span>
+                                <PriceFormatter
+                                  amount={getTotalPrice()}
+                                  className="text-lg font-bold text-black"
+                                />
+                              </div>
+                            </>
+                          )}
+                          {!isAdmin && (
+                            <div className="text-center py-4">
+                              <p className="text-gray-600 mb-2">Prices are hidden for non-admin users</p>
+                              <p className="text-sm text-gray-500">Request a quote to see pricing</p>
                             </div>
+                          )}
+                        </div>
+                      </div>
+                      {/* Get a Quote form for desktop view */}
+                      <div className="hidden md:inline-block w-full bg-white p-6 rounded-lg border">
+                        <h2 className="text-xl font-semibold mb-4">
+                          Get a Quote
+                        </h2>
+                        <form onSubmit={handleSubmit(handleGetQuote)} className="space-y-4">
+                          <div>
+                            <label className="block font-medium">Country</label>
+                            <select {...register("country", { required: true })} className="w-full border rounded p-2">
+                              <option value="">Select Country</option>
+                              <option value="Kenya">Kenya</option>
+                              <option value="Uganda">Uganda</option>
+                              <option value="Tanzania">Tanzania</option>
+                            </select>
+                            {errors.country && <span className="text-red-500 text-xs">Country is required</span>}
+                          </div>
+                          <div>
+                            <label className="block font-medium">Name</label>
+                            <input {...register("name", { required: true })} className="w-full border rounded p-2" />
+                            {errors.name && <span className="text-red-500 text-xs">Name is required</span>}
+                          </div>
+                          <div>
+                            <label className="block font-medium">Phone Number</label>
+                            <input
+                              {...register("phone", {
+                                required: "Phone number is required",
+                                pattern: {
+                                  value: /^\d{10}$/,
+                                  message: "Phone number must be exactly 10 digits",
+                                },
+                              })}
+                              className="w-full border rounded p-2"
+                            />
+                            {errors.phone &&
+                              typeof errors.phone.message === "string" && (
+                                <span className="text-red-500 text-xs">{errors.phone.message}</span>
+                              )}
+                          </div>
+                          <div>
+                            <label className="block font-medium">City</label>
+                            <input
+                              {...register("city", {
+                                required: "City is required",
+                                validate: (value) =>
+                                  selectedCountry && countryCities[selectedCountry]
+                                    ? countryCities[selectedCountry].includes(value)
+                                      ? true
+                                      : `City must be a valid city in ${selectedCountry}`
+                                    : true,
+                              })}
+                              className="w-full border rounded p-2"
+                            />
+                            {errors.city &&
+                              typeof errors.city.message === "string" && (
+                                <span className="text-red-500 text-xs">{errors.city.message}</span>
+                              )}
+                          </div>
+                          <div>
+                            <label className="block font-medium">Physical Address</label>
+                            <input {...register("address", { required: true })} className="w-full border rounded p-2" />
+                            {errors.address && <span className="text-red-500 text-xs">Address is required</span>}
+                          </div>
+                          <Separator />
+                          <Button
+                            className="w-full rounded-full font-semibold tracking-wide hoverEffect"
+                            size="lg"
+                            disabled={loading}
+                            type="submit"
+                          >
+                            {loading ? "Please wait..." : "Get a Quote"}
+                          </Button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                  {/* Order summary for mobile view */}
+                  <div className="md:hidden fixed bottom-0 left-0 w-full bg-white pt-2">
+                    <div className="bg-white p-4 rounded-lg border mx-4">
+                      <h2>Order Summary</h2>
+                      <div className="space-y-4">
+                        {isAdmin ? (
+                          <>
                             {getSubTotalPrice() - getTotalPrice() > 0 && (
                               <div className="flex items-center justify-between">
                                 <span>Discount</span>
@@ -257,142 +368,35 @@ const CartPage = () => {
                               />
                             </div>
                           </>
-                        )}
-                        {!isAdmin && (
-                          <div className="text-center py-4">
-                            <p className="text-gray-600 mb-2">Prices are hidden for non-admin users</p>
-                            <p className="text-sm text-gray-500">Request a quote to see pricing</p>
+                        ) : (
+                          <div className="text-center py-2">
+                            <p className="text-sm text-gray-600">Request a quote to see pricing</p>
                           </div>
                         )}
+                        <form onSubmit={handleSubmit(handleGetQuote)}>
+                          <Button
+                            className="w-full rounded-full font-semibold tracking-wide hoverEffect"
+                            size="lg"
+                            disabled={loading}
+                            type="submit"
+                          >
+                            {loading ? "Please wait..." : "Get a Quote"}
+                          </Button>
+                        </form>
                       </div>
                     </div>
-                    {/* Get a Quote form for desktop view */}
-                    <div className="hidden md:inline-block w-full bg-white p-6 rounded-lg border">
-                      <h2 className="text-xl font-semibold mb-4">
-                        Get a Quote
-                      </h2>
-                      <form onSubmit={handleSubmit(handleGetQuote)} className="space-y-4">
-                        <div>
-                          <label className="block font-medium">Country</label>
-                          <select {...register("country", { required: true })} className="w-full border rounded p-2">
-                            <option value="">Select Country</option>
-                            <option value="Kenya">Kenya</option>
-                            <option value="Uganda">Uganda</option>
-                            <option value="Tanzania">Tanzania</option>
-                          </select>
-                          {errors.country && <span className="text-red-500 text-xs">Country is required</span>}
-                        </div>
-                        <div>
-                          <label className="block font-medium">Name</label>
-                          <input {...register("name", { required: true })} className="w-full border rounded p-2" />
-                          {errors.name && <span className="text-red-500 text-xs">Name is required</span>}
-                        </div>
-                        <div>
-                          <label className="block font-medium">Phone Number</label>
-                          <input
-                            {...register("phone", {
-                              required: "Phone number is required",
-                              pattern: {
-                                value: /^\d{10}$/,
-                                message: "Phone number must be exactly 10 digits",
-                              },
-                            })}
-                            className="w-full border rounded p-2"
-                          />
-                          {errors.phone &&
-                            typeof errors.phone.message === "string" && (
-                              <span className="text-red-500 text-xs">{errors.phone.message}</span>
-                            )}
-                        </div>
-                        <div>
-                          <label className="block font-medium">City</label>
-                          <input
-                            {...register("city", {
-                              required: "City is required",
-                              validate: (value) =>
-                                selectedCountry && countryCities[selectedCountry]
-                                  ? countryCities[selectedCountry].includes(value)
-                                    ? true
-                                    : `City must be a valid city in ${selectedCountry}`
-                                  : true,
-                            })}
-                            className="w-full border rounded p-2"
-                          />
-                          {errors.city &&
-                            typeof errors.city.message === "string" && (
-                              <span className="text-red-500 text-xs">{errors.city.message}</span>
-                            )}
-                        </div>
-                        <div>
-                          <label className="block font-medium">Physical Address</label>
-                          <input {...register("address", { required: true })} className="w-full border rounded p-2" />
-                          {errors.address && <span className="text-red-500 text-xs">Address is required</span>}
-                        </div>
-                        <Separator />
-                        <Button
-                          className="w-full rounded-full font-semibold tracking-wide hoverEffect"
-                          size="lg"
-                          disabled={loading}
-                          type="submit"
-                        >
-                          {loading ? "Please wait..." : "Get a Quote"}
-                        </Button>
-                      </form>
-                    </div>
                   </div>
                 </div>
-                {/* Order summary for mobile view */}
-                <div className="md:hidden fixed bottom-0 left-0 w-full bg-white pt-2">
-                  <div className="bg-white p-4 rounded-lg border mx-4">
-                    <h2>Order Summary</h2>
-                    <div className="space-y-4">
-                      {isAdmin ? (
-                        <>
-                          {getSubTotalPrice() - getTotalPrice() > 0 && (
-                            <div className="flex items-center justify-between">
-                              <span>Discount</span>
-                              <PriceFormatter
-                                amount={getSubTotalPrice() - getTotalPrice()}
-                              />
-                            </div>
-                          )}
-                          <Separator />
-                          <div className="flex items-center justify-between font-semibold text-lg">
-                            <span>Total</span>
-                            <PriceFormatter
-                              amount={getTotalPrice()}
-                              className="text-lg font-bold text-black"
-                            />
-                          </div>
-                        </>
-                      ) : (
-                        <div className="text-center py-2">
-                          <p className="text-sm text-gray-600">Request a quote to see pricing</p>
-                        </div>
-                      )}
-                      <form onSubmit={handleSubmit(handleGetQuote)}>
-                        <Button
-                          className="w-full rounded-full font-semibold tracking-wide hoverEffect"
-                          size="lg"
-                          disabled={loading}
-                          type="submit"
-                        >
-                          {loading ? "Please wait..." : "Get a Quote"}
-                        </Button>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </>
-          ) : (
-            <EmptyCart />
-          )}
-        </Container>
-      ) : (
-        <NoAccess />
-      )}
-    </div>
+              </>
+            ) : (
+              <EmptyCart />
+            )}
+          </Container>
+        ) : (
+          <NoAccess />
+        )}
+      </div>
+    </>
   );
 };
 

@@ -1,4 +1,5 @@
 import Container from "@/components/Container";
+import HeroSection from "@/components/HeroSection";
 import OrdersComponent from "@/components/OrdersComponent";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -25,6 +26,11 @@ const OrdersPage = async () => {
 
   return (
     <div>
+      <HeroSection
+        title="Orders"
+        subtitle="View your recent orders, status, and details."
+        showImage={true}
+      />
       <Container className="py-10">
         {orders?.length ? (
           <Card className="w-full">

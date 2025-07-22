@@ -208,6 +208,31 @@ const getSingleCaseStudy = async (slug: string) => {
   return await client.fetch(query, { slug });
 };
 
+const getSingleHotProduct = async () => {
+  try {
+    const query = `*[_type == 'product' && status == 'hot'] | order(name asc) [0]{
+      ...,
+      overview,
+      brand->{
+        title,
+        slug
+      },
+      subcategory->{
+        title,
+        slug,
+        parent->{
+          title,
+          slug
+        }
+      }
+    }`;
+    return await client.fetch(query);
+  } catch (error) {
+    console.log("Error fetching single hot product:", error);
+    return null;
+  }
+};
+
 export {
   getCategories,
   getAllBrands,
@@ -229,4 +254,5 @@ export {
   getProductsByBrandSlug,
   getAllCaseStudies,
   getSingleCaseStudy,
+  getSingleHotProduct,
 };

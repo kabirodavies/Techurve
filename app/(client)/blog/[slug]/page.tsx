@@ -11,6 +11,7 @@ import SocialMedia from "@/components/SocialMedia";
 import type { GET_ALL_BLOGResult } from "@/sanity.types";
 import { getSingleBlog, getAllBlogs } from "@/sanity/queries";
 import type { BlockContent } from "@/sanity.types";
+import HeroSection from "@/components/HeroSection";
 
 // Helper to extract ToC from PortableText blocks
 type TocItem = { id: string; text: string; level: string };
@@ -87,15 +88,16 @@ const SingleBlogPage = async ({ params }: { params: Promise<{ slug: string }> })
             blockquote: ({ children }: { children?: React.ReactNode }) => <blockquote className="my-5 border-l-2 border-l-gray-300 pl-6 text-base/8 text-gray-950 first:mt-0 last:mb-0">{children}</blockquote>,
           },
           types: {
-            image: ({ value }: { value: { alt?: string } }) => (
-              <Image
-                alt={value.alt || ""}
-                src={urlFor(value).width(2000).url()}
-                className="w-full rounded-2xl"
-                width={1400}
-                height={1000}
-              />
-            ),
+            image: ({ value }: { value: { alt?: string; asset?: { _ref?: string } } }) =>
+              value?.asset?._ref ? (
+                <Image
+                  alt={value.alt || ""}
+                  src={urlFor(value).width(2000).url()}
+                  className="w-full rounded-2xl"
+                  width={1400}
+                  height={1000}
+                />
+              ) : null,
             separator: ({ value }: { value: { style?: string } }) => {
               switch (value.style) {
                 case "line":
@@ -134,18 +136,15 @@ const SingleBlogPage = async ({ params }: { params: Promise<{ slug: string }> })
 
   return (
     <div className="py-10">
-      {/* Hero Section for Blog Post */}
-      <section className="relative bg-gradient-to-br text-black py-20 px-6 text-left overflow-hidden mb-4">
-        <h1 className="text-4xl md:text-6xl font-bold mb-4 z-10 relative">{blog?.title}</h1>
-        {/* Info Bar: Date, Category, Shared On (in hero) */}
-        <div className="flex flex-wrap items-center gap-4 md:gap-8 text-base py-2 px-0 mb-2 z-10 relative">
+      <HeroSection title={blog?.title} showImage={false}>
+        <div className="mt-8 flex flex-wrap items-center gap-4 md:gap-8 text-base py-2 px-0 mb-2 z-10 relative">
           <div className="flex items-center gap-2">
-            <span className="font-semibold text-gray-700 uppercase text-xs">Date:</span>
+            <span className="font-semibold text-white uppercase text-xs">Date:</span>
             <Calendar size={16} className="text-blue-700" />
-            <span className="text-gray-900 text-sm md:text-base">{dayjs(blog.publishedAt).format("MMMM D, YYYY")}</span>
+            <span className="text-gray-500 text-sm md:text-base">{dayjs(blog.publishedAt).format("MMMM D, YYYY")}</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="font-semibold text-gray-700 uppercase text-xs">Category:</span>
+            <span className="font-semibold text-white uppercase text-xs">Category:</span>
             {Array.isArray(blog?.blogcategories) && blog.blogcategories.length > 0 ? (
               blog.blogcategories.map((cat: { title: string | null }, idx: number) => (
                 <span key={idx} className="inline-block px-2 py-0.5 bg-blue-50 text-blue-700 rounded text-sm md:text-base font-normal">
@@ -157,12 +156,11 @@ const SingleBlogPage = async ({ params }: { params: Promise<{ slug: string }> })
             )}
           </div>
           <div className="flex items-center gap-2">
-            <span className="font-semibold text-gray-700 uppercase text-xs">Shared on:</span>
+            <span className="font-semibold text-white uppercase text-xs">Shared on:</span>
             <SocialMedia className="ml-1" iconClassName="border-gray-200 hover:border-blue-700" />
           </div>
         </div>
-        <div className="absolute inset-0 opacity-10 bg-cover bg-center z-0" style={{ backgroundImage: "url('/images/blog-bg.jpg')" }} />
-      </section>
+      </HeroSection>
       <Container className="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-2">
         {/* Sidebar: ToC + Featured Product (now on the left) */}
         <aside className="lg:col-span-4 hidden lg:block">

@@ -152,8 +152,17 @@
 
 body {
   font-family: var(--font-poppins);
+  overflow-x: hidden;
 }
 
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
+}
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 0.08; }
+  50% { opacity: 0.16; }
+}
+.animate-pulse-slow {
+  animation: pulse-slow 4s ease-in-out infinite;
 }
