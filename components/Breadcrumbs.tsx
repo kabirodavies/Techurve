@@ -12,10 +12,17 @@ export default function Breadcrumbs() {
   const pathname = usePathname();
   const segments = pathname.split("/").filter(Boolean);
 
-  const crumbs = segments.map((seg, idx) => ({
-    href: "/" + segments.slice(0, idx + 1).join("/"),
-    label: segmentToLabel(seg),
-  }));
+  const crumbs = segments.map((seg, idx) => {
+    // Special case: if the segment is 'product', link to '/shop'
+    const href =
+      seg === "product"
+        ? "/shop"
+        : "/" + segments.slice(0, idx + 1).join("/");
+    return {
+      href,
+      label: segmentToLabel(seg),
+    };
+  });
 
   return (
     <nav aria-label="Breadcrumb" className="mb-6 w-full text-left">
