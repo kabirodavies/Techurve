@@ -3,8 +3,6 @@
 import React, { useRef, useState } from 'react';
 import Video from 'next-video';
 import Horus from '@/videos/Horus - Promotion video.mp4';
-import { Title } from "./ui/text";
-import Link from "next/link";
 
 export default function HomeBanner() {
   const videoRef = useRef<HTMLVideoElement | null>(null);

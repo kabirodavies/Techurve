@@ -3,7 +3,6 @@ import { usePathname } from "next/navigation";
 import Breadcrumbs from "./Breadcrumbs";
 import Image from "next/image";
 import React from "react";
-import Images from "../images/Images";
 
 
 type HeroSectionProps = {

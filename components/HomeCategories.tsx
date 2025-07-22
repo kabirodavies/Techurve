@@ -6,7 +6,7 @@ import { urlFor } from "@/sanity/lib/image";
 import Link from "next/link";
 import { FaEye } from "react-icons/fa";
 
-const HomeCategories = ({ categories }: { categories: Category[] }) => {
+const HomeCategories = ({ categories }: { categories: (Category & { productCount?: number })[] }) => {
   return (
     <div className="bg-white border border-shop_light_green/20 my-10 md:my-20 p-5 lg:p-7 rounded-md">
       <Title className="border-b pb-3">Popular Categories</Title>
@@ -41,7 +41,7 @@ const HomeCategories = ({ categories }: { categories: Category[] }) => {
               </div>
               <p className="text-xs text-shop_dark_blue/80">
                 {/* If productCount exists, show it, else fallback to 0 */}
-                <span className="font-bold text-shop_orange">{`(${(category as any)?.productCount ?? 0})`}</span>{" "}
+                <span className="font-bold text-shop_orange">{`(${category.productCount ?? 0})`}</span>{" "}
                 items Available
               </p>
               <Link

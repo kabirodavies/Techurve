@@ -1,5 +1,4 @@
 import type { NextConfig } from "next";
-import type { Configuration } from 'webpack';
 const path = require('path');
 
 /** @type {import('next').NextConfig} */
