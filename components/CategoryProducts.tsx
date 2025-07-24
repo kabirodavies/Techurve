@@ -11,6 +11,8 @@ import NoProductAvailable from "./NoProductAvailable";
 import ProductCard from "./ProductCard";
 import { getProductsBySubcategory, getProductsByCategory } from "@/sanity/queries";
 import Title from "@/components/Title";
+import { Shield } from "lucide-react";
+import { featureIconMap } from "@/constants/featureIcons";
 
 interface Props {
   categories: Category[];
@@ -78,7 +80,13 @@ const CategoryProducts = ({ categories, slug }: Props) => {
             key={item?._id}
             className={`bg-transparent border-0 p-0  rounded-none text-darkColor shadow-none hover:bg-shop_orange hover:text-white font-semibold hoverEffect border-b last:border-b-0 transition-colors capitalize ${item?.slug?.current === currentSlug && "bg-shop_orange text-white border-shop_orange"}`}
           >
-            <p className="w-full text-left px-2">{item?.title}</p>
+            <span className="inline-flex items-center gap-2 w-full text-left px-2">
+              {item.icon && (() => {
+                const Icon = featureIconMap[item.icon] || Shield;
+                return <Icon className="w-5 h-5 text-shop_dark_blue" aria-label={item.icon} />;
+              })()}
+              {item?.title}
+            </span>
           </Button>
         ))}
         {selectedCat && selectedCat.subcategories && selectedCat.subcategories.length > 0 && (

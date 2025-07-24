@@ -165,6 +165,7 @@ const CATEGORIES_WITH_SUBCATEGORIES = defineQuery(`
     title,
     slug,
     image,
+    icon,
     "productCount": count(*[_type == "product" && subcategory->parent._ref == ^._id]),
     "subcategories": *[_type == "subcategory" && parent._ref == ^._id]{
       _id,

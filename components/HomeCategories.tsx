@@ -1,8 +1,8 @@
 import React from "react";
 import Title from "./Title";
 import { Category } from "@/sanity.types";
-import Image from "next/image";
-import { urlFor } from "@/sanity/lib/image";
+import { Shield } from "lucide-react";
+import { featureIconMap } from "@/constants/featureIcons";
 import Link from "next/link";
 import { FaEye } from "react-icons/fa";
 
@@ -16,20 +16,13 @@ const HomeCategories = ({ categories }: { categories: (Category & { productCount
             key={category?._id}
             className="relative bg-shop_light_bg p-5 flex items-center gap-4 rounded-lg shadow-sm group transition-all duration-300 hover:shadow-lg hover:scale-[1.025] border border-transparent hover:border-shop_orange/40"
           >
-            {category?.image && (
-              <div className="relative overflow-hidden border border-shop_orange/30 hover:border-shop_orange rounded-lg w-20 h-20 p-1 flex-shrink-0">
-                <Link href={`/category/${category?.slug?.current}`} className="block w-full h-full">
-                  <Image
-                    src={urlFor(category?.image).url()}
-                    alt={category?.title || "categoryImage"}
-                    width={500}
-                    height={500}
-                    className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300"
-                  />
-                  {/* Overlay on hover */}
-                  <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-300">
-                    <FaEye className="text-white text-xl" />
-                  </div>
+            {category?.icon && (
+              <div className="relative border border-shop_orange/30 hover:border-shop_orange rounded-lg w-20 h-20 p-1 flex-shrink-0 flex items-center justify-center bg-white">
+                <Link href={`/category/${category?.slug?.current}`} className="block w-full h-full flex items-center justify-center">
+                  {(() => {
+                    const Icon = featureIconMap[category.icon] || Shield;
+                    return <Icon className="w-14 h-14 text-shop_dark_blue group-hover:scale-110 transition-transform duration-300" aria-label={category.icon} />;
+                  })()}
                 </Link>
               </div>
             )}

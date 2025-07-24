@@ -1,8 +1,8 @@
 import React from "react";
 import Title from "../Title";
 import { Check } from "lucide-react";
-import Image from "next/image";
-import { urlFor } from "@/sanity/lib/image";
+import { Shield } from "lucide-react";
+import { featureIconMap } from "@/constants/featureIcons";
 
 interface CategoryWithCount {
   _id: string;
@@ -11,6 +11,7 @@ interface CategoryWithCount {
   image?: { asset?: { _ref: string } };
   productCount?: number;
   subcategories?: SubcategoryWithCount[];
+  icon?: string; // Added icon property
 }
 interface SubcategoryWithCount {
   _id: string;
@@ -69,15 +70,12 @@ const CategoryList = ({
                 aria-label={`Select category ${category.title}`}
               >
                 {/* Category image/avatar if available */}
-                {category.image?.asset?._ref && (
-                  <span className="w-6 h-6 flex-shrink-0 rounded-full overflow-hidden border border-gray-200 bg-white">
-                    <Image
-                      src={urlFor(category.image).width(24).height(24).url()}
-                      alt={category.title}
-                      width={24}
-                      height={24}
-                      className="object-contain w-6 h-6"
-                    />
+                {category.icon && (
+                  <span className="w-6 h-6 flex-shrink-0 rounded-full overflow-hidden border border-gray-200 bg-white flex items-center justify-center">
+                    {(() => {
+                      const Icon = featureIconMap[category.icon] || Shield;
+                      return <Icon className="w-5 h-5 text-shop_dark_blue" aria-label={category.icon} />;
+                    })()}
                   </span>
                 )}
                 <span className="flex-1 truncate">{category.title}</span>

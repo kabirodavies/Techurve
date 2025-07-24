@@ -1,4 +1,19 @@
-import { Cpu, Database, Monitor, Shield, Zap, Wifi, Globe, Settings, Clock, Wrench } from "lucide-react";
+import {
+  Cpu,
+  Database,
+  Monitor,
+  Shield,
+  Zap,
+  Wifi,
+  Globe,
+  Settings,
+  Clock,
+  Wrench,
+  DoorClosedLocked,
+  Cctv,
+  CalendarCheck,
+  Fingerprint,
+} from "lucide-react";
 
 // Centralized icon map for product features
 // Use these keys as feature IDs in Sanity for consistent icon mapping
@@ -16,9 +31,8 @@ export const featureIconMap: Record<string, React.ElementType> = {
   configuration: Settings,
   time: Clock,
   installation: Wrench,
-  // Add more mappings as needed
-}; 
-
-
-
-
+  cctv: Cctv,
+  time_attendance: CalendarCheck,
+  access_control: DoorClosedLocked,
+  fingerprint: Fingerprint,
+};

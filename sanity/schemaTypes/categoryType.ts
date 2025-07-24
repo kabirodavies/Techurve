@@ -36,19 +36,26 @@ export const categoryType = defineType({
       initialValue: false,
     }),
     defineField({
-      name: "image",
-      title: "Category Image",
-      type: "image",
+      name: "icon",
+      title: "Category Icon",
+      type: "string",
+      description: "Select an icon for this category (matches keys in featureIconMap)",
       options: {
-        hotspot: true,
+        list: [
+          { title: "cctv", value: "cctv" },
+          { title: "time_attendance", value: "time_attendance" },
+          { title: "access_control", value: "access_control" },
+          { title: "fingerprint", value: "fingerprint" },
+        ],
       },
+      validation: (Rule) => Rule.required(),
     }),
   ],
   preview: {
     select: {
       title: "title",
       subtitle: "description",
-      media: "image",
+      media: "icon", // This will be handled in the frontend
     },
   },
 });
