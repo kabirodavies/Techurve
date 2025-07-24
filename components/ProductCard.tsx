@@ -22,95 +22,70 @@ const ProductCard = ({ product }: { product: ExpandedProduct }) => {
   const subcategory = product.subcategory;
 
   return (
-    <div className="text-sm border-[1px] rounded-md border-darkBlue/20 group bg-white">
-      <div className="relative group overflow-hidden bg-shop_light_bg">
+    <div className="text-xs border rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border-darkBlue/10 group bg-white hover:scale-[1.02]">
+      <div className="relative group overflow-hidden bg-shop_light_bg rounded-t-xl">
         {product?.images && product.images[0] && (
-          <Link href={`/product/${product?.slug?.current}`}>
+          <Link href={`/product/${product?.slug?.current}`}> 
             <Image
               src={urlFor(product.images[0]).url()}
               alt="productImage"
-              width={500}
-              height={500}
+              width={320}
+              height={160}
               priority
-              className={`w-full h-64 object-contain overflow-hidden transition-transform bg-shop_light_bg duration-500 
-              ${product?.stock !== 0 ? "group-hover:scale-105" : "opacity-50"}`}
+              className={`w-full h-40 object-contain overflow-hidden transition-transform duration-500 bg-shop_light_bg border-b border-gray-100 shadow-sm group-hover:scale-105 ${product?.stock !== 0 ? "" : "opacity-50"}`}
+              style={{ borderRadius: '0.75rem 0.75rem 0 0' }}
             />
           </Link>
         )}
         <ProductSideMenu product={product} />
         {product?.status === "sale" ? (
-          <p className="absolute top-2 left-2 z-10 text-xs border border-darkColor/50 px-2 rounded-full group-hover:border-lightGreen hover:text-shop_dark_green hoverEffect">
-            Sale!
-          </p>
+          <span className="absolute top-2 left-2 z-10 text-[10px] px-2 py-0.5 rounded-full bg-shop_dark_blue text-white font-bold shadow-md border border-white group-hover:scale-110 transition-transform duration-300">Sale!</span>
         ) : (
           <Link
             href={"/deal"}
-            className="absolute top-2 left-2 z-10 border border-shop_orange/50 p-1 rounded-full group-hover:border-shop_orange hover:text-shop_dark_green hoverEffect"
+            className="absolute top-2 left-2 z-10 p-1 rounded-full bg-shop_dark_blue text-white shadow-md border border-white group-hover:scale-110 transition-transform duration-300"
           >
             <Flame
-              size={18}
-              fill="#fb6c08"
-              className="text-shop_orange/50 group-hover:text-shop_orange hoverEffect"
+              size={14}
+              fill="#1e293b"
+              className="text-white"
             />
           </Link>
         )}
       </div>
-      <div className="p-3 flex flex-col gap-2">
-        {/* Brand Display - Above Product Name */}
-        {brand?.title ? (
-          <Link
-            href={`/shop?brand=${encodeURIComponent(brand.title)}`}
-            className="text-xs text-shop_dark_green hover:text-shop_dark_blue hoverEffect font-medium"
-          >
-            {brand.title}
-          </Link>
-        ) : (
-          <span className="text-xs text-gray-400 font-medium">Brand</span>
-        )}
+      {/* Divider between image and content */}
+      <div className="w-full h-px bg-gray-100 my-0" />
+      <div className="p-2 flex flex-col gap-2 items-center text-center">
+        {/* Product Name at the Top */}
+        <Title className="text-sm font-semibold line-clamp-1 text-gray-900">{product?.name}</Title>
 
-        {/* Category and Subcategory Display - Below Brand, Above Product Name */}
-        <div className="flex flex-wrap gap-1 text-xs text-gray-600">
-          {subcategory?.parent?.title && (
+        {/* Brand followed by Subcategory (e.g., ZKTECO | SUB) */}
+        <div className="flex flex-wrap gap-1 text-[11px] text-gray-600 items-center justify-center">
+          {brand?.title && (
             <Link
-              href={`/category/${subcategory.parent.slug?.current}`}
-              className="hover:text-shop_dark_green hoverEffect"
+              href={`/shop?brand=${encodeURIComponent(brand.title)}`}
+              className="text-[11px] text-shop_dark_green hover:text-shop_dark_blue hover:underline font-medium transition-colors duration-200"
             >
-              {subcategory.parent.title}
+              {brand.title}
             </Link>
           )}
+          {brand?.title && subcategory?.title && <span className="mx-1 text-gray-300 font-bold">|</span>}
           {subcategory?.title && (
-            <>
-              {subcategory?.parent?.title && (
-                <span className="text-gray-400">•</span>
-              )}
-              <Link
-                href={`/category/${subcategory.parent?.slug?.current}?subcategory=${subcategory.slug?.current}`}
-                className="hover:text-shop_dark_green hoverEffect"
-              >
-                {subcategory.title}
-              </Link>
-            </>
+            <Link
+              href={`/category/${subcategory.parent?.slug?.current}?subcategory=${subcategory.slug?.current}`}
+              className="hover:text-shop_dark_green hover:underline transition-colors duration-200"
+            >
+              {subcategory.title}
+            </Link>
           )}
         </div>
-
-        <Title className="text-sm line-clamp-1">{product?.name}</Title>
-
-        <div className="flex items-center gap-2.5">
-          <p className="font-medium">In Stock</p>
-          <p
-            className={`${product?.stock === 0 ? "text-red-600" : "text-shop_dark_green/80 font-semibold"}`}
-          >
-            {(product?.stock as number) > 0 ? product?.stock : "unavailable"}
-          </p>
-        </div>
-
         <PriceView
           price={product?.price}
           discount={product?.discount}
-          className="text-sm"
+          className="text-base font-bold mx-auto"
           showPrice={isAdmin}
         />
-        <AddToCartButton product={product} className="w-36 rounded-full" />
+        <AddToCartButton product={product} className="w-28 rounded-full mx-auto transition-all duration-200 bg-shop_dark_blue text-white hover:shadow-lg hover:bg-black hover:text-white border border-shop_dark_blue font-semibold text-xs" />
       </div>
     </div>
   );

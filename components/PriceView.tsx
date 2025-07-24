@@ -15,17 +15,9 @@ const PriceView = ({ price, discount, className, hideTotal, showPrice = true }: 
   const numericDiscount = Number(discount) || 0;
   const finalPrice = price ? price - numericDiscount : 0;
   
-  // Show "Request Quote" if price is not shown or if final price is 0
+  // Do not render anything if price is not shown or if final price is 0
   if (!showPrice || !price || finalPrice === 0) {
-    return (
-      <div className="flex items-center justify-between gap-5">
-        <div className="flex items-center gap-2">
-          <span className={cn("text-shop_dark_green font-medium", className)}>
-            Request Quote
-          </span>
-        </div>
-      </div>
-    );
+    return null;
   }
 
   return (
