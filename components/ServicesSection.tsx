@@ -22,15 +22,14 @@ const solutions = [
 ];
 
 const ServicesSection = () => (
-  <section className="py-16 bg-gray-50">
-    <div className="max-w-7xl mx-auto px-4">
-      <h2 className="text-3xl md:text-4xl font-bold text-center text-shop_dark_blue mb-8">
-        Explore Our Solutions
-      </h2>
+  <section className="py-16">
+    <div className="max-w-7xl mx-auto px-4 mb-10 lg:mb-20 bg-shop_light_bg p-5 lg:p-10 rounded-xl shadow-md">
+      <h2 className="text-3xl md:text-4xl font-bold text-center text-shop_dark_blue mb-4">Explore Our Solutions</h2>
+      <p className="text-xl text-gray-600 mb-8 text-center">Discover our range of security and business solutions</p>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-10">
         {solutions.map((solution) => (
           <Link key={solution.title} href={solution.link} className="group relative">
-            <div className="relative bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 p-6 flex flex-col items-center text-center border border-gray-100 hover:border-blue-500 hover:-translate-y-1 hover:scale-[1.03]">
+            <div className="relative bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 p-6 flex flex-col items-center text-center border-t border-b border-gray-100 hover:border-t-blue-500 hover:border-b-blue-500 hover:-translate-y-1 hover:scale-[1.03]">
               {/* Accent bar */}
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-t-2xl" />
               {/* Title */}

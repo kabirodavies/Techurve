@@ -41,7 +41,7 @@ const data: ContactItemData[] = [
 const FooterTop = () => {
   return (
     <section
-      className="w-full bg-gradient-to-r from-gray-50 via-white to-gray-50 py-8 px-2 sm:px-6 lg:px-12"
+      className="w-full bg-gradient-to-r py-8 px-2 sm:px-6 lg:px-12"
       aria-label="Contact Information"
     >
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -59,7 +59,7 @@ const FooterTop = () => {
               <h3 className="font-semibold text-gray-900 text-lg group-hover:text-primary transition-colors">
                 {item.title}
               </h3>
-              <p className="text-gray-600 text-sm mt-1 group-hover:text-gray-900 transition-colors">
+              <p className="text-gray-600 text-sm mt-1 group-hover:text-gray-900 transition-colors break-words">
                 {item.subtitle}
               </p>
             </div>

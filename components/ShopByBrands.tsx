@@ -5,7 +5,7 @@ import { getAllBrands } from "@/sanity/queries";
 import type { Brand } from "@/sanity.types";
 import Image from "next/image";
 import { urlFor } from "@/sanity/lib/image";
-import { GitCompareArrows, Headset, ShieldCheck, Truck } from "lucide-react";
+import { GitCompareArrows, Headset, ShieldCheck, Truck, ArrowRightCircle } from "lucide-react";
 
 const extraData = [
   {
@@ -38,16 +38,20 @@ const ShopByBrands = async () => {
   const brands = await getAllBrands();
   return (
     <div className="mb-10 lg:mb-20 bg-shop_light_bg p-5 lg:p-10 rounded-xl shadow-md">
-      <div className="flex flex-col md:flex-row items-start md:items-center gap-2 md:gap-5 justify-between mb-8">
-        <div>
-          <Title>Shop By Brands</Title>
-          <p className="text-shop_btn_dark_blue text-xs md:text-sm mt-1 font-medium tracking-wide">Discover top brands and exclusive deals</p>
+      <h2 className="text-3xl md:text-4xl font-bold text-center text-shop_dark_blue mb-4">Shop By Brands</h2>
+      <p className="text-xl text-gray-600 mb-8 text-center">Discover top brands and exclusive deals</p>
+      <div className="flex flex-col md:flex-row md:items-center md:gap-5 justify-between mb-8">
+        <div className="flex-1 min-w-0">
+          {/* Title and subtitle moved above for alignment consistency */}
         </div>
         <Link
           href={"/shop"}
-          className="text-sm font-semibold tracking-wide hover:text-shop_btn_dark_blue hover:underline transition-colors"
+          className="text-sm font-semibold tracking-wide hover:text-shop_btn_dark_blue hover:underline transition-colors px-5 py-2 rounded-full border border-gray-300 bg-white text-black shadow text-sm md:text-base inline-flex items-center gap-4"
         >
-          View all
+          <span className="text-black">VIEW ALL BRANDS</span>
+          <span className="ml-2 inline-flex items-center justify-center rounded-full bg-shop_dark_blue w-8 h-8">
+            <ArrowRightCircle className="w-5 h-5 md:w-6 md:h-6 text-white" />
+          </span>
         </Link>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
@@ -55,7 +59,7 @@ const ShopByBrands = async () => {
           <Link
             key={brand?._id}
             href={`/shop?brand=${encodeURIComponent(brand?.title ?? "")}`}
-            className="group bg-gradient-to-br from-white to-gray-50 border border-gray-200 w-full h-28 flex flex-col items-center justify-center rounded-lg overflow-hidden shadow-sm hover:shadow-lg hover:border-shop_btn_dark_blue transition-all duration-200 transform hover:scale-105 relative"
+            className="group bg-gradient-to-br from-white to-gray-50 border-t border-b border-gray-200 w-full h-28 flex flex-col items-center justify-center rounded-lg overflow-hidden shadow-sm hover:shadow-lg hover:border-t-shop_btn_dark_blue hover:border-b-shop_btn_dark_blue transition-all duration-200 transform hover:scale-105 relative"
           >
             {brand?.image && (
               <Image

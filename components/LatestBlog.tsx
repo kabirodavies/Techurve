@@ -10,17 +10,20 @@ const LatestBlog = async () => {
   const blogs = await getLatestBlogs();
   return (
     <div className="mb-10 lg:mb-20">
-      <div className="flex items-end justify-between mb-4 gap-4">
-        <Title className="min-h-[3.5rem] flex items-end">Explore Techurve Latest News<br/>and Insights.</Title>
-        <Link
-          href="/blog"
-          className="inline-flex items-center gap-4 px-5 py-2 rounded-full border border-gray-300 bg-white text-black font-semibold shadow hover:bg-gray-100 transition-colors text-sm md:text-base"
-        >
-          <span className="text-black">VIEW ALL NEWS</span>
-          <span className="ml-2 inline-flex items-center justify-center rounded-full bg-shop_dark_blue w-8 h-8">
-            <ArrowRightCircle className="w-5 h-5 md:w-6 md:h-6 text-white" />
-          </span>
-        </Link>
+      <div className="mb-8">
+        <h2 className="text-3xl md:text-4xl font-bold text-center text-shop_dark_blue mb-4">Explore Techurve Latest News and Insights</h2>
+        <p className="text-xl text-gray-600 mb-8 text-center">Stay updated with our latest articles and insights</p>
+        <div className="flex justify-end">
+          <Link
+            href="/blog"
+            className="text-sm font-semibold tracking-wide hover:text-shop_btn_dark_blue hover:underline transition-colors px-5 py-2 rounded-full border border-gray-300 bg-white text-black shadow text-sm md:text-base inline-flex items-center gap-4"
+          >
+            <span className="text-black">VIEW ALL NEWS</span>
+            <span className="ml-2 inline-flex items-center justify-center rounded-full bg-shop_dark_blue w-8 h-8">
+              <ArrowRightCircle className="w-5 h-5 md:w-6 md:h-6 text-white" />
+            </span>
+          </Link>
+        </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
         {blogs?.slice(0, 3).map((blog) => (

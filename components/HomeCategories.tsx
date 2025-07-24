@@ -7,16 +7,18 @@ import Link from "next/link";
 
 const HomeCategories = ({ categories }: { categories: (Category & { productCount?: number })[] }) => {
   return (
-    <div className="bg-white border border-shop_light_green/20 my-10 md:my-20 p-5 lg:p-7 rounded-md">
-      <Title className="border-b pb-3">Popular Categories</Title>
-      <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7">
+    <div className="mb-10 lg:mb-20 bg-shop_light_bg p-5 lg:p-10 rounded-xl shadow-md">
+      <h2 className="text-3xl md:text-4xl font-bold text-center text-shop_dark_blue mb-4">Popular Categories</h2>
+      <p className="text-xl text-gray-600 mb-8 text-center">Browse our most popular product categories</p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7">
         {categories?.map((category) => (
           <div
             key={category?._id}
-            className="relative bg-shop_light_bg p-5 flex items-center gap-4 rounded-lg shadow-sm group transition-all duration-300 hover:shadow-lg hover:scale-[1.025] border border-transparent hover:border-shop_orange/40"
+            className=" 
+            relative bg-white p-5 flex items-center gap-4 rounded-lg shadow-sm group transition-all duration-300 hover:shadow-lg hover:scale-[1.025] border-t border-b border-transparent hover:border-t-shop_orange/40 hover:border-b-shop_orange/40"
           >
             {category?.icon && (
-              <div className="relative border border-shop_orange/30 hover:border-shop_orange rounded-lg w-20 h-20 p-1 flex-shrink-0 flex items-center justify-center bg-white">
+              <div className="relative border-t border-b border-shop_orange/30 hover:border-t-shop_orange hover:border-b-shop_orange w-20 h-20 bg-white flex-shrink-0 flex items-center justify-center">
                 <Link href={`/category/${category?.slug?.current}`} className="block w-full h-full flex items-center justify-center">
                   {(() => {
                     const Icon = featureIconMap[category.icon] || Shield;
