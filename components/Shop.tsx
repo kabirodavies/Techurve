@@ -10,7 +10,6 @@ import ProductCard from "./ProductCard";
 import { getProductsBySubcategory, getProductsByCategory, getAllProducts } from "@/sanity/queries";
 import { useSearchParams } from "next/navigation";
 import BrandList from "./shop/BrandList";
-import PriceList from "./shop/PriceList";
 
 interface SubcategoryWithCount {
   _id: string;
