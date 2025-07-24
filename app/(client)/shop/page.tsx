@@ -10,10 +10,11 @@ const ShopPage = async () => {
     <div className="bg-white">
       {/* Modern Hero Section using reusable component */}
       <HeroSection
-        title="Shop Security & Automation Devices"
-        subtitle="Discover the latest in security, biometrics, and smart automation. Curated for your peace of mind and convenience."
+        title=""
+        // title="Shop Security & Automation Devices"
+        // subtitle="Discover the latest in security, biometrics, and smart automation. Curated for your peace of mind and convenience."
         bannerAlt="Shop Banner"
-        showImage={false}
+        showImage={true}
       />
       <Shop categories={categories} brands={brands} />
     </div>
