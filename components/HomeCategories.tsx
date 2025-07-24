@@ -1,5 +1,4 @@
 import React from "react";
-import Title from "./Title";
 import { Category } from "@/sanity.types";
 import { Shield } from "lucide-react";
 import { featureIconMap } from "@/constants/featureIcons";
