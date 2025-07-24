@@ -13,7 +13,7 @@ const ShopPage = async () => {
         title="Shop Security & Automation Devices"
         subtitle="Discover the latest in security, biometrics, and smart automation. Curated for your peace of mind and convenience."
         bannerAlt="Shop Banner"
-        showImage={true}
+        showImage={false}
       />
       <Shop categories={categories} brands={brands} />
     </div>
