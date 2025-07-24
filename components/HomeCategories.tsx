@@ -4,7 +4,6 @@ import { Category } from "@/sanity.types";
 import { Shield } from "lucide-react";
 import { featureIconMap } from "@/constants/featureIcons";
 import Link from "next/link";
-import { FaEye } from "react-icons/fa";
 
 const HomeCategories = ({ categories }: { categories: (Category & { productCount?: number })[] }) => {
   return (
