@@ -71,7 +71,7 @@ const ProductCard = ({ product }: { product: ExpandedProduct }) => {
           className="text-base font-bold mx-auto"
           showPrice={isAdmin}
         />
-        <AddToCartButton product={product} className="w-28 rounded-full mx-auto transition-all duration-200 bg-shop_light_blue text-white hover:shadow-lg hover:bg-shop_dark_blue hover:text-white border border-shop_light_blue font-semibold text-xs" />
+        <AddToCartButton product={product} className="w-28 rounded-full mx-auto transition-all duration-200 bg-shop_dark_blue text-white hover:shadow-lg hover:bg-shop_dark_blue hover:text-white border border-shop_dark_blue font-semibold text-xs" />
       </div>
     </div>
   );
