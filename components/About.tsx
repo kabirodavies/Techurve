@@ -32,12 +32,13 @@ const About = () => {
   const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
 
   const softwareBanners = [
-    "/software_banner/ZKBio CVSecurity V6.6.0 Web Banner 202506.jpg",
-    "/software_banner/ZKBio CVSecurity V6.6.0-10th Anniversary Poster 202506.jpg",
     "/software_banner/ZKBio Zexus Mobile App Web Banner 2024.png",
     "/software_banner/ZKBio CVSecurity V6.4.0_R Space Management Banner 202411.png",
     "/software_banner/ZKBio CVSecurity V6.4.0_R Video Intercom Banner 202411.png",
-    "/software_banner/ZKBioCVSecurity-Web-banner.jpg"
+    "/software_banner/ZKBioCVSecurity-Web-banner.jpg",
+    "/software_banner/zk1.jpg",
+    "/software_banner/zk2.jpg",
+    "/software_banner/zk3.jpg"
   ];
 
   useEffect(() => {

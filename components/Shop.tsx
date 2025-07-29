@@ -118,13 +118,54 @@ const Shop = ({ categories, brands }: Props) => {
         <div className="sticky top-0 z-10 mb-7">
           <div className="bg-white/90 backdrop-blur-sm shadow-md rounded-xl px-4 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3 border border-gray-100">
             <Title className="text-lg uppercase tracking-wide">All Products</Title>
-            <div className="flex items-center gap-2">
-              <label htmlFor="sort" className="text-sm font-medium text-gray-700 mr-2">Sort by:</label>
+            {/* Unified filter bar for mobile: all dropdowns in a row */}
+            <div className="w-full flex flex-wrap items-center gap-2 md:gap-2 overflow-x-auto md:overflow-visible">
+              {/* Category Dropdown (mobile only) */}
+              <select
+                className="border border-gray-300 rounded px-2 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-shop_dark_blue bg-white md:hidden min-w-[120px]"
+                value={selectedCategory || ''}
+                onChange={e => {
+                  setSelectedCategory(e.target.value || null);
+                  setSelectedSubcategory(null);
+                }}
+              >
+                <option value="">All Categories</option>
+                {categories?.map(category => (
+                  <option key={category._id} value={category._id}>{category.title}</option>
+                ))}
+              </select>
+              {/* Subcategory Dropdown (mobile only) */}
+              {selectedCategory && categories.find(cat => cat._id === selectedCategory)?.subcategories?.length > 0 && (
+                <select
+                  className="border border-gray-300 rounded px-2 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-shop_dark_blue bg-white md:hidden min-w-[120px]"
+                  value={selectedSubcategory || ''}
+                  onChange={e => setSelectedSubcategory(e.target.value || null)}
+                >
+                  <option value="">All Subcategories</option>
+                  {categories.find(cat => cat._id === selectedCategory)?.subcategories?.map(subcat => (
+                    <option key={subcat._id} value={subcat._id}>{subcat.title}</option>
+                  ))}
+                </select>
+              )}
+              {/* Brand Dropdown (mobile only) */}
+              <select
+                className="border border-gray-300 rounded px-2 py-2 text-sm focus:outline-none 
+                focus:ring-2 focus:ring-shop_dark_blue bg-white md:hidden min-w-[120px]"
+                value={selectedBrand || ''}
+                onChange={e => setSelectedBrand(e.target.value || null)}
+              >
+                <option value="">All Brands</option>
+                {brands?.map(brand => (
+                  <option key={brand._id} value={brand.slug?.current || ''}>{brand.title}</option>
+                ))}
+              </select>
+              {/* Sort Dropdown (always visible) */}
+              <label htmlFor="sort" className="text-sm font-medium text-gray-700 mr-2 shrink-0">Sort by:</label>
               <select
                 id="sort"
                 value={sortBy}
                 onChange={e => setSortBy(e.target.value)}
-                className="border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-shop_dark_blue bg-white"
+                className="border border-gray-300 rounded px-2 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-shop_dark_blue bg-white min-w-[120px]"
               >
                 <option value="newest">Newest</option>
                 <option value="price-asc">Price: Low to High</option>
@@ -138,7 +179,7 @@ const Shop = ({ categories, brands }: Props) => {
                     setSelectedBrand(null);
                     setSelectedPrice(null);
                   }}
-                  className="ml-4 text-shop_dark_green underline text-sm font-medium hover:text-darkRed hoverEffect"
+                  className="text-shop_dark_green underline text-sm font-medium hover:text-darkRed hoverEffect shrink-0"
                 >
                   Reset Filters
                 </button>
@@ -150,7 +191,8 @@ const Shop = ({ categories, brands }: Props) => {
         </div>
         {/* Main content area */}
         <div className="flex flex-col md:flex-row gap-10 border-t-0">
-          <div className="md:sticky md:top-20 md:self-start md:h-[calc(100vh-160px)] md:overflow-y-auto md:min-w-48 md:max-w-xs pb-5 md:border-r border-r-gray-100/60 scrollbar-hide flex flex-col gap-6">
+          {/* Sidebar filters (hidden on mobile) */}
+          <div className="hidden md:block md:sticky md:top-20 md:self-start md:h-[calc(100vh-160px)] md:overflow-y-auto md:min-w-48 md:max-w-xs pb-5 md:border-r border-r-gray-100/60 scrollbar-hide flex flex-col gap-6">
             {/* Product Categories Filter */}
             <CategoryList
               categories={categories}

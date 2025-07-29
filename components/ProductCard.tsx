@@ -38,20 +38,7 @@ const ProductCard = ({ product }: { product: ExpandedProduct }) => {
           </Link>
         )}
         <ProductSideMenu product={product} />
-        {product?.status === "sale" ? (
-          <span className="absolute top-2 left-2 z-10 text-[10px] px-2 py-0.5 rounded-full bg-shop_dark_blue text-white font-bold shadow-md border border-white group-hover:scale-110 transition-transform duration-300">Sale!</span>
-        ) : (
-          <Link
-            href={"/deal"}
-            className="absolute top-2 left-2 z-10 p-1 rounded-full bg-shop_dark_blue text-white shadow-md border border-white group-hover:scale-110 transition-transform duration-300"
-          >
-            <Flame
-              size={14}
-              fill="#1e293b"
-              className="text-white"
-            />
-          </Link>
-        )}
+        {/* Removed sale, hot, and new badges */}
       </div>
       {/* Divider between image and content */}
       <div className="w-full h-px bg-gray-100 my-0" />
@@ -85,7 +72,7 @@ const ProductCard = ({ product }: { product: ExpandedProduct }) => {
           className="text-base font-bold mx-auto"
           showPrice={isAdmin}
         />
-        <AddToCartButton product={product} className="w-28 rounded-full mx-auto transition-all duration-200 bg-shop_dark_blue text-white hover:shadow-lg hover:bg-black hover:text-white border border-shop_dark_blue font-semibold text-xs" />
+        <AddToCartButton product={product} className="w-28 rounded-full mx-auto transition-all duration-200 bg-shop_light_blue text-white hover:shadow-lg hover:bg-shop_dark_blue hover:text-white border border-shop_light_blue font-semibold text-xs" />
       </div>
     </div>
   );

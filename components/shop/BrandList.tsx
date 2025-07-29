@@ -14,7 +14,19 @@ const BrandList = ({ brands, selectedBrand, setSelectedBrand }: Props) => {
   return (
     <div className="w-full bg-white p-5 rounded-xl shadow-md border relative">
       <Title className="text-base font-black">Brands</Title>
-      <RadioGroup value={selectedBrand || ""} className="mt-2 space-y-1">
+      {/* Desktop: Dropdown */}
+      <select
+        className="hidden md:block border border-gray-300 rounded px-2 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-shop_dark_blue bg-white min-w-[120px] mb-2"
+        value={selectedBrand || ''}
+        onChange={e => setSelectedBrand(e.target.value || null)}
+      >
+        <option value="">All Brands</option>
+        {brands?.map(brand => (
+          <option key={brand._id} value={brand.slug?.current || ''}>{brand.title}</option>
+        ))}
+      </select>
+      {/* Mobile: Radio List */}
+      <RadioGroup value={selectedBrand || ""} className="mt-2 space-y-1 md:hidden">
         {brands?.map((brand) => (
           <div
             key={brand?._id}
