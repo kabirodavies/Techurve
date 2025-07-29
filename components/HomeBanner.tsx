@@ -2,7 +2,6 @@
 
 import React, { useRef, useState } from 'react';
 import Video from 'next-video';
-import Image from 'next/image';
 import Link from 'next/link';
 
 import Horus from '@/videos/Horus - Promotion video.mp4';

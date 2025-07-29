@@ -25,10 +25,9 @@ const LatestBlog = async () => {
         </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
-        {blogs?.slice(0, 3).map((blog) => (
-          <Link
+        {blogs?.slice(0, 3).map((blog, index) => (
+          <div
             key={blog?._id}
-            href={`/blog/${blog?.slug?.current}`}
             className="group bg-white rounded-xl border border-gray-200 hover:border-gray-400 transition flex flex-col overflow-hidden focus:outline-none"
             tabIndex={0}
             aria-label={blog?.title}
@@ -54,7 +53,7 @@ const LatestBlog = async () => {
                 ))}
               </div>
             </div>
-          </Link>
+          </div>
         ))}
       </div>
     </div>

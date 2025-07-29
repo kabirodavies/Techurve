@@ -7,14 +7,7 @@ import Container from "./Container";
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
 import {
-  Shield,
-  Monitor,
-  Lock,
-  MessageCircle,
-  CheckCircle2,
-  ArrowRight,
-  Play,
-  Apple
+  // Removed unused imports: Shield, Monitor, Lock, MessageCircle, CheckCircle2, ArrowRight, Play, Apple
 } from "lucide-react";
 import { featureIconMap } from "@/constants/featureIcons";
 import { getAllSolutions } from "@/sanity/queries/index";
@@ -29,14 +22,13 @@ interface Solution {
   summary: string;
   icon: string;
   industries?: string[];
-  body?: any;
+  body?: unknown;
 }
 
 const About = () => {
   const [solutions, setSolutions] = useState<Solution[]>([]);
   const [loading, setLoading] = useState(true);
-  const [featuredProduct, setFeaturedProduct] = useState<any>(null);
-  const [featuredLoading, setFeaturedLoading] = useState(true);
+  // Removed unused featuredProduct and featuredLoading state
   const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
 
   const softwareBanners = [
@@ -53,7 +45,7 @@ const About = () => {
       try {
         const data = await getAllSolutions();
         setSolutions(data);
-      } catch (e) {
+      } catch {
         setSolutions([]);
       } finally {
         setLoading(false);
@@ -64,27 +56,24 @@ const About = () => {
 
   useEffect(() => {
     async function fetchFeatured() {
-      setFeaturedLoading(true);
+      // Removed setFeaturedLoading(true) and setFeaturedLoading(false)
       try {
         const categories = await getCategoriesWithSubcategories();
         // Find the subcategory for Entrance Control
-        const entranceSubcat = categories
-          .flatMap((cat: any) => cat.subcategories || [])
-          .find((sub: any) =>
+        const entranceSubcat = (categories as { subcategories?: { title?: string; slug?: { current?: string }; _id: string }[] }[])
+          .flatMap((cat) => cat.subcategories || [])
+          .find((sub) =>
             sub.title?.toLowerCase().includes("entrance control") ||
             sub.slug?.current?.toLowerCase().includes("entrance-control")
           );
         if (!entranceSubcat) {
-          setFeaturedProduct(null);
-          setFeaturedLoading(false);
+          // Removed setFeaturedProduct(null)
           return;
         }
         const products = await getProductsBySubcategory(entranceSubcat._id);
-        setFeaturedProduct(products[0] || null);
-      } catch (e) {
-        setFeaturedProduct(null);
-      } finally {
-        setFeaturedLoading(false);
+        // Removed setFeaturedProduct(products[0] || null)
+      } catch {
+        // Removed setFeaturedProduct(null)
       }
     }
     fetchFeatured();
