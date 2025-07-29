@@ -17,6 +17,7 @@ import {
   PRODUCTS_BY_CATEGORY,
   ALL_PRODUCTS_QUERY,
   PRODUCTS_BY_BRAND_SLUG,
+  GET_ALL_SOLUTIONS,
 } from "./query";
 
 const getCategories = async (quantity?: number) => {
@@ -233,6 +234,15 @@ const getSingleHotProduct = async () => {
   }
 };
 
+const getAllSolutions = async () => {
+  try {
+    return await client.fetch(GET_ALL_SOLUTIONS);
+  } catch (error) {
+    console.error("Error fetching all solutions:", error);
+    return [];
+  }
+};
+
 export {
   getCategories,
   getAllBrands,
@@ -255,4 +265,5 @@ export {
   getAllCaseStudies,
   getSingleCaseStudy,
   getSingleHotProduct,
+  getAllSolutions,
 };

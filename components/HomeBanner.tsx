@@ -19,7 +19,7 @@ export default function HomeBanner() {
   };
 
   return (
-    <div className="w-full bg-pink-200 rounded-lg px-6 md:px-16 py-12 md:py-20 flex flex-col md:flex-row items-center justify-between gap-10 animate-fadeIn">
+    <div className="w-full bg-pink-200 rounded-lg px-6 md:px-16 py-20 md:py-32 flex flex-col md:flex-row items-center justify-between gap-10 animate-fadeIn">
       {/* Left: Text Section */}
       <div className="flex-1 flex flex-col items-start justify-center max-w-xl">
         <h1 className="text-3xl md:text-5xl font-extrabold text-gray-900 mb-6 leading-tight">

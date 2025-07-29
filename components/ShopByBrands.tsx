@@ -36,7 +36,7 @@ const extraData = [
 const ShopByBrands = async () => {
   const brands = await getAllBrands();
   return (
-    <div className="mb-10 lg:mb-20 bg-shop_light_bg p-5 lg:p-10 rounded-xl shadow-md">
+    <div className="mb-10 lg:mb-20">
       <h2 className="text-3xl md:text-4xl font-bold text-center text-shop_dark_blue mb-4">Shop By Brands</h2>
       <p className="text-xl text-gray-600 mb-8 text-center">Discover top brands and exclusive deals</p>
       <div className="flex flex-col md:flex-row md:items-center md:gap-5 justify-between mb-8">

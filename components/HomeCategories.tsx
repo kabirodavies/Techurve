@@ -3,10 +3,12 @@ import { Category } from "@/sanity.types";
 import { Shield } from "lucide-react";
 import { featureIconMap } from "@/constants/featureIcons";
 import Link from "next/link";
+import Container from "./Container";
 
 const HomeCategories = ({ categories }: { categories: (Category & { productCount?: number })[] }) => {
   return (
-    <div className="mb-10 lg:mb-20 bg-shop_light_bg p-5 lg:p-10 rounded-xl shadow-md">
+    <Container className="py-16">
+    <div className="">
       <h2 className="text-3xl md:text-4xl font-bold text-center text-shop_dark_blue mb-4">Popular Categories</h2>
       <p className="text-xl text-gray-600 mb-8 text-center">Browse our most popular product categories</p>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7">
@@ -48,6 +50,7 @@ const HomeCategories = ({ categories }: { categories: (Category & { productCount
         ))}
       </div>
     </div>
+    </Container>
   );
 };
 
