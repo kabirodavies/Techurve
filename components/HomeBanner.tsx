@@ -2,6 +2,9 @@
 
 import React, { useRef, useState } from 'react';
 import Video from 'next-video';
+import Image from 'next/image';
+import Link from 'next/link';
+
 import Horus from '@/videos/Horus - Promotion video.mp4';
 
 export default function HomeBanner() {
@@ -16,15 +19,44 @@ export default function HomeBanner() {
   };
 
   return (
-    <div className="w-full flex flex-col items-center justify-center animate-fadeIn">
-      <div className="w-full aspect-video bg-black relative">
+    <div className="w-full bg-pink-200 rounded-lg px-6 md:px-16 py-12 md:py-20 flex flex-col md:flex-row items-center justify-between gap-10 animate-fadeIn">
+      {/* Left: Text Section */}
+      <div className="flex-1 flex flex-col items-start justify-center max-w-xl">
+        <h1 className="text-3xl md:text-5xl font-extrabold text-gray-900 mb-6 leading-tight">
+          Your Trusted
+          <br />
+          Partener in Security.
+        </h1>
+        <p className="text-gray-900 mb-8 text-base md:text-lg">
+          Explore top-quality surveillance systems and security products
+          designed to protect your home and business. Shop now for the latest in
+          safety and peace of mind
+        </p>
+        <div className="flex flex-col sm:flex-row gap-4 mb-6">
+          <Link 
+            href="/shop" 
+            className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold text-lg hover:bg-blue-700 transition-colors duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+          >
+            Shop Now
+          </Link>
+          <Link 
+            href="/case-study" 
+            className="border-2 border-blue-600 text-blue-600 px-8 py-3 rounded-lg font-semibold text-lg hover:bg-blue-600 hover:text-white transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+          >
+            Case Studies
+          </Link>
+        </div>
+      </div>
+      {/* Right: Video Section */}
+      <div className="flex-1 flex items-center justify-center w-full max-w-xl aspect-video bg-white relative rounded-3xl shadow-xl border border-blue-100 overflow-hidden">
         <Video
           ref={videoRef}
           src={Horus}
           style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            borderRadius: "1.5rem", // extra rounded
           }}
           controls={isPlaying}
           autoPlay={isPlaying}
@@ -33,7 +65,11 @@ export default function HomeBanner() {
         {!isPlaying && (
           <button
             onClick={handlePlay}
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-blue-600/90 text-white border-none rounded-full w-20 h-20 text-4xl flex items-center justify-center shadow-lg cursor-pointer z-10 transition-all duration-300 ease-in-out hover:scale-110 hover:bg-blue-700 hoverEffect animate-fadeIn"
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
+             bg-blue-600/90 text-white border-none rounded-full w-14 
+             h-14 text-3xl flex items-center justify-center shadow-lg cursor-pointer
+              z-10 transition-all duration-300 ease-in-out hover:scale-110
+               hover:bg-blue-700 animate-fadeIn"
             aria-label="Play video"
           >
             ▶

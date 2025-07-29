@@ -24,8 +24,11 @@ const solutions = [
 const ServicesSection = () => (
   <section className="py-16">
     <div className="max-w-7xl mx-auto px-4 mb-10 lg:mb-20 bg-shop_light_bg p-5 lg:p-10 rounded-xl shadow-md">
-      <h2 className="text-3xl md:text-4xl font-bold text-center text-shop_dark_blue mb-4">Explore Our Solutions</h2>
-      <p className="text-xl text-gray-600 mb-8 text-center">Discover our range of security and business solutions</p>
+      <h2 className="text-3xl md:text-4xl font-bold text-center
+       text-shop_dark_blue mb-4">Discover curated security solutions.
+      </h2>
+      <p className="text-xl text-gray-600 mb-8 text-center">
+      and AI-based Biometric Solutions</p>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-10">
         {solutions.map((solution) => (
           <Link key={solution.title} href={solution.link} className="group relative">
