@@ -16,8 +16,8 @@ const HomeCategories = ({ categories }: { categories: (Category & { productCount
           Browse our most popular product categories
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7">
-          {categories?.map((category, index) => {
-            const iconKey = (category as any).icon;
+          {categories?.map((category) => {
+            const iconKey = (category as Category).icon;
             const Icon = iconKey && featureIconMap[iconKey] ? featureIconMap[iconKey] : Shield;
             return (
               <div

@@ -70,8 +70,7 @@ const About = () => {
           // Removed setFeaturedProduct(null)
           return;
         }
-        const products = await getProductsBySubcategory(entranceSubcat._id);
-        // Removed setFeaturedProduct(products[0] || null)
+        // Removed unused 'products' variable
       } catch {
         // Removed setFeaturedProduct(null)
       }
