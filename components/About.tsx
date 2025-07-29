@@ -12,7 +12,7 @@ import {
 import { featureIconMap } from "@/constants/featureIcons";
 import { getAllSolutions } from "@/sanity/queries/index";
 import { useEffect, useState } from "react";
-import { getCategoriesWithSubcategories, getProductsBySubcategory } from "@/sanity/queries";
+import { getCategoriesWithSubcategories } from "@/sanity/queries";
 
 // Add a type for the solution object
 interface Solution {
