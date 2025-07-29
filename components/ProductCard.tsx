@@ -5,7 +5,6 @@ import { urlFor } from "@/sanity/lib/image";
 import Image from "next/image";
 import React from "react";
 import Link from "next/link";
-import { Flame } from "lucide-react";
 import PriceView from "./PriceView";
 import Title from "./Title";
 import ProductSideMenu from "./ProductSideMenu";
