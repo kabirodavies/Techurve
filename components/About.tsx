@@ -123,11 +123,11 @@ const About = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 * index }}
                 >
-                  <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white">
-                    <CardContent className="p-6 text-center">
-                      <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-md">
-                        <Icon className="w-8 h-8 text-white" />
-                      </div>
+                                      <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white">
+                      <CardContent className="p-6 text-center">
+                        <div className="w-16 h-16 bg-shop_dark_blue rounded-full flex items-center justify-center mx-auto mb-4 shadow-md">
+                          <Icon className="w-8 h-8 text-white" />
+                        </div>
                       <h3 className="text-lg font-bold text-gray-900 mb-3 line-clamp-1">
                         {feature.title}
                       </h3>
@@ -238,7 +238,7 @@ const About = () => {
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
                 How Our Solutions Work
               </h2>
-              <div className="w-24 h-1 bg-gradient-to-r from-purple-500 to-blue-500 mx-auto rounded-full"></div>
+              <div className="w-24 h-1 bg-shop_dark_blue mx-auto rounded-full"></div>
             </motion.div>
 
             {/* Process Steps */}
@@ -271,12 +271,12 @@ const About = () => {
                   className="relative group"
                 >
                   {/* Step Number */}
-                  <div className="absolute -top-4 -left-4 w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-white text-sm font-bold shadow-lg">
+                  <div className="absolute -top-4 -left-4 w-8 h-8 bg-shop_dark_blue rounded-full flex items-center justify-center text-white text-sm font-bold shadow-lg">
                     {item.step}
                   </div>
                   
                   {/* Content Card */}
-                  <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 group-hover:border-purple-200">
+                  <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 group-hover:border-shop_dark_blue/20">
                     <div className="text-5xl mb-4 transform group-hover:scale-110 transition-transform duration-300">
                       {item.icon}
                     </div>
@@ -294,11 +294,11 @@ const About = () => {
               transition={{ duration: 0.6, delay: 1.6 }}
               className="relative"
             >
-              <div className="bg-gradient-to-r from-purple-500 to-blue-500 p-1 rounded-2xl shadow-lg">
+              <div className="bg-shop_dark_blue p-1 rounded-2xl shadow-lg">
                 <div className="bg-white rounded-xl p-8 relative overflow-hidden">
                   {/* Decorative Elements */}
-                  <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-purple-100 to-blue-100 rounded-full -translate-y-10 translate-x-10"></div>
-                  <div className="absolute bottom-0 left-0 w-16 h-16 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full translate-y-8 -translate-x-8"></div>
+                  <div className="absolute top-0 right-0 w-20 h-20 bg-shop_dark_blue/10 rounded-full -translate-y-10 translate-x-10"></div>
+                  <div className="absolute bottom-0 left-0 w-16 h-16 bg-shop_dark_blue/10 rounded-full translate-y-8 -translate-x-8"></div>
                   
                   <div className="relative z-10">
                     <h3 className="text-2xl font-bold text-gray-900 mb-3">
@@ -309,7 +309,7 @@ const About = () => {
                     </p>
                     
                     <Button 
-                      className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white px-8 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                      className="bg-shop_dark_blue hover:bg-shop_dark_blue/90 text-white px-8 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                       asChild
                     >
                       <a href="/contact" className="flex items-center gap-2">
