@@ -305,7 +305,7 @@ const About = () => {
                       Ready to Get Started?
                     </h3>
                     <p className="text-gray-600 mb-6 max-w-md mx-auto">
-                      Let's discuss your security needs and find the perfect solution for your business.
+                      Let&apos;s discuss your security needs and find the perfect solution for your business.
                     </p>
                     
                     <Button 
