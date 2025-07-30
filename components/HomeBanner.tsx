@@ -1,10 +1,7 @@
 "use client";
 
 import React, { useRef, useState } from 'react';
-import Video from 'next-video';
 import Link from 'next/link';
-
-import Horus from '@/videos/Horus - Promotion video.mp4';
 
 export default function HomeBanner() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -48,9 +45,10 @@ export default function HomeBanner() {
       </div>
       {/* Right: Video Section */}
       <div className="flex-1 flex items-center justify-center w-full max-w-xl aspect-video bg-white relative rounded-3xl shadow-xl border border-blue-100 overflow-hidden">
-        <Video
+        <video
           ref={videoRef}
-          src={Horus}
+          src="https://stream.mux.com/hPthtXB2E9wOOipb7bUWsmsoZLiXqJXQP43IG00dNB004.m3u8"
+          poster="https://image.mux.com/hPthtXB2E9wOOipb7bUWsmsoZLiXqJXQP43IG00dNB004/thumbnail.webp"
           style={{
             width: "100%",
             height: "100%",
@@ -60,6 +58,7 @@ export default function HomeBanner() {
           controls={isPlaying}
           autoPlay={isPlaying}
           muted={true}
+          preload="metadata"
         />
         {!isPlaying && (
           <button

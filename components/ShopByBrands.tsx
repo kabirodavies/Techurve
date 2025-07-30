@@ -11,25 +11,25 @@ const extraData = [
     title: "Free Delivery",
     description: "Free shipping over $1000",
     icon: <Truck size={45} />,
-    bg: "from-green-100 to-green-50",
+    bg: "from-white to-white",
   },
   {
     title: "Easy Return",
     description: "Hassle-free returns",
     icon: <GitCompareArrows size={45} />,
-    bg: "from-blue-100 to-blue-50",
+    bg: "from-white to-white",
   },
   {
     title: "Customer Support",
     description: "Friendly 24/7 support",
     icon: <Headset size={45} />,
-    bg: "from-yellow-100 to-yellow-50",
+    bg: "from-white to-white",
   },
   {
     title: "Money Back Guarantee", 
     description: "Quality checked by our team",
     icon: <ShieldCheck size={45} />,
-    bg: "from-pink-100 to-pink-50",
+    bg: "from-white to-white",
   },
 ];
 

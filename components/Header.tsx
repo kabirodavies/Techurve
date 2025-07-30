@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useState, useEffect } from "react";
 import Container from "./Container";
 import Logo from "./Logo";
 import HeaderMenu from "./HeaderMenu";
@@ -7,20 +9,51 @@ import CartIcon from "./CartIcon";
 import FavoriteButton from "./FavoriteButton";
 import SignIn from "./SignIn";
 import MobileMenu from "./MobileMenu";
-import { auth, currentUser } from "@clerk/nextjs/server";
+import { useUser } from "@clerk/nextjs";
 import { ClerkLoaded, SignedIn, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 import { Logs } from "lucide-react";
-import { getMyOrders } from "@/sanity/queries";
 
-const Header = async () => {
-  const user = await currentUser();
-  const { userId } = await auth();
-  const orders = userId ? await getMyOrders(userId) : null;
+const Header = () => {
+  const { user } = useUser();
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [orders, setOrders] = useState([]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      setIsScrolled(scrollTop > 50);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      if (user) {
+        try {
+          const response = await fetch('/api/orders');
+          const data = await response.json();
+          setOrders(data);
+        } catch (error) {
+          console.error('Error fetching orders:', error);
+        }
+      }
+    };
+
+    fetchOrders();
+  }, [user]);
 
   return (
-    <header className="sticky top-0 z-50 py-5 bg-white/70 backdrop-blur-md">
-      <Container className="flex items-center justify-between text-lightColor">
+    <header className={`sticky top-0 z-50 py-5 backdrop-blur-md transition-all duration-300 ${
+      isScrolled 
+        ? 'bg-white shadow-lg' 
+        : 'bg-shop_light_blue'
+    }`}>
+      <Container className={`flex items-center justify-between transition-colors duration-300 ${
+        isScrolled ? 'text-gray-900' : 'text-white'
+      }`}>
         <div className="w-auto md:w-1/3 flex items-center gap-2.5 justify-start md:gap-0">
           <MobileMenu />
           <Logo />

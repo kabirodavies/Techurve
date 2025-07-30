@@ -136,7 +136,7 @@ const About = () => {
                       </p>
                       <Button 
                         variant="link" 
-                        className="text-purple-600 hover:text-purple-700 p-0 h-auto font-medium underline"
+                        className="text-gray-600 hover:text-black p-0 h-auto font-medium underline"
                         asChild
                       >
                         <a href={feature.slug ? `/solutions/${feature.slug.current}` : '#'} target="_blank" rel="noopener noreferrer">
@@ -312,7 +312,7 @@ const About = () => {
                       className="bg-shop_dark_blue hover:bg-shop_dark_blue/90 text-white px-8 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                       asChild
                     >
-                      <a href="/contact" className="flex items-center gap-2">
+                      <a href="https://calendly.com/techurvesolutions-info/30min" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
                         <span>Set Up a Meeting</span>
                         <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                           <path d="M5 12h14M12 5l7 7-7 7"/>
