@@ -123,26 +123,7 @@ export const productType = defineType({
       validation: (Rule) => Rule.required(),
       fieldset: "hero",
     }),
-    defineField({
-      name: "variant",
-      title: "Product Type",
-      type: "string",
-      options: {
-        list: [
-          { title: "CCTv Video Surveillance", value: "cctv" },
-          { title: "Biometrics & Access Control", value: "biometrics" },
-          { title: "Perimeter Security", value: "perimeter_security" },
-          { title: "Intrusion Detection", value: "intrusion_detection" },
-          { title: "IoT Smart Homes", value: "smart_homes" },
-          { title: "Parking Management", value: "parking_management" },
-          { title: "Interactive Digital Boards", value: "digital_boards" },
-          { title: "Software & Applications", value: "software" },
-          { title: "Connectivity & Infrastructure", value: "connectivity" },
-          { title: "Services & Solutions", value: "services" },
-        ],
-      },
-      fieldset: "hero",
-    }),
+
     defineField({
       name: "isFeatured",
       title: "Featured Product",
