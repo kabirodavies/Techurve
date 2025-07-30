@@ -215,7 +215,116 @@ const About = () => {
               />
             ))}
           </div>
+          
         </div>
+      </motion.div>
+
+      {/* How It Works Section */}
+      <motion.div 
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.6 }}
+        className="mt-20"
+      >
+        <section className="relative">
+          <div className="max-w-5xl mx-auto px-4 text-center">
+            {/* Elegant Title */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.8 }}
+              className="mb-16"
+            >
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                How Our Solutions Work
+              </h2>
+              <div className="w-24 h-1 bg-gradient-to-r from-purple-500 to-blue-500 mx-auto rounded-full"></div>
+            </motion.div>
+
+            {/* Process Steps */}
+            <div className="grid md:grid-cols-3 gap-12 mb-16">
+              {[
+                {
+                  icon: "🔍",
+                  title: "Consultation",
+                  description: "We assess your needs and recommend the best-fit solution.",
+                  step: "01"
+                },
+                {
+                  icon: "⚙️", 
+                  title: "Integration",
+                  description: "Seamless integration of devices and software for your environment.",
+                  step: "02"
+                },
+                {
+                  icon: "📈",
+                  title: "Support & Growth", 
+                  description: "Ongoing support and scalable solutions as your needs evolve.",
+                  step: "03"
+                }
+              ].map((item, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 1 + index * 0.2 }}
+                  className="relative group"
+                >
+                  {/* Step Number */}
+                  <div className="absolute -top-4 -left-4 w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-white text-sm font-bold shadow-lg">
+                    {item.step}
+                  </div>
+                  
+                  {/* Content Card */}
+                  <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 group-hover:border-purple-200">
+                    <div className="text-5xl mb-4 transform group-hover:scale-110 transition-transform duration-300">
+                      {item.icon}
+                    </div>
+                    <h4 className="text-xl font-bold text-gray-900 mb-3">{item.title}</h4>
+                    <p className="text-gray-600 leading-relaxed">{item.description}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Creative Meeting Button */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 1.6 }}
+              className="relative"
+            >
+              <div className="bg-gradient-to-r from-purple-500 to-blue-500 p-1 rounded-2xl shadow-lg">
+                <div className="bg-white rounded-xl p-8 relative overflow-hidden">
+                  {/* Decorative Elements */}
+                  <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-purple-100 to-blue-100 rounded-full -translate-y-10 translate-x-10"></div>
+                  <div className="absolute bottom-0 left-0 w-16 h-16 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full translate-y-8 -translate-x-8"></div>
+                  
+                  <div className="relative z-10">
+                    <h3 className="text-2xl font-bold text-gray-900 mb-3">
+                      Ready to Get Started?
+                    </h3>
+                    <p className="text-gray-600 mb-6 max-w-md mx-auto">
+                      Let's discuss your security needs and find the perfect solution for your business.
+                    </p>
+                    
+                    <Button 
+                      className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white px-8 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                      asChild
+                    >
+                      <a href="/contact" className="flex items-center gap-2">
+                        <span>Set Up a Meeting</span>
+                        <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                      </a>
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </section>
       </motion.div>
     </Container>
   );
