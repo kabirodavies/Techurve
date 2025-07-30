@@ -1,7 +1,7 @@
 import Shop from "@/components/Shop";
 import HeroSection from "@/components/HeroSection";
 import { getCategoriesWithSubcategories, getAllBrands } from "@/sanity/queries";
-import React from "react";
+import React, { Suspense } from "react";
 
 const ShopPage = async () => {
   const categories = await getCategoriesWithSubcategories();
@@ -16,7 +16,9 @@ const ShopPage = async () => {
         bannerAlt="Shop Banner"
         showImage={true}
       />
-      <Shop categories={categories} brands={brands} />
+      <Suspense fallback={<div className="flex justify-center items-center p-8">Loading shop...</div>}>
+        <Shop categories={categories} brands={brands} />
+      </Suspense>
     </div>
   );
 };
