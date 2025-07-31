@@ -455,7 +455,7 @@
 
 import React from 'react';
 import HeroSection from "@/components/HeroSection";
-
+import { motion } from "framer-motion";
 import Container from "@/components/Container";
 import { ArrowRightCircle } from "lucide-react";
 import Testimonials from "@/components/Testimonials";
