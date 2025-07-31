@@ -1,7 +1,7 @@
 import Container from "@/components/Container";
 import HomeBanner from "@/components/HomeBanner";
 import HomeCategories from "@/components/HomeCategories";
-import LatestBlog from "@/components/LatestBlog";
+// import LatestBlog from "@/components/LatestBlog";
 import About from "@/components/About";
 // import ServicesSection from "@/components/ServicesSection";
 import ShopByBrands from "@/components/ShopByBrands";
@@ -20,7 +20,7 @@ const Home = async () => {
         {/* <ServicesSection /> */}
         <HomeCategories categories={categories} />
         <ShopByBrands/>
-        <LatestBlog />
+        {/* <LatestBlog /> */}
       </Container>
     </>
   );

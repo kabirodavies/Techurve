@@ -123,29 +123,7 @@ export default function SolutionsPageClient({ solutions, testimonials, caseStudi
         <CaseStudyShowcase caseStudies={caseStudies} />
       </section>
 
-      {/* How It Works */}
-      <section className="bg-gray-50 py-16">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-2xl font-semibold mb-8">How Our Solutions Work</h2>
-          <div className="flex flex-col md:flex-row justify-center gap-8">
-            <div>
-              <div className="text-4xl mb-2">🔍</div>
-              <h4 className="font-bold mb-1">Consultation</h4>
-              <p className="text-gray-600">We assess your needs and recommend the best-fit solution.</p>
-            </div>
-            <div>
-              <div className="text-4xl mb-2">⚙️</div>
-              <h4 className="font-bold mb-1">Integration</h4>
-              <p className="text-gray-600">Seamless integration of devices and software for your environment.</p>
-            </div>
-            <div>
-              <div className="text-4xl mb-2">📈</div>
-              <h4 className="font-bold mb-1">Support & Growth</h4>
-              <p className="text-gray-600">Ongoing support and scalable solutions as your needs evolve.</p>
-            </div>
-          </div>
-        </div>
-      </section>
+  
 
       {/* Testimonials/Case Studies */}
       <Testimonials testimonials={testimonials} />

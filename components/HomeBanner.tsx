@@ -31,13 +31,13 @@ export default function HomeBanner() {
         <div className="flex flex-col sm:flex-row gap-4 mb-6">
           <Link 
             href="/shop" 
-            className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold text-lg hover:bg-blue-700 transition-colors duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+            className="bg-shop_dark_blue text-white px-8 py-3 rounded-lg font-semibold text-lg hover:bg-shop_dark_blue/90 transition-colors duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
           >
-            Shop Now
+            Shop
           </Link>
           <Link 
             href="/case-study" 
-            className="border-2 border-blue-600 text-blue-600 px-8 py-3 rounded-lg font-semibold text-lg hover:bg-blue-600 hover:text-white transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+            className="border-2 border-blue-600 text-blue-600 px-8 py-3 rounded-lg font-semibold text-lg hover:bg-shop_dark_blue/90 hover:text-white transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
           >
             Case Studies
           </Link>
